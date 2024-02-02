@@ -20,7 +20,7 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8000/signup", {
+      const response = await axios.post("http://localhost:8000/auth/signup", {
         email,
         password,
       });
@@ -28,6 +28,7 @@ function Signup() {
       if (response.data === "exist") {
         alert("User already exists");
       } else if (response.data === "notexist") {
+        localStorage.setItem("userId", email);
         navigate("/home", { state: { id: email } });
       }
     } catch (error) {

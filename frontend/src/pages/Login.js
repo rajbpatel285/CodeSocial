@@ -22,7 +22,7 @@ function Login() {
     setErrorMessage("");
 
     try {
-      const response = await axios.post("http://localhost:8000/login", {
+      const response = await axios.post("http://localhost:8000/auth/login", {
         email,
         password,
       });
