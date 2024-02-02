@@ -12,13 +12,15 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8000/", {
+      const response = await axios.post("http://localhost:8000/login", {
         email,
         password,
       });
 
       if (response.data === "exist") {
         navigate("/home", { state: { id: email } });
+      } else if (response.data === "incorrect password") {
+        alert("Password is incorrect");
       } else if (response.data === "notexist") {
         alert("User has not signed up");
       }
