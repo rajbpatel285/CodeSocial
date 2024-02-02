@@ -24,7 +24,7 @@ const NavButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-function Home() {
+function Help() {
   const location = useLocation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -124,15 +124,16 @@ function Home() {
 
       <div style={{ padding: "20px" }}>
         <Typography variant="h4" style={{ fontWeight: "bold" }}>
-          Hello {location.state.id}
+          Help & Support
         </Typography>
         <Typography variant="body1">
-          Welcome to the home page of CodeSocial, where you can participate in
-          contests, solve problems, and check your standings among peers.
+          Need assistance? Here you can find FAQs, contact support, and access
+          helpful resources to guide you through our platform.
         </Typography>
+        {/* ...rest of your content */}
       </div>
     </div>
   );
 }
 
-export default Home;
+export default Help;

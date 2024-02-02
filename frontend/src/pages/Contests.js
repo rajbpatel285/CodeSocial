@@ -24,7 +24,7 @@ const NavButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-function Home() {
+function Contests() {
   const location = useLocation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -79,6 +79,7 @@ function Home() {
             <MenuItem onClick={handleClose}>Settings</MenuItem>
             <MenuItem onClick={handleClose}>Logout</MenuItem>
           </Menu>
+          {/* ...other elements like user icon, etc. */}
         </Toolbar>
       </AppBar>
 
@@ -124,15 +125,16 @@ function Home() {
 
       <div style={{ padding: "20px" }}>
         <Typography variant="h4" style={{ fontWeight: "bold" }}>
-          Hello {location.state.id}
+          Contests
         </Typography>
         <Typography variant="body1">
-          Welcome to the home page of CodeSocial, where you can participate in
-          contests, solve problems, and check your standings among peers.
+          Here you can find all the contests happening on CodeSocial,
+          participate and test your skills against other coders.
         </Typography>
+        {/* ...rest of your content */}
       </div>
     </div>
   );
 }
 
-export default Home;
+export default Contests;
