@@ -17,10 +17,9 @@ const NavButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
   "&.active": {
     color: theme.palette.secondary.main,
-    backgroundColor: theme.palette.action.selected,
   },
   "&:hover": {
-    color: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.action.selected,
   },
 }));
 

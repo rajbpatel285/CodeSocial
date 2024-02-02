@@ -17,10 +17,9 @@ const NavButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
   "&.active": {
     color: theme.palette.secondary.main,
-    backgroundColor: theme.palette.action.selected,
   },
   "&:hover": {
-    color: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.action.selected,
   },
 }));
 
@@ -39,6 +38,10 @@ function Home() {
 
   const handleNavigation = (path) => {
     navigate(path, { state: { id: location.state?.id } });
+  };
+
+  const handleLogout = (path) => {
+    navigate("/");
   };
 
   return (
@@ -77,7 +80,7 @@ function Home() {
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>Settings</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
