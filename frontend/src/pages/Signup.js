@@ -180,7 +180,7 @@ function Signup() {
         </Typography>
         <MuiLink
           component={Link}
-          to="/login"
+          to="/"
           variant="body2"
           sx={{
             display: "block",
