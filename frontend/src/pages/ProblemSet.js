@@ -1,11 +1,14 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Typography } from "@mui/material";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 
 function ProblemSet() {
-  const location = useLocation();
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div>

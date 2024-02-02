@@ -20,6 +20,12 @@ function TopAppBar({ title }) {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    setAnchorEl(null);
+    window.location.href = "/";
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -54,7 +60,7 @@ function TopAppBar({ title }) {
         >
           <MenuItem onClick={handleClose}>Profile</MenuItem>
           <MenuItem onClick={handleClose}>Settings</MenuItem>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

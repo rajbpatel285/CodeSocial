@@ -1,11 +1,14 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Typography } from "@mui/material";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 
 function Home() {
-  const location = useLocation();
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div>
@@ -13,7 +16,7 @@ function Home() {
       <SecondaryNavbar />
       <div style={{ padding: "20px" }}>
         <Typography variant="h4" style={{ fontWeight: "bold" }}>
-          Hello {location.state?.id || "Guest"}
+          Hello {userId}
         </Typography>
         <Typography variant="body1">
           Welcome to the home page of CodeSocial, where you can participate in

@@ -13,7 +13,6 @@ import {
 
 function Login() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -29,6 +28,7 @@ function Login() {
       });
 
       if (response.data === "exist") {
+        localStorage.setItem("userId", email);
         navigate("/home", { state: { id: email } });
       } else {
         if (response.data === "incorrect password") {
