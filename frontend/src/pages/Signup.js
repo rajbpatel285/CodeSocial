@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import {
@@ -8,6 +8,7 @@ import {
   Button,
   Typography,
   Link as MuiLink,
+  Alert,
 } from "@mui/material";
 
 function Signup() {
@@ -15,24 +16,50 @@ function Signup() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [passwordError, setPasswordError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const isDataFilled = email && password && username;
+
+    const isPasswordsMatch = confirmPassword && password === confirmPassword;
+
+    setIsButtonDisabled(
+      !(isDataFilled && (isPasswordsMatch || !confirmPassword))
+    );
+
+    setPasswordError(
+      confirmPassword && !isPasswordsMatch ? "Passwords do not match" : ""
+    );
+  }, [email, password, confirmPassword, username]);
 
   async function submit(e) {
     e.preventDefault();
+    setErrorMessage("");
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
 
     try {
       const response = await axios.post("http://localhost:8000/auth/signup", {
         email,
+        username,
         password,
       });
 
       if (response.data === "exist") {
-        alert("User already exists");
+        setErrorMessage("User already exists");
       } else if (response.data === "notexist") {
         localStorage.setItem("userId", email);
         navigate("/home", { state: { id: email } });
       }
     } catch (error) {
-      alert("Wrong details");
+      setErrorMessage("An error occurred. Please try again.");
       console.error(error);
     }
   }
@@ -102,15 +129,46 @@ function Signup() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            id="confirmPassword"
+            autoComplete="current-password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            error={!!passwordError}
+            helperText={passwordError}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             sx={{ mt: 3, mb: 2 }}
+            disabled={isButtonDisabled}
           >
             Sign up
           </Button>
+          {errorMessage && (
+            <Alert severity="error" sx={{ width: "100%" }}>
+              {errorMessage}
+            </Alert>
+          )}
         </Box>
         <Typography
           variant="body2"
@@ -122,13 +180,12 @@ function Signup() {
         </Typography>
         <MuiLink
           component={Link}
-          to="/"
+          to="/login"
           variant="body2"
           sx={{
             display: "block",
             textAlign: "center",
             textDecoration: "none",
-            // mt: 2,
             fontWeight: "bold",
             color: "primary.main",
           }}

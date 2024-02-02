@@ -1,12 +1,16 @@
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  const { emailOrUsername, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    // Find user by email or username
+    const user = await User.findOne({
+      $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
+    });
 
-    if (user && user.password === password) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       res.json("exist");
     } else if (user) {
       res.json("incorrect password");
@@ -20,7 +24,7 @@ exports.login = async (req, res) => {
 };
 
 exports.signup = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -28,7 +32,7 @@ exports.signup = async (req, res) => {
     if (existingUser) {
       res.json("exist");
     } else {
-      const newUser = new User({ email, password });
+      const newUser = new User({ email, username, password });
       await newUser.save();
       res.json("notexist");
     }

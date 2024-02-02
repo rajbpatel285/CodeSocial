@@ -13,7 +13,7 @@ import {
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -23,18 +23,18 @@ function Login() {
 
     try {
       const response = await axios.post("http://localhost:8000/auth/login", {
-        email,
+        emailOrUsername,
         password,
       });
 
       if (response.data === "exist") {
-        localStorage.setItem("userId", email);
-        navigate("/home", { state: { id: email } });
+        localStorage.setItem("userId", emailOrUsername); // Store the login identifier in local storage
+        navigate("/home", { state: { id: emailOrUsername } });
       } else {
         if (response.data === "incorrect password") {
           setErrorMessage("Password is incorrect");
         } else if (response.data === "notexist") {
-          setErrorMessage("User has not signed up");
+          setErrorMessage("User not found");
         }
       }
     } catch (error) {
@@ -88,13 +88,13 @@ function Login() {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="emailOrUsername"
+            label="Username or Email"
+            name="emailOrUsername"
+            autoComplete="emailOrUsername"
             autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={emailOrUsername}
+            onChange={(e) => setEmailOrUsername(e.target.value)}
           />
           <TextField
             margin="normal"
