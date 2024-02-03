@@ -25,8 +25,17 @@ function SecondaryNavbar() {
   return (
     <AppBar
       position="static"
-      color="warning"
-      sx={{ margin: "20px 20px", borderRadius: 1 }}
+      sx={{
+        backgroundColor: "transparent",
+        color: "inherit",
+        boxShadow: "none",
+        border: "5px solid",
+        borderColor: "divider",
+        borderRadius: 1,
+        mt: 5,
+        mx: 2,
+        maxWidth: "calc(100% - 35px)",
+      }}
     >
       <Toolbar>
         <NavButton

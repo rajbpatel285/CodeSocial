@@ -6,6 +6,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Box,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
@@ -29,9 +30,14 @@ function TopAppBar({ title }) {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" style={{ flexGrow: 1 }}>
-          {title}
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+          <img
+            src={`${process.env.PUBLIC_URL}/images/logo.png`}
+            alt="CodeSocial"
+            style={{ marginRight: "10px", height: "40px" }}
+          />
+          <Typography variant="h6">{title}</Typography>
+        </Box>
         <IconButton
           size="large"
           edge="end"
