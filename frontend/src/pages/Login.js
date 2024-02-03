@@ -20,7 +20,6 @@ function Login() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   useEffect(() => {
-    // Enable the button if both fields have a value
     const isDataValid = emailOrUsername && password;
     setIsButtonDisabled(!isDataValid);
   }, [emailOrUsername, password]);
@@ -36,7 +35,7 @@ function Login() {
       });
 
       if (response.data === "exist") {
-        localStorage.setItem("userId", emailOrUsername); // Store the login identifier in local storage
+        localStorage.setItem("userId", emailOrUsername);
         navigate("/home", { state: { id: emailOrUsername } });
       } else {
         if (response.data === "incorrect password") {
@@ -57,35 +56,35 @@ function Login() {
       disableGutters
       sx={{
         display: "flex",
-        flexDirection: "column",
+        justifyContent: "flex-end",
+        alignItems: "center",
         height: "100vh",
-        justifyContent: "center",
-        alignItems: "flex-end",
         paddingRight: "10%",
-        backgroundColor: "#f0f2f5",
+        backgroundImage: `url(${
+          process.env.PUBLIC_URL + "/images/login_bg_image.png"
+        })`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <Box
         sx={{
           width: "400px",
           padding: "20px",
-          border: 1,
-          borderColor: "grey.300",
           borderRadius: "4px",
-          background: "#fff",
+          backgroundColor: "#fff",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <Typography
-          variant="h4"
-          component="h1"
-          sx={{ textAlign: "center", mb: 3 }}
-        >
-          Login
-        </Typography>
+        <img
+          src={process.env.PUBLIC_URL + "/images/logo.png"}
+          alt="CodeSocial Logo"
+          style={{ maxWidth: "25%" }}
+        />
         <Box
           component="form"
           onSubmit={submit}
@@ -127,7 +126,7 @@ function Login() {
             Sign In
           </Button>
           {errorMessage && (
-            <Alert severity="error" sx={{ width: "100%" }}>
+            <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
               {errorMessage}
             </Alert>
           )}

@@ -70,35 +70,35 @@ function Signup() {
       disableGutters
       sx={{
         display: "flex",
-        flexDirection: "column",
+        justifyContent: "flex-end",
+        alignItems: "center",
         height: "100vh",
-        justifyContent: "center",
-        alignItems: "flex-end",
         paddingRight: "10%",
-        backgroundColor: "#f0f2f5",
+        backgroundImage: `url(${
+          process.env.PUBLIC_URL + "/images/login_bg_image.png"
+        })`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <Box
         sx={{
           width: "400px",
           padding: "20px",
-          border: 1,
-          borderColor: "grey.300",
           borderRadius: "4px",
-          background: "#fff",
+          backgroundColor: "#fff",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <Typography
-          variant="h4"
-          component="h1"
-          sx={{ textAlign: "center", mb: 3 }}
-        >
-          Sign Up
-        </Typography>
+        <img
+          src={process.env.PUBLIC_URL + "/images/logo.png"}
+          alt="CodeSocial Logo"
+          style={{ maxWidth: "25%" }}
+        />
         <Box
           component="form"
           onSubmit={submit}
