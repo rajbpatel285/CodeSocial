@@ -5,17 +5,19 @@ exports.login = async (req, res) => {
   const { emailOrUsername, password } = req.body;
 
   try {
-    // Find user by email or username
     const user = await User.findOne({
       $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
     });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      res.json("exist");
+      res.json({
+        message: "exist",
+        isAdmin: user.isAdmin,
+      });
     } else if (user) {
-      res.json("incorrect password");
+      res.json({ message: "incorrect password" });
     } else {
-      res.json("notexist");
+      res.json({ message: "notexist" });
     }
   } catch (error) {
     console.error(error);

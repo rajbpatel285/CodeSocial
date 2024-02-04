@@ -15,9 +15,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-// Hash the user's password before saving
 userSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
