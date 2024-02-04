@@ -1,4 +1,5 @@
 const Question = require("../models/Question");
+const mongoose = require("mongoose");
 
 // Create and Save a new Question
 exports.create = async (req, res) => {
@@ -10,9 +11,10 @@ exports.create = async (req, res) => {
 
   // Create a Question
   const question = new Question({
-    questionId: new mongoose.Types.ObjectId(), // Generates a new unique identifier
+    questionId: new mongoose.Types.ObjectId(),
     question: req.body.question,
     answer: req.body.answer,
+    difficulty: req.body.difficulty,
   });
 
   // Save Question in the database

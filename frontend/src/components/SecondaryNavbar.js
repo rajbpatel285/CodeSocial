@@ -32,9 +32,9 @@ function SecondaryNavbar() {
         border: "5px solid",
         borderColor: "divider",
         borderRadius: 1,
-        mt: 5,
-        mx: 2,
-        maxWidth: "calc(100% - 35px)",
+        mt: 3,
+        mx: "5%",
+        maxWidth: "calc(90%)",
       }}
     >
       <Toolbar>

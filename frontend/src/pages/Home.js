@@ -16,7 +16,7 @@ function Home() {
     <div>
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
-      <div style={{ padding: "20px" }}>
+      <div style={{ margin: "0 5%" }}>
         <Typography variant="h4" style={{ fontWeight: "bold" }}>
           Hello {userId}
         </Typography>
