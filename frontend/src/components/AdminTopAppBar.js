@@ -38,6 +38,7 @@ function AdminTopAppBar({ title }) {
           />
           <Typography variant="h6">{title}</Typography>
         </Box>
+        <Typography variant="h6">Admin</Typography>
         <IconButton
           size="large"
           edge="end"

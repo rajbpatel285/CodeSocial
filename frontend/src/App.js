@@ -8,6 +8,7 @@ import Standings from "./pages/Standings";
 import Help from "./pages/Help";
 import AdminProblemSet from "./pages/AdminProblemSet";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AdminContests from "./pages/AdminContests";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/standings" element={<Standings />} />
           <Route path="/help" element={<Help />} />
           <Route path="/adminproblemset" element={<AdminProblemSet />} />
+          <Route path="/admincontests" element={<AdminContests />} />
         </Routes>
       </Router>
     </div>

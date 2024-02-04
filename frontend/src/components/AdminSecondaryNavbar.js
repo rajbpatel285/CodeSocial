@@ -50,12 +50,6 @@ function AdminSecondaryNavbar() {
         >
           Contests
         </NavButton>
-        <NavButton
-          onClick={() => handleNavigation("/adminstandings")}
-          className={location.pathname === "/adminstandings" ? "active" : ""}
-        >
-          Standings
-        </NavButton>
       </Toolbar>
     </AppBar>
   );
