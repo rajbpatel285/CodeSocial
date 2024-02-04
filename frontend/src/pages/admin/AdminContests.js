@@ -1,10 +1,10 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { Typography } from "@mui/material";
-import AdminTopAppBar from "../components/AdminTopAppBar";
-import AdminSecondaryNavbar from "../components/AdminSecondaryNavbar";
+import AdminTopAppBar from "../../components/AdminTopAppBar";
+import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 
-function AdminProblemSet() {
+function AdminContests() {
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
@@ -18,15 +18,15 @@ function AdminProblemSet() {
       <AdminSecondaryNavbar />
       <div style={{ padding: "20px" }}>
         <Typography variant="h4" style={{ fontWeight: "bold" }}>
-          Problem Set
+          Contests
         </Typography>
         <Typography variant="body1">
-          Challenge yourself with a variety of problems. Solve problems to
-          improve your coding skills and prepare for coding contests.
+          Here you can find all the contests happening on CodeSocial.
+          Participate and test your skills against other coders.
         </Typography>
       </div>
     </div>
   );
 }
 
-export default AdminProblemSet;
+export default AdminContests;

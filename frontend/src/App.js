@@ -6,9 +6,9 @@ import Contests from "./pages/Contests";
 import ProblemSet from "./pages/ProblemSet";
 import Standings from "./pages/Standings";
 import Help from "./pages/Help";
-import AdminProblemSet from "./pages/AdminProblemSet";
+import AdminProblemSet from "./pages/admin/AdminProblemSet";
+import AdminContests from "./pages/admin/AdminContests";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AdminContests from "./pages/AdminContests";
 
 function App() {
   return (
