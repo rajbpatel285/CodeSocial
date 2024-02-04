@@ -39,20 +39,20 @@ function AdminSecondaryNavbar() {
     >
       <Toolbar>
         <NavButton
-          onClick={() => handleNavigation("/contests")}
-          className={location.pathname === "/contests" ? "active" : ""}
-        >
-          Contests
-        </NavButton>
-        <NavButton
-          onClick={() => handleNavigation("/problemset")}
-          className={location.pathname === "/problemset" ? "active" : ""}
+          onClick={() => handleNavigation("/adminproblemset")}
+          className={location.pathname === "/adminproblemset" ? "active" : ""}
         >
           Problem Set
         </NavButton>
         <NavButton
-          onClick={() => handleNavigation("/standings")}
-          className={location.pathname === "/standings" ? "active" : ""}
+          onClick={() => handleNavigation("/admincontests")}
+          className={location.pathname === "/admincontests" ? "active" : ""}
+        >
+          Contests
+        </NavButton>
+        <NavButton
+          onClick={() => handleNavigation("/adminstandings")}
+          className={location.pathname === "/adminstandings" ? "active" : ""}
         >
           Standings
         </NavButton>

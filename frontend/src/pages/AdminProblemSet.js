@@ -2,18 +2,20 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { Typography } from "@mui/material";
 import AdminTopAppBar from "../components/AdminTopAppBar";
-import SecondaryNavbar from "../components/SecondaryNavbar";
+import AdminSecondaryNavbar from "../components/AdminSecondaryNavbar";
 
 function AdminProblemSet() {
   const userId = localStorage.getItem("userId");
-  if (!userId) {
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+  if (!userId || !isAdmin) {
     return <Navigate to="/" replace />;
   }
 
   return (
     <div>
       <AdminTopAppBar title="CodeSocial" />
-      <SecondaryNavbar />
+      <AdminSecondaryNavbar />
       <div style={{ padding: "20px" }}>
         <Typography variant="h4" style={{ fontWeight: "bold" }}>
           Problem Set

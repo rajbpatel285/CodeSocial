@@ -6,7 +6,9 @@ import SecondaryNavbar from "../components/SecondaryNavbar";
 
 function Standings() {
   const userId = localStorage.getItem("userId");
-  if (!userId) {
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+  if (!userId || isAdmin) {
     return <Navigate to="/" replace />;
   }
 

@@ -6,6 +6,7 @@ import Contests from "./pages/Contests";
 import ProblemSet from "./pages/ProblemSet";
 import Standings from "./pages/Standings";
 import Help from "./pages/Help";
+import AdminProblemSet from "./pages/AdminProblemSet";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/problemset" element={<ProblemSet />} />
           <Route path="/standings" element={<Standings />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/adminproblemset" element={<AdminProblemSet />} />
         </Routes>
       </Router>
     </div>

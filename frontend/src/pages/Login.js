@@ -34,13 +34,16 @@ function Login() {
         password,
       });
 
-      if (response.data === "exist") {
+      if (response.data.message === "exist") {
         localStorage.setItem("userId", emailOrUsername);
-        navigate("/home", { state: { id: emailOrUsername } });
+        localStorage.setItem("isAdmin", response.data.isAdmin);
+        response.data.isAdmin
+          ? navigate("/adminproblemset")
+          : navigate("/home"); // Redirect based on isAdmin
       } else {
-        if (response.data === "incorrect password") {
+        if (response.data.message === "incorrect password") {
           setErrorMessage("Password is incorrect");
-        } else if (response.data === "notexist") {
+        } else if (response.data.message === "notexist") {
           setErrorMessage("User not found");
         }
       }
