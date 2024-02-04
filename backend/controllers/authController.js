@@ -31,8 +31,14 @@ exports.signup = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
 
+    const existingUsername = await User.findOne({ username });
+
+    console.log(existingUsername);
+
     if (existingUser) {
       res.json("exist");
+    } else if (existingUsername) {
+      res.json("username unavailable");
     } else {
       const newUser = new User({ email, username, password });
       await newUser.save();

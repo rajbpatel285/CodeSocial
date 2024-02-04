@@ -129,7 +129,7 @@ function Login() {
             Sign In
           </Button>
           {errorMessage && (
-            <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
+            <Alert severity="error" sx={{ width: "85%", mx: 2 }}>
               {errorMessage}
             </Alert>
           )}

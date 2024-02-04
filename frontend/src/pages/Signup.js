@@ -21,6 +21,9 @@ function Signup() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [passwordError, setPasswordError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordValidationMessage, setPasswordValidationMessage] =
+    useState("");
 
   useEffect(() => {
     const isDataFilled = email && password && username;
@@ -34,7 +37,30 @@ function Signup() {
     setPasswordError(
       confirmPassword && !isPasswordsMatch ? "Passwords do not match" : ""
     );
+
+    validateEmail();
+    validatePassword();
   }, [email, password, confirmPassword, username]);
+
+  const validateEmail = () => {
+    if (email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+      setEmailError("Invalid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const validatePassword = () => {
+    if (password && !/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/.test(password)) {
+      setPasswordValidationMessage(
+        "Password must contain at least 8 characters, one uppercase, one number and one symbol."
+      );
+    } else if (password && password.length < 8) {
+      setPasswordValidationMessage("Password must be at least 8 characters.");
+    } else {
+      setPasswordValidationMessage("");
+    }
+  };
 
   async function submit(e) {
     e.preventDefault();
@@ -53,9 +79,12 @@ function Signup() {
       });
 
       if (response.data === "exist") {
-        setErrorMessage("User already exists");
+        setErrorMessage("An account with this email already exists.");
+      } else if (response.data === "username unavailable") {
+        setErrorMessage("Username is already taken.");
       } else if (response.data === "notexist") {
         localStorage.setItem("userId", email);
+        localStorage.setItem("isAdmin", response.data.isAdmin);
         navigate("/home", { state: { id: email } });
       }
     } catch (error) {
@@ -116,6 +145,8 @@ function Signup() {
             autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            error={!!emailError}
+            helperText={emailError}
           />
           <TextField
             margin="normal"
@@ -128,6 +159,8 @@ function Signup() {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={!!passwordValidationMessage}
+            helperText={passwordValidationMessage}
           />
           <TextField
             margin="normal"
@@ -165,7 +198,7 @@ function Signup() {
             Sign up
           </Button>
           {errorMessage && (
-            <Alert severity="error" sx={{ width: "100%" }}>
+            <Alert severity="error" sx={{ width: "85%", mx: 2 }}>
               {errorMessage}
             </Alert>
           )}
