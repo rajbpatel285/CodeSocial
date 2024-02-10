@@ -11,6 +11,8 @@ import {
   Paper,
   TableSortLabel,
 } from "@mui/material";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -19,7 +21,8 @@ function ProblemSet() {
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [questions, setQuestions] = useState([]);
-  const [order, setOrder] = useState("asc"); // 'asc' or 'desc'
+  const [order, setOrder] = useState("asc");
+  const [filledStars, setFilledStars] = useState({});
 
   useEffect(() => {
     fetchQuestions();
@@ -43,6 +46,13 @@ function ProblemSet() {
       return isAsc ? b.difficulty - a.difficulty : a.difficulty - b.difficulty;
     });
     setQuestions([...sortedQuestions]);
+  };
+
+  const handleStarClick = (questionId) => {
+    setFilledStars((prevFilledStars) => ({
+      ...prevFilledStars,
+      [questionId]: !prevFilledStars[questionId],
+    }));
   };
 
   if (!userId || isAdmin) {
@@ -114,8 +124,14 @@ function ProblemSet() {
                   <TableCell
                     style={{ ...cellStyle, width: "15%" }}
                     align="center"
-                  ></TableCell>{" "}
-                  {/* Placeholder for future content */}
+                    onClick={() => handleStarClick(question.questionId)}
+                  >
+                    {filledStars[question.questionId] ? (
+                      <StarIcon />
+                    ) : (
+                      <StarBorderIcon />
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
