@@ -19,6 +19,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TableSortLabel,
 } from "@mui/material";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
@@ -33,6 +34,7 @@ function AdminProblemSet() {
   const [questionText, setQuestionText] = useState("");
   const [answer, setAnswer] = useState("");
   const [difficulty, setDifficulty] = useState("");
+  const [order, setOrder] = useState("asc");
 
   useEffect(() => {
     fetchQuestions();
@@ -47,6 +49,15 @@ function AdminProblemSet() {
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
+  };
+
+  const handleSort = () => {
+    const isAsc = order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    const sortedQuestions = questions.sort((a, b) => {
+      return isAsc ? b.difficulty - a.difficulty : a.difficulty - b.difficulty;
+    });
+    setQuestions([...sortedQuestions]);
   };
 
   if (!userId || !isAdmin) {
@@ -83,6 +94,10 @@ function AdminProblemSet() {
     }
   };
 
+  const cellStyle = {
+    border: "3px solid rgba(224, 224, 224, 1)",
+  };
+
   return (
     <div>
       <AdminTopAppBar title="CodeSocial" />
@@ -106,8 +121,23 @@ function AdminProblemSet() {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Problem</TableCell>
-                <TableCell align="right">Difficulty</TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "70%" }}
+                >
+                  Problem
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  align="center"
+                >
+                  <TableSortLabel active direction={order} onClick={handleSort}>
+                    Difficulty
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  align="center"
+                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -116,7 +146,11 @@ function AdminProblemSet() {
                   key={question.questionId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell
+                    style={{ ...cellStyle, width: "70%" }}
+                    component="th"
+                    scope="row"
+                  >
                     <Link
                       to={`/adminquestion/${question.questionId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
@@ -124,82 +158,22 @@ function AdminProblemSet() {
                       {question.questionTitle}
                     </Link>
                   </TableCell>
-                  <TableCell align="right">{question.difficulty}</TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "15%" }}
+                    align="center"
+                  >
+                    {question.difficulty}
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "15%" }}
+                    align="center"
+                  ></TableCell>{" "}
+                  {/* Placeholder for future content */}
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Add a New Question</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="questionTitle"
-              label="Question Title"
-              type="text"
-              fullWidth
-              value={questionTitle}
-              onChange={(e) => setQuestionTitle(e.target.value)}
-            />
-            <TextField
-              margin="dense"
-              id="question"
-              label="Question"
-              type="text"
-              fullWidth
-              multiline
-              minRows={3}
-              value={questionText}
-              onChange={(e) => setQuestionText(e.target.value)}
-            />
-            <TextField
-              margin="dense"
-              id="answer"
-              label="Answer"
-              type="text"
-              fullWidth
-              multiline
-              minRows={2}
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-            />
-            <FormControl fullWidth style={{ marginTop: "20px" }}>
-              <InputLabel id="difficulty-label">Difficulty</InputLabel>
-              <Select
-                labelId="difficulty-label"
-                id="difficulty"
-                value={difficulty}
-                label="Difficulty"
-                onChange={(e) => setDifficulty(e.target.value)}
-              >
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-              </Select>
-            </FormControl>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleSave} color="primary">
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
       </div>
     </div>
   );

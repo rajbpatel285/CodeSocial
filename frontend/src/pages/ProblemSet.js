@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TableSortLabel,
 } from "@mui/material";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
@@ -18,6 +19,7 @@ function ProblemSet() {
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [questions, setQuestions] = useState([]);
+  const [order, setOrder] = useState("asc"); // 'asc' or 'desc'
 
   useEffect(() => {
     fetchQuestions();
@@ -34,9 +36,22 @@ function ProblemSet() {
     }
   };
 
+  const handleSort = () => {
+    const isAsc = order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    const sortedQuestions = questions.sort((a, b) => {
+      return isAsc ? b.difficulty - a.difficulty : a.difficulty - b.difficulty;
+    });
+    setQuestions([...sortedQuestions]);
+  };
+
   if (!userId || isAdmin) {
     return <Navigate to="/" replace />;
   }
+
+  const cellStyle = {
+    border: "3px solid rgba(224, 224, 224, 1)",
+  };
 
   return (
     <div>
@@ -53,8 +68,23 @@ function ProblemSet() {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Problem</TableCell>
-                <TableCell align="right">Difficulty</TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "70%" }}
+                >
+                  Problem
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  align="center"
+                >
+                  <TableSortLabel active direction={order} onClick={handleSort}>
+                    Difficulty
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  align="center"
+                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -63,7 +93,11 @@ function ProblemSet() {
                   key={question.questionId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell
+                    style={{ ...cellStyle, width: "70%" }}
+                    component="th"
+                    scope="row"
+                  >
                     <Link
                       to={`/question/${question.questionId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
@@ -71,7 +105,17 @@ function ProblemSet() {
                       {question.questionTitle}
                     </Link>
                   </TableCell>
-                  <TableCell align="right">{question.difficulty}</TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "15%" }}
+                    align="center"
+                  >
+                    {question.difficulty}
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "15%" }}
+                    align="center"
+                  ></TableCell>{" "}
+                  {/* Placeholder for future content */}
                 </TableRow>
               ))}
             </TableBody>
