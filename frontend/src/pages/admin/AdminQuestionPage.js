@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Typography } from "@mui/material";
-import TopAppBar from "../components/TopAppBar";
-import SecondaryNavbar from "../components/SecondaryNavbar";
+import AdminTopAppBar from "../../components/AdminTopAppBar";
+import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 
-function QuestionPage() {
+function AdminQuestionPage() {
   const { questionId } = useParams();
   const [question, setQuestion] = useState(null);
   const userId = localStorage.getItem("userId");
@@ -31,14 +31,14 @@ function QuestionPage() {
     return <div>Loading...</div>;
   }
 
-  if (!userId || isAdmin) {
+  if (!userId || !isAdmin) {
     return <Navigate to="/" replace />;
   }
 
   return (
     <div>
-      <TopAppBar title="CodeSocial" />
-      <SecondaryNavbar />
+      <AdminTopAppBar title="CodeSocial" />
+      <AdminSecondaryNavbar />
       <div style={{ margin: "0 5%" }}>
         <Typography
           variant="h4"
@@ -65,4 +65,4 @@ function QuestionPage() {
   );
 }
 
-export default QuestionPage;
+export default AdminQuestionPage;

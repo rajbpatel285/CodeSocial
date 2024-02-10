@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -117,7 +117,12 @@ function AdminProblemSet() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {question.questionTitle}
+                    <Link
+                      to={`/adminquestion/${question.questionId}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      {question.questionTitle}
+                    </Link>
                   </TableCell>
                   <TableCell align="right">{question.difficulty}</TableCell>
                 </TableRow>

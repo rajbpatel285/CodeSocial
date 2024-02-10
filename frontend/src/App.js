@@ -9,6 +9,7 @@ import Help from "./pages/Help";
 import QuestionPage from "./pages/QuestionPage";
 import AdminProblemSet from "./pages/admin/AdminProblemSet";
 import AdminContests from "./pages/admin/AdminContests";
+import AdminQuestionPage from "./pages/admin/AdminQuestionPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -26,6 +27,10 @@ function App() {
           <Route path="/question/:questionId" element={<QuestionPage />} />
           <Route path="/adminproblemset" element={<AdminProblemSet />} />
           <Route path="/admincontests" element={<AdminContests />} />
+          <Route
+            path="/adminquestion/:questionId"
+            element={<AdminQuestionPage />}
+          />
         </Routes>
       </Router>
     </div>
