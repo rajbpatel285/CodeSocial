@@ -174,6 +174,76 @@ function AdminProblemSet() {
             </TableBody>
           </Table>
         </TableContainer>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Add a New Question</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="questionTitle"
+              label="Question Title"
+              type="text"
+              fullWidth
+              value={questionTitle}
+              onChange={(e) => setQuestionTitle(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              id="question"
+              label="Question"
+              type="text"
+              fullWidth
+              multiline
+              minRows={3}
+              value={questionText}
+              onChange={(e) => setQuestionText(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              id="answer"
+              label="Answer"
+              type="text"
+              fullWidth
+              multiline
+              minRows={2}
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+            />
+            <FormControl fullWidth style={{ marginTop: "20px" }}>
+              <InputLabel id="difficulty-label">Difficulty</InputLabel>
+              <Select
+                labelId="difficulty-label"
+                id="difficulty"
+                value={difficulty}
+                label="Difficulty"
+                onChange={(e) => setDifficulty(e.target.value)}
+              >
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={7}>7</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={9}>9</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+              </Select>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleSave} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );
