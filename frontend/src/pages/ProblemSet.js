@@ -13,15 +13,12 @@ import {
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function ProblemSet() {
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [questions, setQuestions] = useState([]);
-  const [questionTitle, setQuestionTitle] = useState("");
-  const [questionText, setQuestionText] = useState("");
-  const [answer, setAnswer] = useState("");
-  const [difficulty, setDifficulty] = useState("");
 
   useEffect(() => {
     fetchQuestions();
@@ -68,7 +65,12 @@ function ProblemSet() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {question.questionTitle}
+                    <Link
+                      to={`/question/${question.questionId}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      {question.questionTitle}
+                    </Link>
                   </TableCell>
                   <TableCell align="right">{question.difficulty}</TableCell>
                 </TableRow>
