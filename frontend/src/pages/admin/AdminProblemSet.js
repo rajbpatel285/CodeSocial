@@ -12,6 +12,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Paper,
 } from "@mui/material";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
@@ -81,7 +87,7 @@ function AdminProblemSet() {
     <div>
       <AdminTopAppBar title="CodeSocial" />
       <AdminSecondaryNavbar />
-      <div style={{ margin: "0 10%" }}>
+      <div style={{ margin: "0 5%" }}>
         <Typography
           variant="h4"
           style={{ fontWeight: "bold", marginBottom: "20px" }}
@@ -96,29 +102,29 @@ function AdminProblemSet() {
         >
           Add Question
         </Button>
-        <Paper
-          style={{ maxHeight: 500, overflow: "auto", marginBottom: "20px" }}
-        >
-          {questions.map((question, index) => (
-            <div
-              key={question.questionId}
-              style={{
-                padding: "10px",
-                borderBottom:
-                  index !== questions.length - 1 ? "1px solid #ccc" : "",
-              }}
-            >
-              <Typography variant="h6">{question.questionTitle}</Typography>
-              <Typography variant="body1" style={{ margin: "10px 0" }}>
-                {question.question}
-              </Typography>
-              <Typography variant="body2">Answer: {question.answer}</Typography>
-              <Typography variant="body2">
-                Difficulty: {question.difficulty}
-              </Typography>
-            </div>
-          ))}
-        </Paper>
+        <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Problem</TableCell>
+                <TableCell align="right">Difficulty</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {questions.map((question) => (
+                <TableRow
+                  key={question.questionId}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {question.questionTitle}
+                  </TableCell>
+                  <TableCell align="right">{question.difficulty}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <Dialog
           open={open}
           onClose={handleClose}
