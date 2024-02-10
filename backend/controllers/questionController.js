@@ -12,6 +12,7 @@ exports.create = async (req, res) => {
   // Create a Question
   const question = new Question({
     questionId: new mongoose.Types.ObjectId(),
+    questionTitle: req.body.questionTitle,
     question: req.body.question,
     answer: req.body.answer,
     difficulty: req.body.difficulty,
@@ -80,8 +81,10 @@ exports.update = async (req, res) => {
     const question = await Question.findOneAndUpdate(
       { questionId: req.params.questionId },
       {
+        questionTitle: req.body.questionTitle,
         question: req.body.question,
         answer: req.body.answer,
+        difficulty: req.body.difficulty,
       },
       { new: true }
     );

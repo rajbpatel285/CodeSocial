@@ -32,7 +32,7 @@ function SecondaryNavbar() {
         border: "5px solid",
         borderColor: "divider",
         borderRadius: 1,
-        mt: 3,
+        my: 3,
         mx: "5%",
         maxWidth: "calc(90%)",
       }}

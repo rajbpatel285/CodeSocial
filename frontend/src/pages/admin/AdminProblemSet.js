@@ -12,9 +12,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  List,
-  ListItem,
-  ListItemText,
   Paper,
 } from "@mui/material";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
@@ -26,6 +23,7 @@ function AdminProblemSet() {
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [open, setOpen] = useState(false);
   const [questions, setQuestions] = useState([]);
+  const [questionTitle, setQuestionTitle] = useState("");
   const [questionText, setQuestionText] = useState("");
   const [answer, setAnswer] = useState("");
   const [difficulty, setDifficulty] = useState("");
@@ -62,6 +60,7 @@ function AdminProblemSet() {
       const response = await axios.post(
         "http://localhost:8000/question/questions",
         {
+          questionTitle,
           question: questionText,
           answer,
           difficulty: parseInt(difficulty, 10),
@@ -69,6 +68,7 @@ function AdminProblemSet() {
       );
       setQuestions([...questions, response.data]);
       setOpen(false);
+      setQuestionTitle("");
       setQuestionText("");
       setAnswer("");
       setDifficulty("");
@@ -81,8 +81,7 @@ function AdminProblemSet() {
     <div>
       <AdminTopAppBar title="CodeSocial" />
       <AdminSecondaryNavbar />
-      <div style={{ margin: "0 5%" }}>
-        {" "}
+      <div style={{ margin: "0 10%" }}>
         <Typography
           variant="h4"
           style={{ fontWeight: "bold", marginBottom: "20px" }}
@@ -100,19 +99,25 @@ function AdminProblemSet() {
         <Paper
           style={{ maxHeight: 500, overflow: "auto", marginBottom: "20px" }}
         >
-          <List>
-            {questions.map((question, index) => (
-              <ListItem
-                key={question.questionId}
-                divider={index !== questions.length - 1}
-              >
-                <ListItemText
-                  primary={`Q: ${question.question}`}
-                  secondary={`Answer: ${question.answer} - Difficulty: ${question.difficulty}`}
-                />
-              </ListItem>
-            ))}
-          </List>
+          {questions.map((question, index) => (
+            <div
+              key={question.questionId}
+              style={{
+                padding: "10px",
+                borderBottom:
+                  index !== questions.length - 1 ? "1px solid #ccc" : "",
+              }}
+            >
+              <Typography variant="h6">{question.questionTitle}</Typography>
+              <Typography variant="body1" style={{ margin: "10px 0" }}>
+                {question.question}
+              </Typography>
+              <Typography variant="body2">Answer: {question.answer}</Typography>
+              <Typography variant="body2">
+                Difficulty: {question.difficulty}
+              </Typography>
+            </div>
+          ))}
         </Paper>
         <Dialog
           open={open}
@@ -124,10 +129,21 @@ function AdminProblemSet() {
             <TextField
               autoFocus
               margin="dense"
+              id="questionTitle"
+              label="Question Title"
+              type="text"
+              fullWidth
+              value={questionTitle}
+              onChange={(e) => setQuestionTitle(e.target.value)}
+            />
+            <TextField
+              margin="dense"
               id="question"
               label="Question"
               type="text"
               fullWidth
+              multiline
+              minRows={3}
               value={questionText}
               onChange={(e) => setQuestionText(e.target.value)}
             />
@@ -137,6 +153,8 @@ function AdminProblemSet() {
               label="Answer"
               type="text"
               fullWidth
+              multiline
+              minRows={2}
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
             />
