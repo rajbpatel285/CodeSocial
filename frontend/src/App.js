@@ -10,6 +10,7 @@ import QuestionPage from "./pages/QuestionPage";
 import AdminProblemSet from "./pages/admin/AdminProblemSet";
 import AdminContests from "./pages/admin/AdminContests";
 import AdminQuestionPage from "./pages/admin/AdminQuestionPage";
+import AdminContestDetail from "./pages/admin/AdminContestDetail";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -30,6 +31,10 @@ function App() {
           <Route
             path="/adminquestion/:questionId"
             element={<AdminQuestionPage />}
+          />
+          <Route
+            path="/admincontestdetail/:contestId"
+            element={<AdminContestDetail />}
           />
         </Routes>
       </Router>

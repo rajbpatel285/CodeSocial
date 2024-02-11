@@ -1,12 +1,70 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Navigate, Link, useNavigate } from "react-router-dom";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
+import axios from "axios";
 
 function AdminContests() {
+  const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
+  const [contests, setContests] = useState([]);
+  const [open, setOpen] = useState(false);
+  // Contest form state
+  const [contestName, setContestName] = useState("");
+  const [description, setDescription] = useState("");
+  const [level, setLevel] = useState("");
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+    fetchContests();
+  }, []);
+
+  const fetchContests = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/contest");
+      setContests(response.data);
+    } catch (error) {
+      console.error("Failed to fetch contests", error);
+    }
+  };
+
+  const handleCreateContest = async () => {
+    // Logic to create a contest
+    try {
+      const response = await axios.post("http://localhost:8000/contest", {
+        contestName,
+        description,
+        level,
+        date,
+      });
+      console.log(response.data);
+      fetchContests(); // Refresh the list
+      setOpen(false); // Close the dialog
+    } catch (error) {
+      console.error("Failed to create contest", error);
+    }
+  };
 
   if (!userId || !isAdmin) {
     return <Navigate to="/" replace />;
@@ -17,13 +75,106 @@ function AdminContests() {
       <AdminTopAppBar title="CodeSocial" />
       <AdminSecondaryNavbar />
       <div style={{ margin: "0 5%" }}>
-        <Typography variant="h4" style={{ fontWeight: "bold" }}>
+        <Typography
+          variant="h4"
+          style={{ fontWeight: "bold", marginBottom: "20px" }}
+        >
           Contests
         </Typography>
-        <Typography variant="body1">
-          Here you can find all the contests happening on CodeSocial.
-          Participate and test your skills against other coders.
-        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setOpen(true)}
+          style={{ marginBottom: "20px" }}
+        >
+          Add Contest
+        </Button>
+        {/* Contest Creation Dialog */}
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>Add a New Contest</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="contestName"
+              label="Contest Name"
+              type="text"
+              fullWidth
+              value={contestName}
+              onChange={(e) => setContestName(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              id="description"
+              label="Description"
+              type="text"
+              fullWidth
+              multiline
+              rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="level-label">Level</InputLabel>
+              <Select
+                labelId="level-label"
+                id="level"
+                value={level}
+                label="Level"
+                onChange={(e) => setLevel(e.target.value)}
+              >
+                <MenuItem value="easy">Easy</MenuItem>
+                <MenuItem value="medium">Medium</MenuItem>
+                <MenuItem value="difficult">Difficult</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              margin="dense"
+              id="date"
+              label="Date"
+              type="date"
+              fullWidth
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={handleCreateContest}>Create</Button>
+          </DialogActions>
+        </Dialog>
+        {/* Contests Table */}
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Contest Name</TableCell>
+                <TableCell>Level</TableCell>
+                <TableCell>Date</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {contests.map((contest) => (
+                <TableRow
+                  key={contest.contestId}
+                  onClick={() =>
+                    navigate(`/admincontestdetail/${contest.contestId}`)
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <TableCell>{contest.contestName}</TableCell>
+                  <TableCell>{contest.level}</TableCell>
+                  <TableCell>
+                    {new Date(contest.date).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     </div>
   );

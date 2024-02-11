@@ -40,8 +40,14 @@ exports.findAll = async (req, res) => {
 exports.findOne = async (req, res) => {
   const { contestId } = req.params;
 
+  if (!mongoose.Types.ObjectId.isValid(contestId)) {
+    return res.status(400).send({ message: "Invalid contest ID format." });
+  }
+
   try {
-    const contest = await Contest.findById(contestId);
+    const contest = await Contest.findOne({
+      contestId: req.params.contestId,
+    });
     if (!contest) {
       return res
         .status(404)
@@ -49,11 +55,6 @@ exports.findOne = async (req, res) => {
     }
     res.send(contest);
   } catch (error) {
-    if (error.kind === "ObjectId") {
-      return res
-        .status(404)
-        .send({ message: "Contest not found with id " + contestId });
-    }
     return res
       .status(500)
       .send({ message: "Error retrieving contest with id " + contestId });
