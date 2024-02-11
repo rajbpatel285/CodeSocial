@@ -70,6 +70,10 @@ function AdminContests() {
     return <Navigate to="/" replace />;
   }
 
+  const cellStyle = {
+    border: "3px solid rgba(224, 224, 224, 1)",
+  };
+
   return (
     <div>
       <AdminTopAppBar title="CodeSocial" />
@@ -151,23 +155,53 @@ function AdminContests() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Contest Name</TableCell>
-                <TableCell>Level</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "70%" }}
+                >
+                  Contest Name
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                >
+                  Level
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                >
+                  Date
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {contests.map((contest) => (
                 <TableRow
                   key={contest.contestId}
-                  onClick={() =>
-                    navigate(`/admincontestdetail/${contest.contestId}`)
-                  }
-                  style={{ cursor: "pointer" }}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>{contest.contestName}</TableCell>
-                  <TableCell>{contest.level}</TableCell>
-                  <TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "70%" }}
+                    component="th"
+                    scope="row"
+                  >
+                    <Link
+                      to={`/admincontestdetail/${contest.contestId}`}
+                      style={{
+                        textDecoration: "underline",
+                        color: "#1976d2",
+                        cursor: "pointer",
+                        "&:hover": {
+                          textDecoration: "underline",
+                          color: "#1976d2",
+                        },
+                      }}
+                    >
+                      {contest.contestName}
+                    </Link>
+                  </TableCell>
+                  <TableCell style={{ ...cellStyle, width: "15%" }}>
+                    {contest.level}
+                  </TableCell>
+                  <TableCell style={{ ...cellStyle, width: "15%" }}>
                     {new Date(contest.date).toLocaleDateString()}
                   </TableCell>
                 </TableRow>

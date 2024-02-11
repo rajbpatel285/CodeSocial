@@ -153,7 +153,15 @@ function AdminProblemSet() {
                   >
                     <Link
                       to={`/adminquestion/${question.questionId}`}
-                      style={{ textDecoration: "none", color: "inherit" }}
+                      style={{
+                        textDecoration: "underline",
+                        color: "#1976d2",
+                        cursor: "pointer",
+                        "&:hover": {
+                          textDecoration: "underline",
+                          color: "#1976d2",
+                        },
+                      }}
                     >
                       {question.questionTitle}
                     </Link>

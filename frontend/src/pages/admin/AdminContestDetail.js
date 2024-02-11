@@ -73,7 +73,7 @@ function AdminContestDetail() {
       await axios.put(`http://localhost:8000/contest${contestId}`, {
         isPublished: true,
       });
-      navigate("/admincontests"); // Redirect to contests list or appropriate page
+      navigate("/admincontests");
     } catch (error) {
       console.error("Failed to publish contest", error);
     }
