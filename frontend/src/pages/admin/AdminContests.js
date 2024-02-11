@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, Link, useNavigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -25,12 +25,10 @@ import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
 
 function AdminContests() {
-  const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [contests, setContests] = useState([]);
   const [open, setOpen] = useState(false);
-  // Contest form state
   const [contestName, setContestName] = useState("");
   const [description, setDescription] = useState("");
   const [level, setLevel] = useState("");

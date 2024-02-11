@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -22,12 +22,13 @@ import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
 
 function AdminContestDetail() {
+  const userId = localStorage.getItem("userId");
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
   const { contestId } = useParams();
   const navigate = useNavigate();
   const [contest, setContest] = useState(null);
   const [open, setOpen] = useState(false);
   const [questions, setQuestions] = useState([]);
-  // State for new question form
   const [newQuestion, setNewQuestion] = useState({
     questionTitle: "",
     question: "",
@@ -52,11 +53,26 @@ function AdminContestDetail() {
 
   const handleAddQuestionToContest = async () => {
     try {
-      const { data } = await axios.post("/question", { ...newQuestion });
-      // Optionally, update contest's questionSet in the backend if needed
-      setQuestions([...questions, data]);
+      const questionResponse = await axios.post(
+        "http://localhost:8000/question/questions",
+        { ...newQuestion }
+      );
+      const createdQuestion = questionResponse.data;
+
+      const updateContestResponse = await axios.put(
+        `http://localhost:8000/contest/addQuestion/${contestId}`,
+        {
+          questionId: createdQuestion._id,
+        }
+      );
+
+      setQuestions([...questions, createdQuestion]);
+      setContest({
+        ...contest,
+        questionSet: [...contest.questionSet, createdQuestion],
+      });
+
       setOpen(false);
-      // Reset new question form
       setNewQuestion({
         questionTitle: "",
         question: "",
@@ -83,17 +99,37 @@ function AdminContestDetail() {
     return <div>Loading...</div>;
   }
 
+  if (!userId || !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div>
       <AdminTopAppBar title="CodeSocial" />
       <AdminSecondaryNavbar />
       <div style={{ margin: "0 5%" }}>
-        <Typography variant="h4" style={{ fontWeight: "bold" }}>
+        <Typography
+          variant="h4"
+          style={{ fontWeight: "bold", marginBottom: "10px" }}
+        >
           {contest.contestName}
         </Typography>
-        <Typography variant="body1">{contest.description}</Typography>
-        <Typography variant="body2">Level: {contest.level}</Typography>
-        <Typography variant="body2">
+        <Typography
+          variant="body1"
+          style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
+        >
+          {contest.description}
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
+        >
+          Level: {contest.level}
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
+        >
           Date: {new Date(contest.date).toLocaleDateString()}
         </Typography>
         <Button
@@ -121,7 +157,69 @@ function AdminContestDetail() {
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Add a New Question</DialogTitle>
           <DialogContent>
-            {/* Form fields for questionTitle, question, answer, difficulty */}
+            <TextField
+              autoFocus
+              margin="dense"
+              id="questionTitle"
+              label="Question Title"
+              type="text"
+              fullWidth
+              value={newQuestion.questionTitle}
+              onChange={(e) =>
+                setNewQuestion({
+                  ...newQuestion,
+                  questionTitle: e.target.value,
+                })
+              }
+            />
+            <TextField
+              margin="dense"
+              id="question"
+              label="Question"
+              type="text"
+              fullWidth
+              multiline
+              minRows={3}
+              value={newQuestion.question}
+              onChange={(e) =>
+                setNewQuestion({ ...newQuestion, question: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              id="answer"
+              label="Answer"
+              type="text"
+              fullWidth
+              multiline
+              minRows={2}
+              value={newQuestion.answer}
+              onChange={(e) =>
+                setNewQuestion({ ...newQuestion, answer: e.target.value })
+              }
+            />
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="difficulty-label">Difficulty</InputLabel>
+              <Select
+                labelId="difficulty-label"
+                id="difficulty"
+                value={newQuestion.difficulty}
+                onChange={(e) =>
+                  setNewQuestion({ ...newQuestion, difficulty: e.target.value })
+                }
+              >
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={7}>7</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={9}>9</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+              </Select>
+            </FormControl>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpen(false)}>Cancel</Button>

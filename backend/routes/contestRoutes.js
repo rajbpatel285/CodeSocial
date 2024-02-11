@@ -13,4 +13,6 @@ router.put("/:contestId", contestController.update);
 
 router.delete("/:contestId", contestController.delete);
 
+router.put("/addQuestion/:contestId", contestController.addQuestionToContest);
+
 module.exports = router;

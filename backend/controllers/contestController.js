@@ -1,4 +1,5 @@
 const Contest = require("../models/Contest");
+const Question = require("../models/Question");
 const mongoose = require("mongoose");
 
 exports.create = async (req, res) => {
@@ -102,5 +103,35 @@ exports.delete = async (req, res) => {
     res
       .status(500)
       .send({ message: "Could not delete Contest with id=" + contestId });
+  }
+};
+
+exports.addQuestionToContest = async (req, res) => {
+  const { contestId } = req.params;
+  const { questionId } = req.body;
+
+  try {
+    const contest = await Contest.findOne({
+      contestId: req.params.contestId,
+    });
+    if (!contest) {
+      return res.status(404).send({ message: "Contest not found" });
+    }
+
+    const question = await Question.findById(questionId);
+    if (!question) {
+      return res.status(404).send({ message: "Question not found" });
+    }
+
+    contest.questionSet.push(questionId);
+
+    await contest.save();
+
+    res
+      .status(200)
+      .send({ message: "Question added to contest successfully", contest });
+  } catch (error) {
+    console.error("Error adding question to contest:", error);
+    res.status(500).send({ message: "Server error" });
   }
 };
