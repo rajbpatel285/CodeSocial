@@ -110,7 +110,7 @@ exports.update = async (req, res) => {
 // Delete a question with the specified questionId in the request
 exports.delete = async (req, res) => {
   try {
-    const question = await Question.findOneAndRemove({
+    const question = await Question.findOneAndDelete({
       questionId: req.params.questionId,
     });
     if (!question) {

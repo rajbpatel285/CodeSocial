@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -16,13 +16,12 @@ import {
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
-import DialogContentText from "@mui/material/DialogContentText";
 
 function AdminQuestionPage() {
   const { questionId } = useParams();
-  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const [question, setQuestion] = useState(null);
+  const [open, setOpen] = useState(false);
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionText, setQuestionText] = useState("");
   const [answer, setAnswer] = useState("");
@@ -47,11 +46,11 @@ function AdminQuestionPage() {
   };
 
   const handleOpenDialog = () => {
+    setOpen(true);
     setQuestionTitle(question.questionTitle);
     setQuestionText(question.question);
     setAnswer(question.answer);
     setDifficulty(question.difficulty);
-    setOpen(true);
   };
 
   const handleUpdateQuestion = async () => {
@@ -72,6 +71,17 @@ function AdminQuestionPage() {
     }
   };
 
+  const handleDeleteQuestion = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:8000/question/questions/${questionId}`
+      );
+      navigate("/adminproblemset"); // Adjust the navigate path as needed
+    } catch (error) {
+      console.error("Error deleting question:", error);
+    }
+  };
+
   if (!question) {
     return <div>Loading...</div>;
   }
@@ -89,36 +99,52 @@ function AdminQuestionPage() {
           variant="contained"
           color="primary"
           onClick={handleOpenDialog}
-          style={{ marginBottom: "20px" }}
+          style={{ marginRight: "10px" }}
         >
           Update Question
         </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            if (
+              window.confirm("Are you sure you want to delete this question?")
+            ) {
+              handleDeleteQuestion();
+            }
+          }}
+        >
+          Delete Question
+        </Button>
         <Typography
           variant="h4"
-          style={{ fontWeight: "bold", marginBottom: "10px" }}
+          style={{
+            marginBottom: "20px",
+            marginTop: "20px",
+            fontWeight: "bold",
+          }}
         >
           {question.questionTitle}
         </Typography>
         <Typography variant="body2" style={{ marginBottom: "20px" }}>
           Difficulty: {question.difficulty}
         </Typography>
-        <div style={{ marginBottom: "20px" }}>
-          <Typography
-            variant="body1"
-            style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
-          >
-            {question.question}
-          </Typography>
-          <Typography variant="body1" style={{ whiteSpace: "pre-line" }}>
-            {question.answer}
-          </Typography>
-        </div>
+        <Typography
+          variant="body1"
+          style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
+        >
+          {question.question}
+        </Typography>
+        <Typography
+          variant="body1"
+          style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
+        >
+          Answer: {question.answer}
+        </Typography>
+        {/* Update Question Dialog */}
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Update Question</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Update the details for the question here.
-            </DialogContentText>
             <TextField
               autoFocus
               margin="dense"
@@ -147,7 +173,7 @@ function AdminQuestionPage() {
               type="text"
               fullWidth
               multiline
-              rows={4}
+              rows={2}
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
             />
@@ -157,7 +183,6 @@ function AdminQuestionPage() {
                 labelId="difficulty-label"
                 id="difficulty"
                 value={difficulty}
-                label="Difficulty"
                 onChange={(e) => setDifficulty(e.target.value)}
               >
                 <MenuItem value={1}>1</MenuItem>
