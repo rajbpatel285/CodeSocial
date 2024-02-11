@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate, Link } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -12,9 +12,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  List,
-  ListItem,
-  ListItemText,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Paper,
 } from "@mui/material";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
@@ -43,7 +46,15 @@ function AdminContestDetail() {
           `http://localhost:8000/contest/${contestId}`
         );
         setContest(data);
-        setQuestions(data.questionSet || []);
+        // Fetch questions details for each questionId in contest.questionSet
+        const questionDetails = await Promise.all(
+          data.questionSet.map((questionId) =>
+            axios
+              .get(`http://localhost:8000/question/questions/${questionId}`)
+              .then((res) => res.data)
+          )
+        );
+        setQuestions(questionDetails);
       } catch (error) {
         console.error("Error fetching contest details:", error);
       }
@@ -103,6 +114,10 @@ function AdminContestDetail() {
     return <Navigate to="/" replace />;
   }
 
+  const cellStyle = {
+    border: "3px solid rgba(224, 224, 224, 1)",
+  };
+
   return (
     <div>
       <AdminTopAppBar title="CodeSocial" />
@@ -132,6 +147,60 @@ function AdminContestDetail() {
         >
           Date: {new Date(contest.date).toLocaleDateString()}
         </Typography>
+        <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "80%" }}
+                >
+                  Problem
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "20%" }}
+                  align="center"
+                >
+                  Difficulty
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {questions.map((question) => (
+                <TableRow
+                  key={question.questionId}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell
+                    style={{ ...cellStyle, width: "80%" }}
+                    component="th"
+                    scope="row"
+                  >
+                    <Link
+                      to={`/adminquestion/${question.questionId}`}
+                      style={{
+                        textDecoration: "underline",
+                        color: "#1976d2",
+                        cursor: "pointer",
+                        "&:hover": {
+                          textDecoration: "underline",
+                          color: "#1976d2",
+                        },
+                      }}
+                    >
+                      {question.questionTitle}
+                    </Link>
+                  </TableCell>
+                  <TableCell
+                    style={{ ...cellStyle, width: "20%" }}
+                    align="center"
+                  >
+                    {question.difficulty}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <Button
           variant="contained"
           color="primary"
@@ -139,13 +208,13 @@ function AdminContestDetail() {
         >
           Add Question
         </Button>
-        <List>
+        {/* <List>
           {questions.map((question, index) => (
             <ListItem key={index}>
               <ListItemText primary={question.questionTitle} />
             </ListItem>
           ))}
-        </List>
+        </List> */}
         <Button
           variant="contained"
           color="secondary"

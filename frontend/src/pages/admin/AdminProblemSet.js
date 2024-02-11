@@ -176,7 +176,6 @@ function AdminProblemSet() {
                     style={{ ...cellStyle, width: "15%" }}
                     align="center"
                   ></TableCell>{" "}
-                  {/* Placeholder for future content */}
                 </TableRow>
               ))}
             </TableBody>
