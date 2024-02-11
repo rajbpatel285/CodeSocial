@@ -118,11 +118,6 @@ exports.addQuestionToContest = async (req, res) => {
       return res.status(404).send({ message: "Contest not found" });
     }
 
-    const question = await Question.findById(questionId);
-    if (!question) {
-      return res.status(404).send({ message: "Question not found" });
-    }
-
     contest.questionSet.push(questionId);
 
     await contest.save();

@@ -62,7 +62,7 @@ function AdminContestDetail() {
       const updateContestResponse = await axios.put(
         `http://localhost:8000/contest/addQuestion/${contestId}`,
         {
-          questionId: createdQuestion._id,
+          questionId: createdQuestion.questionId,
         }
       );
 

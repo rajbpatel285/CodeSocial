@@ -1,4 +1,5 @@
 const Question = require("../models/Question");
+const Contest = require("../models/Contest");
 const mongoose = require("mongoose");
 
 // Create and Save a new Question
@@ -107,26 +108,39 @@ exports.update = async (req, res) => {
   }
 };
 
-// Delete a question with the specified questionId in the request
-exports.delete = async (req, res) => {
+exports.removeQuestionFromContest = async (questionId) => {
   try {
-    const question = await Question.findOneAndDelete({
+    await Contest.updateMany(
+      { questionSet: questionId },
+      { $pull: { questionSet: questionId } }
+    );
+
+    return { message: "Question removed from contest(s) successfully" };
+  } catch (error) {
+    console.error("Error removing question from contest:", error);
+    throw error;
+  }
+};
+
+exports.delete = async (req, res) => {
+  const { questionId } = req.params;
+
+  try {
+    const removalResult = await exports.removeQuestionFromContest(questionId);
+
+    const questionDeleted = await Question.findOneAndDelete({
       questionId: req.params.questionId,
     });
-    if (!question) {
-      return res.status(404).send({
-        message: "Question not found with id " + req.params.questionId,
-      });
+    if (!questionDeleted) {
+      return res.status(404).send({ message: "Question not found" });
     }
-    res.send({ message: "Question deleted successfully!" });
-  } catch (error) {
-    if (error.kind === "ObjectId" || error.name === "NotFound") {
-      return res.status(404).send({
-        message: "Question not found with id " + req.params.questionId,
-      });
-    }
-    return res.status(500).send({
-      message: "Could not delete question with id " + req.params.questionId,
+
+    res.send({
+      message: "Question removed from contest(s) and deleted successfully",
+      removalResult,
     });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: "Could not delete question" });
   }
 };
