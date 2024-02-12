@@ -107,7 +107,6 @@ exports.delete = async (req, res) => {
 };
 
 exports.addQuestionToContest = async (req, res) => {
-  const { contestId } = req.params;
   const { questionId } = req.body;
 
   try {
@@ -128,5 +127,38 @@ exports.addQuestionToContest = async (req, res) => {
   } catch (error) {
     console.error("Error adding question to contest:", error);
     res.status(500).send({ message: "Server error" });
+  }
+};
+
+exports.togglePublishContest = async (req, res) => {
+  const { contestId } = req.params;
+
+  try {
+    const contest = await Contest.findOne({ contestId: contestId });
+
+    if (!contest) {
+      return res.status(404).send({
+        message: `Contest not found with id=${contestId}.`,
+      });
+    }
+
+    const isPublishedToggle = !contest.isPublished;
+
+    const updatedContest = await Contest.findOneAndUpdate(
+      { contestId: contestId },
+      { $set: { isPublished: isPublishedToggle } },
+      { new: true }
+    );
+
+    const action = isPublishedToggle ? "published" : "withdrawn";
+    res.send({
+      message: `Contest ${action} successfully.`,
+      contest: updatedContest,
+    });
+  } catch (error) {
+    console.error("Error toggling contest publish state:", error);
+    res.status(500).send({
+      message: `Error toggling publish state for contest with id=${contestId}.`,
+    });
   }
 };

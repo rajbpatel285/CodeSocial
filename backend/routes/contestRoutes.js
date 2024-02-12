@@ -15,4 +15,6 @@ router.delete("/:contestId", contestController.delete);
 
 router.put("/addQuestion/:contestId", contestController.addQuestionToContest);
 
+router.put("/:contestId/publish", contestController.togglePublishContest);
+
 module.exports = router;
