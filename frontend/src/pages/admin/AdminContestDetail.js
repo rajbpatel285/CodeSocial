@@ -46,7 +46,6 @@ function AdminContestDetail() {
           `http://localhost:8000/contest/${contestId}`
         );
         setContest(data);
-        // Fetch questions details for each questionId in contest.questionSet
         const questionDetails = await Promise.all(
           data.questionSet.map((questionId) =>
             axios
@@ -97,9 +96,7 @@ function AdminContestDetail() {
 
   const handlePublishContest = async () => {
     try {
-      await axios.put(`http://localhost:8000/contest${contestId}`, {
-        isPublished: true,
-      });
+      await axios.put(`http://localhost:8000/contest/${contestId}/publish`);
       navigate("/admincontests");
     } catch (error) {
       console.error("Failed to publish contest", error);
@@ -208,21 +205,19 @@ function AdminContestDetail() {
         >
           Add Question
         </Button>
-        {/* <List>
-          {questions.map((question, index) => (
-            <ListItem key={index}>
-              <ListItemText primary={question.questionTitle} />
-            </ListItem>
-          ))}
-        </List> */}
         <Button
           variant="contained"
-          color="secondary"
           onClick={handlePublishContest}
+          sx={{
+            backgroundColor: contest.isPublished ? "#d32f2f" : "#2e7d32", // Red for withdraw, Green for publish
+            "&:hover": {
+              backgroundColor: contest.isPublished ? "#9a0007" : "#1b5e20", // Darken the color on hover
+            },
+          }}
         >
-          Publish Contest
+          {contest.isPublished ? "Withdraw Contest" : "Publish Contest"}
         </Button>
-        {/* Add Question Dialog */}
+
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Add a New Question</DialogTitle>
           <DialogContent>

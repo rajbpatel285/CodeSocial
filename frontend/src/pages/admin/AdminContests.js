@@ -48,7 +48,6 @@ function AdminContests() {
   };
 
   const handleCreateContest = async () => {
-    // Logic to create a contest
     try {
       const response = await axios.post("http://localhost:8000/contest", {
         contestName,
@@ -57,8 +56,8 @@ function AdminContests() {
         date,
       });
       console.log(response.data);
-      fetchContests(); // Refresh the list
-      setOpen(false); // Close the dialog
+      fetchContests();
+      setOpen(false);
     } catch (error) {
       console.error("Failed to create contest", error);
     }
@@ -91,7 +90,6 @@ function AdminContests() {
         >
           Add Contest
         </Button>
-        {/* Contest Creation Dialog */}
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Add a New Contest</DialogTitle>
           <DialogContent>
@@ -148,13 +146,12 @@ function AdminContests() {
             <Button onClick={handleCreateContest}>Create</Button>
           </DialogActions>
         </Dialog>
-        {/* Contests Table */}
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "70%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "55%" }}
                 >
                   Contest Name
                 </TableCell>
@@ -168,6 +165,12 @@ function AdminContests() {
                 >
                   Date
                 </TableCell>
+
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                >
+                  Status
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -177,7 +180,7 @@ function AdminContests() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell
-                    style={{ ...cellStyle, width: "70%" }}
+                    style={{ ...cellStyle, width: "55%" }}
                     component="th"
                     scope="row"
                   >
@@ -201,6 +204,17 @@ function AdminContests() {
                   </TableCell>
                   <TableCell style={{ ...cellStyle, width: "15%" }}>
                     {new Date(contest.date).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell style={{ ...cellStyle, width: "15%" }}>
+                    {contest.isPublished ? (
+                      <Typography style={{ color: "green" }}>
+                        Published
+                      </Typography>
+                    ) : (
+                      <Typography style={{ color: "red" }}>
+                        Not yet Published
+                      </Typography>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
