@@ -7,6 +7,7 @@ import ProblemSet from "./pages/ProblemSet";
 import Standings from "./pages/Standings";
 import Help from "./pages/Help";
 import QuestionPage from "./pages/QuestionPage";
+import ContestDetail from "./pages/ContestDetail";
 import AdminProblemSet from "./pages/admin/AdminProblemSet";
 import AdminContests from "./pages/admin/AdminContests";
 import AdminQuestionPage from "./pages/admin/AdminQuestionPage";
@@ -26,6 +27,7 @@ function App() {
           <Route path="/standings" element={<Standings />} />
           <Route path="/help" element={<Help />} />
           <Route path="/question/:questionId" element={<QuestionPage />} />
+          <Route path="/contestdetail/:contestId" element={<ContestDetail />} />
           <Route path="/adminproblemset" element={<AdminProblemSet />} />
           <Route path="/admincontests" element={<AdminContests />} />
           <Route
