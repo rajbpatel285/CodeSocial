@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  starredQuestions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Question",
+    },
+  ],
 });
 
 userSchema.pre("save", async function (next) {

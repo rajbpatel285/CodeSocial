@@ -26,6 +26,7 @@ function ProblemSet() {
 
   useEffect(() => {
     fetchQuestions();
+    fetchStarredQuestions();
   }, []);
 
   const fetchQuestions = async () => {
@@ -39,6 +40,22 @@ function ProblemSet() {
     }
   };
 
+  const fetchStarredQuestions = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/user/starred/${userId}`
+      );
+      const starredQuestionIds = response.data;
+      const starsState = starredQuestionIds.reduce(
+        (acc, id) => ({ ...acc, [id]: true }),
+        {}
+      );
+      setFilledStars(starsState);
+    } catch (error) {
+      console.error("Error fetching starred questions:", error);
+    }
+  };
+
   const handleSort = () => {
     const isAsc = order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -48,11 +65,21 @@ function ProblemSet() {
     setQuestions([...sortedQuestions]);
   };
 
-  const handleStarClick = (questionId) => {
-    setFilledStars((prevFilledStars) => ({
-      ...prevFilledStars,
-      [questionId]: !prevFilledStars[questionId],
-    }));
+  const handleStarClick = async (questionId) => {
+    const isStarred = filledStars[questionId];
+    const endpoint = isStarred ? "/user/unstar" : "/user/star";
+    try {
+      await axios.post(`http://localhost:8000${endpoint}`, {
+        userId: userId,
+        questionId: questionId,
+      });
+      setFilledStars((prev) => ({
+        ...prev,
+        [questionId]: !isStarred,
+      }));
+    } catch (error) {
+      console.error("Error updating starred question:", error);
+    }
   };
 
   if (!userId || isAdmin) {

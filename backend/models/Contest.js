@@ -18,7 +18,6 @@ const contestSchema = new mongoose.Schema({
   level: {
     type: String,
     required: true,
-    // enum: ["easy", "medium", "difficult"],
   },
   date: {
     type: Date,

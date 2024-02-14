@@ -123,9 +123,9 @@ function AdminContests() {
                 label="Level"
                 onChange={(e) => setLevel(e.target.value)}
               >
-                <MenuItem value="easy">Easy</MenuItem>
-                <MenuItem value="medium">Medium</MenuItem>
-                <MenuItem value="difficult">Difficult</MenuItem>
+                <MenuItem value="Easy">Easy</MenuItem>
+                <MenuItem value="Medium">Medium</MenuItem>
+                <MenuItem value="Difficult">Difficult</MenuItem>
               </Select>
             </FormControl>
             <TextField
