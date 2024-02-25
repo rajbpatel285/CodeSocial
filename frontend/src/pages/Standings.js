@@ -11,10 +11,13 @@ import {
   TableSortLabel,
 } from "@mui/material";
 import axios from "axios";
+import { Navigate, Link } from "react-router-dom";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 
 function Standings() {
+  const userId = localStorage.getItem("userId");
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [users, setUsers] = useState([]);
   const [order, setOrder] = useState("desc");
 
@@ -39,6 +42,10 @@ function Standings() {
     });
     setUsers([...sortedUsers]);
   };
+
+  if (!userId || isAdmin) {
+    return <Navigate to="/" replace />;
+  }
 
   const cellStyle = {
     border: "3px solid rgba(224, 224, 224, 1)",
@@ -78,7 +85,20 @@ function Standings() {
               {users.map((user, index) => (
                 <TableRow key={index}>
                   <TableCell component="th" scope="row" style={cellStyle}>
-                    {user.username}
+                    <Link
+                      to={`/userprofile/${userId}`}
+                      style={{
+                        textDecoration: "underline",
+                        color: "#1976d2",
+                        cursor: "pointer",
+                        "&:hover": {
+                          textDecoration: "underline",
+                          color: "#1976d2",
+                        },
+                      }}
+                    >
+                      {user.username}
+                    </Link>
                   </TableCell>
                   <TableCell align="center" style={cellStyle}>
                     {user.rating}

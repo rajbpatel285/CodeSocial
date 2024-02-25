@@ -58,3 +58,41 @@ exports.getUsers = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+exports.getUserDetails = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId, "email username rating -_id");
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching user details", error });
+  }
+};
+
+exports.getUserDetails = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findOne(
+      {
+        $or: [{ email: userId }, { username: userId }],
+      },
+      "email username rating starredQuestions"
+    ).populate("starredQuestions");
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      email: user.email,
+      username: user.username,
+      rating: user.rating,
+      starredQuestions: user.starredQuestions,
+    });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching user details", error });
+  }
+};
