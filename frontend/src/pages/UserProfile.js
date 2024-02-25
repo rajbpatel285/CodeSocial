@@ -4,8 +4,10 @@ import { Typography, Paper, Avatar } from "@mui/material";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 function UserProfile() {
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
   const { userId } = useParams();
   const [userDetails, setUserDetails] = useState({});
 
@@ -22,6 +24,30 @@ function UserProfile() {
     };
     fetchUserDetails();
   }, [userId]);
+
+  const getRatingColor = (rating) => {
+    if (rating >= 2500) return "#ff8c00";
+    if (rating >= 2300) return "#ff4500";
+    if (rating >= 2000) return "#008b8b";
+    if (rating >= 1600) return "#006400";
+    if (rating >= 1200) return "#0000cd";
+    if (rating >= 800) return "#00008b";
+    return "#8b0000";
+  };
+
+  const getRatingTag = (rating) => {
+    if (rating >= 2500) return "Grand Master";
+    if (rating >= 2300) return "Master";
+    if (rating >= 2000) return "Expert";
+    if (rating >= 1600) return "Professional";
+    if (rating >= 1200) return "Specialist";
+    if (rating >= 800) return "Beginner";
+    return "Newbie";
+  };
+
+  if (!userId || isAdmin) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div>
@@ -41,11 +67,25 @@ function UserProfile() {
             src="/demo-avatar.jpg"
           />
           <div>
-            <Typography variant="h5">Email: {userDetails.email}</Typography>
             <Typography variant="h5">
-              Username: {userDetails.username}
+              <span style={{ color: "#6698e8" }}>Email :</span>{" "}
+              {userDetails.email}
             </Typography>
-            <Typography variant="h5">Rating: {userDetails.rating}</Typography>
+            <Typography variant="h5">
+              <span style={{ color: "#6698e8" }}>Username :</span>{" "}
+              {userDetails.username}
+            </Typography>
+            <Typography variant="h5">
+              <span style={{ color: "#6698e8" }}>Rating :</span>{" "}
+              <span style={{ color: getRatingColor(userDetails.rating) }}>
+                {userDetails.rating}
+              </span>
+              {" ("}
+              <span style={{ color: getRatingColor(userDetails.rating) }}>
+                {getRatingTag(userDetails.rating)}
+              </span>
+              {")"}
+            </Typography>
           </div>
         </Paper>
       </div>

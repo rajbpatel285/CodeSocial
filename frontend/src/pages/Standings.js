@@ -86,7 +86,7 @@ function Standings() {
                 <TableRow key={index}>
                   <TableCell component="th" scope="row" style={cellStyle}>
                     <Link
-                      to={`/userprofile/${userId}`}
+                      to={`/userprofile/${user.username}`}
                       style={{
                         textDecoration: "underline",
                         color: "#1976d2",
