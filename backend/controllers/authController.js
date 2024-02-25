@@ -33,8 +33,6 @@ exports.signup = async (req, res) => {
 
     const existingUsername = await User.findOne({ username });
 
-    console.log(existingUsername);
-
     if (existingUser) {
       res.json("exist");
     } else if (existingUsername) {

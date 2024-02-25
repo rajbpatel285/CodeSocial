@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
       ref: "Question",
     },
   ],
+  rating: {
+    type: Number,
+    default: 1000,
+  },
 });
 
 userSchema.pre("save", async function (next) {

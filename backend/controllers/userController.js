@@ -1,6 +1,5 @@
 const User = require("../models/User");
 
-// Add a starred question
 exports.addStarredQuestion = async (req, res) => {
   const { userId, questionId } = req.body;
   try {
@@ -15,7 +14,6 @@ exports.addStarredQuestion = async (req, res) => {
   }
 };
 
-// Remove a starred question
 exports.removeStarredQuestion = async (req, res) => {
   const { userId, questionId } = req.body;
   try {
@@ -30,14 +28,12 @@ exports.removeStarredQuestion = async (req, res) => {
   }
 };
 
-// Get starred questions for a user
 exports.getStarredQuestions = async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await User.findOne({
       $or: [{ email: userId }, { username: userId }],
     });
-    console.log(user);
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -46,5 +42,19 @@ exports.getStarredQuestions = async (req, res) => {
     res
       .status(500)
       .send({ message: "Error fetching starred questions", error });
+  }
+};
+
+exports.getUsers = async (req, res) => {
+  try {
+    // Fetch only non-admin users
+    const users = await User.find(
+      { isAdmin: false },
+      "username rating -_id"
+    ).sort({ rating: -1 });
+    res.json(users);
+  } catch (error) {
+    console.error("Failed to fetch users", error);
+    res.status(500).send("Server error");
   }
 };
