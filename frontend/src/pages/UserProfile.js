@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { Navigate, useParams, useNavigate } from "react-router-dom";
 import {
   Typography,
   Paper,
@@ -18,27 +18,33 @@ import axios from "axios";
 
 function UserProfile() {
   const isAdmin = localStorage.getItem("isAdmin") === "true";
-  const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
+  const { userEmailOrUsername } = useParams();
   const [userDetails, setUserDetails] = useState({});
-  const [editData, setEditData] = useState({ username: "", name: "" });
+  const [editData, setEditData] = useState({
+    username: "",
+    name: "",
+    email: "",
+  });
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
-    fetchUserDetails();
-  }, [userId]);
+    fetchUserDetails(userEmailOrUsername);
+  }, [userEmailOrUsername]);
 
-  const fetchUserDetails = async () => {
+  const fetchUserDetails = async (userIdentifier) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/profile/${userId}`
+        `http://localhost:8000/user/profile/${userIdentifier}`
       );
       setUserDetails(response.data);
       setEditData({
         username: response.data.username,
         name: response.data.name,
+        email: response.data.email,
       });
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -65,8 +71,10 @@ function UserProfile() {
         return;
       }
       localStorage.setItem("userId", editData.username);
-      fetchUserDetails();
       setOpenEditDialog(false);
+      editData.username !== userEmailOrUsername
+        ? navigate(`/userprofile/${editData.username}`)
+        : window.location.reload();
     } catch (error) {
       console.error("Error updating user profile:", error);
       setSnackbarMessage("Error updating profile. Please try again.");
@@ -93,6 +101,9 @@ function UserProfile() {
     if (rating >= 800) return "Beginner";
     return "Newbie";
   };
+
+  const canEditProfile =
+    userId === userDetails.username || userId === userDetails.email;
 
   if (!userId || isAdmin) {
     return <Navigate to="/" />;
@@ -150,12 +161,23 @@ function UserProfile() {
             </Typography>
           </div>
         </Paper>
-        <Button variant="outlined" onClick={handleOpenEditDialog}>
-          Edit Profile
-        </Button>
+        {canEditProfile && (
+          <Button variant="outlined" onClick={handleOpenEditDialog}>
+            Edit Profile
+          </Button>
+        )}
         <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
           <DialogTitle>Edit Profile</DialogTitle>
           <DialogContent>
+            <TextField
+              margin="dense"
+              label="Email"
+              type="email"
+              fullWidth
+              variant="outlined"
+              value={editData.email}
+              disabled={true}
+            />
             <TextField
               margin="dense"
               label="Username"

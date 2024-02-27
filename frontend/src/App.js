@@ -29,7 +29,10 @@ function App() {
           <Route path="/help" element={<Help />} />
           <Route path="/question/:questionId" element={<QuestionPage />} />
           <Route path="/contestdetail/:contestId" element={<ContestDetail />} />
-          <Route path="/userprofile/:userId" element={<UserProfile />} />
+          <Route
+            path="/userprofile/:userEmailOrUsername"
+            element={<UserProfile />}
+          />
           <Route path="/adminproblemset" element={<AdminProblemSet />} />
           <Route path="/admincontests" element={<AdminContests />} />
           <Route

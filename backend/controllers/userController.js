@@ -47,28 +47,11 @@ exports.getStarredQuestions = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
   try {
-    // Fetch only non-admin users
-    const users = await User.find(
-      { isAdmin: false },
-      "username rating -_id"
-    ).sort({ rating: -1 });
+    const users = await User.find({ isAdmin: false }).sort({ rating: -1 });
     res.json(users);
   } catch (error) {
     console.error("Failed to fetch users", error);
     res.status(500).send("Server error");
-  }
-};
-
-exports.getUserDetails = async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const user = await User.findById(userId, "email username rating -_id");
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-    res.status(200).send(user);
-  } catch (error) {
-    res.status(500).send({ message: "Error fetching user details", error });
   }
 };
 
@@ -91,13 +74,13 @@ exports.getUserDetails = async (req, res) => {
 
 exports.updateUserProfile = async (req, res) => {
   const { userId } = req.params;
-  const { username, name } = req.body;
+  const { username, name, email } = req.body;
 
   try {
     const existingUsername = await User.findOne({ username });
 
-    if (existingUsername) {
-      res.json("username already exists");
+    if (existingUsername && existingUsername.email !== email) {
+      return res.json("username already exists");
     }
 
     const user = await User.findOneAndUpdate(

@@ -83,7 +83,15 @@ function Standings() {
             </TableHead>
             <TableBody>
               {users.map((user, index) => (
-                <TableRow key={index}>
+                <TableRow
+                  key={index}
+                  style={{
+                    backgroundColor:
+                      userId === user.username || userId === user.email
+                        ? "skyblue"
+                        : "",
+                  }}
+                >
                   <TableCell component="th" scope="row" style={cellStyle}>
                     <Link
                       to={`/userprofile/${user.username}`}
