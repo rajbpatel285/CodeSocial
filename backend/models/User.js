@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+    default: null,
+  },
   password: {
     type: String,
     required: true,
@@ -26,6 +30,10 @@ const userSchema = new mongoose.Schema({
     },
   ],
   rating: {
+    type: Number,
+    default: 1000,
+  },
+  maxRating: {
     type: Number,
     default: 1000,
   },

@@ -75,24 +75,55 @@ exports.getUserDetails = async (req, res) => {
 exports.getUserDetails = async (req, res) => {
   const { userId } = req.params;
   try {
-    const user = await User.findOne(
-      {
-        $or: [{ email: userId }, { username: userId }],
-      },
-      "email username rating starredQuestions"
-    ).populate("starredQuestions");
+    const user = await User.findOne({
+      $or: [{ email: userId }, { username: userId }],
+    }).populate("starredQuestions");
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching user details", error });
+  }
+};
+
+exports.updateUserProfile = async (req, res) => {
+  const { userId } = req.params;
+  const { username, name } = req.body;
+
+  try {
+    const existingUsername = await User.findOne({ username });
+
+    if (existingUsername) {
+      res.json("username already exists");
+    }
+
+    const user = await User.findOneAndUpdate(
+      { $or: [{ email: userId }, { username: userId }] },
+      { $set: { username, name } },
+      { new: true, runValidators: true }
+    );
 
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
 
     res.status(200).json({
-      email: user.email,
-      username: user.username,
-      rating: user.rating,
-      starredQuestions: user.starredQuestions,
+      message: "Profile updated successfully",
+      user: {
+        email: user.email,
+        username: user.username,
+        name: user.name,
+        rating: user.rating,
+        starredQuestions: user.starredQuestions,
+      },
     });
   } catch (error) {
-    res.status(500).send({ message: "Error fetching user details", error });
+    if (error.code === 11000) {
+      return res.status(400).send({ message: "Username already exists" });
+    }
+    res.status(500).send({ message: "Error updating user profile", error });
   }
 };
