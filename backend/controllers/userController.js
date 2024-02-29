@@ -110,3 +110,57 @@ exports.updateUserProfile = async (req, res) => {
     res.status(500).send({ message: "Error updating user profile", error });
   }
 };
+
+exports.addFriend = async (req, res) => {
+  const { userId, friendId } = req.body;
+  try {
+    const user = await User.findOneAndUpdate(
+      { $or: [{ email: userId }, { username: userId }] },
+      { $addToSet: { friends: friendId } },
+      { new: true, runValidators: true }
+    );
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.status(200).send({ message: "Friend added successfully", user });
+  } catch (error) {
+    res.status(500).send({ message: "Error adding friend", error });
+  }
+};
+
+exports.removeFriend = async (req, res) => {
+  const { userId, friendId } = req.body;
+  try {
+    const user = await User.findOneAndUpdate(
+      { $or: [{ email: userId }, { username: userId }] },
+      { $pull: { friends: friendId } },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.status(200).send({ message: "Friend removed successfully" });
+  } catch (error) {
+    res.status(500).send({ message: "Error removing friend", error });
+  }
+};
+
+exports.checkFriendship = async (req, res) => {
+  const { userId, profileId } = req.query;
+
+  try {
+    const user = await User.findOne({
+      $or: [{ email: userId }, { username: userId }],
+    });
+    const isFriend = user.friends.some(
+      (friendId) => friendId.toString() === profileId
+    );
+
+    res.status(200).json({ isFriend });
+  } catch (error) {
+    console.error("Failed to check friendship status", error);
+    res
+      .status(500)
+      .send({ message: "Error checking friendship status", error });
+  }
+};

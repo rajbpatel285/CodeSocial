@@ -30,10 +30,66 @@ function UserProfile() {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [isFriend, setIsFriend] = useState(null);
 
   useEffect(() => {
-    fetchUserDetails(userEmailOrUsername);
-  }, [userEmailOrUsername]);
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/user/profile/${userEmailOrUsername}`
+        );
+        setUserDetails(response.data);
+        setEditData({
+          username: response.data.username,
+          name: response.data.name,
+          email: response.data.email,
+        });
+        // After setting user details, check friendship
+        checkFriendship(response.data._id);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, [userEmailOrUsername, userId]);
+
+  const checkFriendship = async (profileId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/user/checkFriendship`,
+        {
+          params: { userId, profileId },
+        }
+      );
+      setIsFriend(response.data.isFriend);
+    } catch (error) {
+      console.error("Error checking friendship status:", error);
+      setIsFriend(false); // Default to not friends if there's an error
+    }
+  };
+
+  const toggleFriendship = async () => {
+    const action = isFriend ? "removeFriend" : "addFriend";
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/user/${action}`,
+        {
+          userId,
+          friendId: userDetails._id,
+        }
+      );
+      if (response.status === 200) {
+        setIsFriend(!isFriend); // Toggle the friendship status
+        setSnackbarMessage(response.data.message);
+      }
+    } catch (error) {
+      console.error(`Error ${action} status:`, error);
+      setSnackbarMessage(`Error updating friend status. Please try again.`);
+    } finally {
+      setOpenSnackbar(true);
+    }
+  };
 
   const fetchUserDetails = async (userIdentifier) => {
     try {
@@ -164,6 +220,11 @@ function UserProfile() {
         {canEditProfile && (
           <Button variant="outlined" onClick={handleOpenEditDialog}>
             Edit Profile
+          </Button>
+        )}
+        {!canEditProfile && (
+          <Button variant="outlined" onClick={toggleFriendship}>
+            {isFriend ? "Remove Friend" : "Add Friend"}
           </Button>
         )}
         <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>

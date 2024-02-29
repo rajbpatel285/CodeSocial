@@ -7,5 +7,8 @@ router.get("/starred/:userId", userController.getStarredQuestions);
 router.get("/users", userController.getUsers);
 router.get("/profile/:userId", userController.getUserDetails);
 router.put("/profile/update/:userId", userController.updateUserProfile);
+router.post("/addFriend", userController.addFriend);
+router.post("/removeFriend", userController.removeFriend);
+router.get("/checkFriendship", userController.checkFriendship);
 
 module.exports = router;
