@@ -11,7 +11,9 @@ import {
   TextField,
   DialogActions,
   Snackbar,
+  Box,
 } from "@mui/material";
+import HandshakeIcon from "@mui/icons-material/Handshake";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -183,6 +185,14 @@ function UserProfile() {
             style={{ marginRight: "20px", width: "250px", height: "250px" }}
           />
           <div>
+            {isFriend && (
+              <Box display="flex" alignItems="center" marginBottom={2}>
+                <HandshakeIcon style={{ color: "goldenrod" }} />
+                <Typography variant="h6" style={{ marginLeft: 8 }}>
+                  Friends
+                </Typography>
+              </Box>
+            )}
             <Typography variant="h5">
               <span style={{ color: getRatingColor(userDetails.rating) }}>
                 {getRatingTag(userDetails.rating)}
@@ -223,7 +233,14 @@ function UserProfile() {
           </Button>
         )}
         {!canEditProfile && (
-          <Button variant="outlined" onClick={toggleFriendship}>
+          <Button
+            variant="outlined"
+            onClick={toggleFriendship}
+            style={{
+              color: isFriend ? "red" : "green",
+              borderColor: isFriend ? "red" : "green",
+            }}
+          >
             {isFriend ? "Remove Friend" : "Add Friend"}
           </Button>
         )}

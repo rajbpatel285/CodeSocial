@@ -164,3 +164,22 @@ exports.checkFriendship = async (req, res) => {
       .send({ message: "Error checking friendship status", error });
   }
 };
+
+exports.fetchFriends = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findOne({
+      $or: [{ email: userId }, { username: userId }],
+    }).populate("friends", "username email rating name");
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    res.status(200).json(user.friends);
+  } catch (error) {
+    console.error("Failed to fetch friends:", error);
+    res.status(500).send({ message: "Error fetching friends", error });
+  }
+};

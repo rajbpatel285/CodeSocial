@@ -10,6 +10,7 @@ import {
   Paper,
   TableSortLabel,
 } from "@mui/material";
+import HandshakeIcon from "@mui/icons-material/Handshake";
 import axios from "axios";
 import { Navigate, Link } from "react-router-dom";
 import TopAppBar from "../components/TopAppBar";
@@ -20,19 +21,32 @@ function Standings() {
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [users, setUsers] = useState([]);
   const [order, setOrder] = useState("desc");
+  const [friends, setFriends] = useState([]);
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/user/users");
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/user/users");
-      setUsers(response.data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
+    const fetchFriends = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/user/friends/${userId}`
+        );
+        setFriends(response.data.map((friend) => friend.username));
+      } catch (error) {
+        console.error("Error fetching friends:", error);
+      }
+    };
+
+    fetchUsers();
+    fetchFriends();
+  }, []);
 
   const handleSort = () => {
     const isAsc = order === "asc";
@@ -106,6 +120,16 @@ function Standings() {
                       }}
                     >
                       {user.username}
+                      {friends.includes(user.username) &&
+                        userId !== user.username && (
+                          <HandshakeIcon
+                            style={{
+                              color: "goldenrod",
+                              marginLeft: 8,
+                              fontSize: "1.2rem",
+                            }}
+                          />
+                        )}
                     </Link>
                   </TableCell>
                   <TableCell align="center" style={cellStyle}>
