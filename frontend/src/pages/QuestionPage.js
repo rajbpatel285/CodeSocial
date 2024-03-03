@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { Typography, TextField, Button } from "@mui/material";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -42,23 +42,81 @@ function QuestionPage() {
       <div style={{ margin: "0 5%" }}>
         <Typography
           variant="h4"
-          style={{ fontWeight: "bold", marginBottom: "10px" }}
+          style={{
+            fontWeight: "bold",
+            marginBottom: "10px",
+            textAlign: "center",
+            textDecoration: "underline",
+          }}
         >
           {question.questionTitle}
         </Typography>
-        <Typography variant="body2" style={{ marginBottom: "20px" }}>
-          Difficulty: {question.difficulty}
+        <Typography
+          variant="body2"
+          style={{ marginBottom: "10px", textAlign: "center" }}
+        >
+          <b>Difficulty:</b> {question.difficulty}
         </Typography>
-        <div style={{ marginBottom: "20px" }}>
+        <div style={{ marginBottom: "10px" }}>
           <Typography
-            variant="body1"
-            style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
+            variant="body2"
+            style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
           >
             {question.question}
           </Typography>
-          <Typography variant="body1" style={{ whiteSpace: "pre-line" }}>
+          <Typography
+            variant="body1"
+            style={{
+              whiteSpace: "pre-line",
+              fontWeight: "bold",
+            }}
+          >
+            Input
+          </Typography>
+          <Typography
+            variant="body2"
+            style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
+          >
             {question.answer}
           </Typography>
+          <Typography
+            variant="body1"
+            style={{
+              whiteSpace: "pre-line",
+              fontWeight: "bold",
+            }}
+          >
+            Output
+          </Typography>
+          <Typography
+            variant="body2"
+            style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
+          >
+            {question.answer}
+          </Typography>
+          <TextField
+            label="Add Your Code here..."
+            multiline
+            rows={8}
+            variant="outlined"
+            fullWidth
+            style={{ marginBottom: "5px" }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            // onClick={handleTestCode}
+          >
+            Test
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            // onClick={handleTestCode}
+            style={{ marginLeft: "5px" }}
+          >
+            Submit
+          </Button>
         </div>
       </div>
     </div>
