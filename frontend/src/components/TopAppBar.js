@@ -9,9 +9,12 @@ import {
   Box,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import { useNavigate } from "react-router-dom";
 
 function TopAppBar({ title }) {
+  const userId = localStorage.getItem("userId");
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,6 +28,11 @@ function TopAppBar({ title }) {
     localStorage.removeItem("userId");
     setAnchorEl(null);
     window.location.href = "/";
+  };
+
+  const redirectToProfile = () => {
+    setAnchorEl(null);
+    navigate(`/userprofile/${userId}`);
   };
 
   return (
@@ -64,7 +72,7 @@ function TopAppBar({ title }) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={redirectToProfile}>Profile</MenuItem>
           <MenuItem onClick={handleClose}>Settings</MenuItem>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>

@@ -241,7 +241,7 @@ function UserProfile() {
               borderColor: isFriend ? "red" : "green",
             }}
           >
-            {isFriend ? "Remove Friend" : "Add Friend"}
+            {isFriend ? "Delete Friend" : "Add Friend"}
           </Button>
         )}
         <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
