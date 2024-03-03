@@ -81,7 +81,10 @@ function Standings() {
             <TableHead>
               <TableRow>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "70%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "5%" }}
+                ></TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "65%" }}
                 >
                   Username
                 </TableCell>
@@ -106,6 +109,18 @@ function Standings() {
                         : "",
                   }}
                 >
+                  <TableCell align="center" style={cellStyle}>
+                    {friends.includes(user.username) &&
+                      userId !== user.username && (
+                        <HandshakeIcon
+                          style={{
+                            color: "#3d7ff2",
+                            marginLeft: 8,
+                            fontSize: "1.2rem",
+                          }}
+                        />
+                      )}
+                  </TableCell>
                   <TableCell component="th" scope="row" style={cellStyle}>
                     <Link
                       to={`/userprofile/${user.username}`}
@@ -120,16 +135,6 @@ function Standings() {
                       }}
                     >
                       {user.username}
-                      {friends.includes(user.username) &&
-                        userId !== user.username && (
-                          <HandshakeIcon
-                            style={{
-                              color: "goldenrod",
-                              marginLeft: 8,
-                              fontSize: "1.2rem",
-                            }}
-                          />
-                        )}
                     </Link>
                   </TableCell>
                   <TableCell align="center" style={cellStyle}>

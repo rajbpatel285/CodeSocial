@@ -14,6 +14,14 @@ import {
   Box,
 } from "@mui/material";
 import HandshakeIcon from "@mui/icons-material/Handshake";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import AdsClickIcon from "@mui/icons-material/AdsClick";
+import BalanceIcon from "@mui/icons-material/Balance";
+import AssuredWorkloadIcon from "@mui/icons-material/AssuredWorkload";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -33,6 +41,10 @@ function UserProfile() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [isFriend, setIsFriend] = useState(null);
+  const [openBadgesDialog, setOpenBadgesDialog] = useState(false);
+  const [badgesDialogTitle, setBadgesDialogTitle] = useState("");
+  const [badgesDialogDescription, setBadgesDialogDescription] = useState("");
+  const [badgesDialogIcon, setBadgesDialogIcon] = useState(null);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -67,7 +79,7 @@ function UserProfile() {
       setIsFriend(response.data.isFriend);
     } catch (error) {
       console.error("Error checking friendship status:", error);
-      setIsFriend(false); // Default to not friends if there's an error
+      setIsFriend(false);
     }
   };
 
@@ -82,7 +94,7 @@ function UserProfile() {
         }
       );
       if (response.status === 200) {
-        setIsFriend(!isFriend); // Toggle the friendship status
+        setIsFriend(!isFriend);
         setSnackbarMessage(response.data.message);
       }
     } catch (error) {
@@ -93,28 +105,19 @@ function UserProfile() {
     }
   };
 
-  const fetchUserDetails = async (userIdentifier) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8000/user/profile/${userIdentifier}`
-      );
-      setUserDetails(response.data);
-      setEditData({
-        username: response.data.username,
-        name: response.data.name,
-        email: response.data.email,
-      });
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
-  };
-
   const handleOpenEditDialog = () => {
     setOpenEditDialog(true);
   };
 
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
+  };
+
+  const handleBadgesOpenDialog = (title, description, IconComponent) => {
+    setBadgesDialogTitle(title);
+    setBadgesDialogDescription(description);
+    setBadgesDialogIcon(IconComponent);
+    setOpenBadgesDialog(true);
   };
 
   const handleEditProfile = async () => {
@@ -187,12 +190,99 @@ function UserProfile() {
           <div>
             {isFriend && (
               <Box display="flex" alignItems="center" marginBottom={2}>
-                <HandshakeIcon style={{ color: "goldenrod" }} />
+                <HandshakeIcon style={{ color: "#3d7ff2" }} />
                 <Typography variant="h6" style={{ marginLeft: 8 }}>
                   Friends
                 </Typography>
               </Box>
             )}
+            <div style={{ marginTop: "40px" }}>
+              <Tooltip title="Winner">
+                <IconButton
+                  onClick={() =>
+                    handleBadgesOpenDialog(
+                      "Winner",
+                      "This badge signifies the winners of alteast 5 contests.",
+                      <MilitaryTechIcon
+                        style={{ color: "goldenrod", marginRight: "5px" }}
+                      />
+                    )
+                  }
+                >
+                  <MilitaryTechIcon
+                    style={{ color: "goldenrod", marginRight: "5px" }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Topper">
+                <IconButton
+                  onClick={() =>
+                    handleBadgesOpenDialog(
+                      "Topper",
+                      "This badge signifies the contestants in top 5 for 5 contests.",
+                      <EmojiEventsIcon
+                        style={{ color: "goldenrod", marginRight: "5px" }}
+                      />
+                    )
+                  }
+                >
+                  <EmojiEventsIcon
+                    style={{ color: "goldenrod", marginRight: "5px" }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Challenger">
+                <IconButton
+                  onClick={() =>
+                    handleBadgesOpenDialog(
+                      "Challenger",
+                      "This badge signifies the players that contested in atleast 25 contests.",
+                      <WorkspacePremiumIcon
+                        style={{ color: "goldenrod", marginRight: "5px" }}
+                      />
+                    )
+                  }
+                >
+                  <WorkspacePremiumIcon
+                    style={{ color: "goldenrod", marginRight: "5px" }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Balancer">
+                <IconButton
+                  onClick={() =>
+                    handleBadgesOpenDialog(
+                      "Balancer",
+                      "This badge signifies the users that solved atleast 25 question of Difficulty 1, 2, 3, 4, 5.",
+                      <BalanceIcon
+                        style={{ color: "goldenrod", marginRight: "5px" }}
+                      />
+                    )
+                  }
+                >
+                  <BalanceIcon
+                    style={{ color: "goldenrod", marginRight: "5px" }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Consistent">
+                <IconButton
+                  onClick={() =>
+                    handleBadgesOpenDialog(
+                      "Consistent",
+                      "This badge signifies the users who regularly solved questions for 50 days.",
+                      <AssuredWorkloadIcon
+                        style={{ color: "goldenrod", marginRight: "5px" }}
+                      />
+                    )
+                  }
+                >
+                  <AssuredWorkloadIcon
+                    style={{ color: "goldenrod", marginRight: "5px" }}
+                  />
+                </IconButton>
+              </Tooltip>
+            </div>
             <Typography variant="h5">
               <span style={{ color: getRatingColor(userDetails.rating) }}>
                 {getRatingTag(userDetails.rating)}
@@ -244,6 +334,20 @@ function UserProfile() {
             {isFriend ? "Delete Friend" : "Add Friend"}
           </Button>
         )}
+        <Dialog
+          open={openBadgesDialog}
+          onClose={() => setOpenBadgesDialog(false)}
+        >
+          <DialogTitle>
+            {badgesDialogIcon} {badgesDialogTitle}
+          </DialogTitle>
+          <DialogContent>
+            <Typography>{badgesDialogDescription}</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenBadgesDialog(false)}>Close</Button>
+          </DialogActions>
+        </Dialog>
         <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
           <DialogTitle>Edit Profile</DialogTitle>
           <DialogContent>

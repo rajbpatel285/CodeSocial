@@ -217,6 +217,7 @@ function AdminContestDetail() {
           variant="contained"
           color="primary"
           onClick={() => setOpen(true)}
+          style={{ marginRight: "10px" }}
         >
           Add Question
         </Button>
@@ -224,15 +225,14 @@ function AdminContestDetail() {
           variant="contained"
           onClick={handlePublishContest}
           sx={{
-            backgroundColor: contest.isPublished ? "#d32f2f" : "#2e7d32", // Red for withdraw, Green for publish
+            backgroundColor: contest.isPublished ? "#d32f2f" : "#2e7d32",
             "&:hover": {
-              backgroundColor: contest.isPublished ? "#9a0007" : "#1b5e20", // Darken the color on hover
+              backgroundColor: contest.isPublished ? "#9a0007" : "#1b5e20",
             },
           }}
         >
           {contest.isPublished ? "Withdraw Contest" : "Publish Contest"}
         </Button>
-
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Add a New Question</DialogTitle>
           <DialogContent>
@@ -305,11 +305,6 @@ function AdminContestDetail() {
                 <MenuItem value={3}>3</MenuItem>
                 <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
               </Select>
             </FormControl>
           </DialogContent>
