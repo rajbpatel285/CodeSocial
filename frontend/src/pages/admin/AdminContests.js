@@ -33,6 +33,7 @@ function AdminContests() {
   const [description, setDescription] = useState("");
   const [level, setLevel] = useState("");
   const [date, setDate] = useState("");
+  const [sortDirection, setSortDirection] = useState("asc");
 
   useEffect(() => {
     fetchContests();
@@ -61,6 +62,20 @@ function AdminContests() {
     } catch (error) {
       console.error("Failed to create contest", error);
     }
+  };
+
+  const toggleSortDate = () => {
+    const sortedContests = [...contests].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      if (sortDirection === "asc") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
+    setContests(sortedContests);
+    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
   };
 
   if (!userId || !isAdmin) {
@@ -162,8 +177,10 @@ function AdminContests() {
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  onClick={toggleSortDate}
+                  sx={{ cursor: "pointer" }}
                 >
-                  Date
+                  Date {sortDirection === "asc" ? "↑" : "↓"}
                 </TableCell>
 
                 <TableCell

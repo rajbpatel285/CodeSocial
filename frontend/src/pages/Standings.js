@@ -57,6 +57,16 @@ function Standings() {
     setUsers([...sortedUsers]);
   };
 
+  const getRatingColor = (rating) => {
+    if (rating >= 2800) return "#ff8c00";
+    if (rating >= 2400) return "#008b8b";
+    if (rating >= 2000) return "#ff4500";
+    if (rating >= 1600) return "#006400";
+    if (rating >= 1300) return "#00008b";
+    if (rating >= 1000) return "#8b0000";
+    return "#0000cd";
+  };
+
   if (!userId || isAdmin) {
     return <Navigate to="/" replace />;
   }
@@ -138,7 +148,9 @@ function Standings() {
                     </Link>
                   </TableCell>
                   <TableCell align="center" style={cellStyle}>
-                    {user.rating}
+                    <span style={{ color: getRatingColor(user.rating) }}>
+                      {user.rating}
+                    </span>
                   </TableCell>
                 </TableRow>
               ))}

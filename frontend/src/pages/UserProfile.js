@@ -145,12 +145,12 @@ function UserProfile() {
 
   const getRatingColor = (rating) => {
     if (rating >= 2500) return "#ff8c00";
-    if (rating >= 2300) return "#ff4500";
-    if (rating >= 2000) return "#008b8b";
+    if (rating >= 2300) return "#008b8b";
+    if (rating >= 2000) return "#ff4500";
     if (rating >= 1600) return "#006400";
-    if (rating >= 1200) return "#0000cd";
-    if (rating >= 800) return "#00008b";
-    return "#8b0000";
+    if (rating >= 1200) return "#00008b";
+    if (rating >= 800) return "#8b0000";
+    return "#0000cd";
   };
 
   const getRatingTag = (rating) => {
@@ -283,7 +283,7 @@ function UserProfile() {
                 </IconButton>
               </Tooltip>
             </div>
-            <Typography variant="h5">
+            <Typography variant="h5" style={{ marginTop: "10px" }}>
               <span style={{ color: getRatingColor(userDetails.rating) }}>
                 {getRatingTag(userDetails.rating)}
               </span>

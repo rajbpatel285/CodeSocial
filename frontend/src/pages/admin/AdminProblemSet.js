@@ -125,7 +125,7 @@ function AdminProblemSet() {
             <TableHead>
               <TableRow>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "70%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "85%" }}
                 >
                   Problem
                 </TableCell>
@@ -137,10 +137,6 @@ function AdminProblemSet() {
                     Difficulty
                   </TableSortLabel>
                 </TableCell>
-                <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
-                  align="center"
-                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -150,7 +146,7 @@ function AdminProblemSet() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell
-                    style={{ ...cellStyle, width: "70%" }}
+                    style={{ ...cellStyle, width: "85%" }}
                     component="th"
                     scope="row"
                   >
@@ -175,10 +171,6 @@ function AdminProblemSet() {
                   >
                     {question.difficulty}
                   </TableCell>
-                  <TableCell
-                    style={{ ...cellStyle, width: "15%" }}
-                    align="center"
-                  ></TableCell>{" "}
                 </TableRow>
               ))}
             </TableBody>
