@@ -38,6 +38,7 @@ function AdminContestDetail() {
     input: "",
     output: "",
     difficulty: "",
+    isPublshed: false,
   });
 
   useEffect(() => {

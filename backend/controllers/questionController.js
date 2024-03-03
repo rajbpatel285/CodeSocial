@@ -16,6 +16,7 @@ exports.create = async (req, res) => {
     input: req.body.input,
     output: req.body.output,
     difficulty: req.body.difficulty,
+    isPublished: req.body.isPublished,
   });
 
   try {

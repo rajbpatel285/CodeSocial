@@ -150,6 +150,16 @@ exports.togglePublishContest = async (req, res) => {
       { new: true }
     );
 
+    await Promise.all(
+      contest.questionSet.map(async (questionIdValue) => {
+        await Question.findOneAndUpdate(
+          { questionId: questionIdValue },
+          { $set: { isPublished: isPublishedToggle } },
+          { new: true }
+        );
+      })
+    );
+
     const action = isPublishedToggle ? "published" : "withdrawn";
     res.send({
       message: `Contest ${action} successfully.`,
