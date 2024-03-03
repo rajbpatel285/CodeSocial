@@ -35,7 +35,8 @@ function AdminContestDetail() {
   const [newQuestion, setNewQuestion] = useState({
     questionTitle: "",
     question: "",
-    answer: "",
+    input: "",
+    output: "",
     difficulty: "",
   });
 
@@ -86,7 +87,8 @@ function AdminContestDetail() {
       setNewQuestion({
         questionTitle: "",
         question: "",
-        answer: "",
+        input: "",
+        output: "",
         difficulty: "",
       });
     } catch (error) {
@@ -122,27 +124,40 @@ function AdminContestDetail() {
       <div style={{ margin: "0 5%" }}>
         <Typography
           variant="h4"
-          style={{ fontWeight: "bold", marginBottom: "10px" }}
+          style={{
+            fontWeight: "bold",
+            marginBottom: "10px",
+            textAlign: "center",
+            textDecoration: "underline",
+          }}
         >
           {contest.contestName}
         </Typography>
         <Typography
-          variant="body1"
+          variant="body2"
+          style={{
+            whiteSpace: "pre-line",
+            marginBottom: "10px",
+            textAlign: "center",
+          }}
+        >
+          <b>Level:</b> {contest.level}
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{
+            whiteSpace: "pre-line",
+            marginBottom: "10px",
+            textAlign: "center",
+          }}
+        >
+          <b>Date:</b> {new Date(contest.date).toLocaleDateString()}
+        </Typography>
+        <Typography
+          variant="body"
           style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
         >
           {contest.description}
-        </Typography>
-        <Typography
-          variant="body2"
-          style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
-        >
-          Level: {contest.level}
-        </Typography>
-        <Typography
-          variant="body2"
-          style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
-        >
-          Date: {new Date(contest.date).toLocaleDateString()}
         </Typography>
         <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
           <Table aria-label="simple table">
@@ -251,15 +266,28 @@ function AdminContestDetail() {
             />
             <TextField
               margin="dense"
-              id="answer"
-              label="Answer"
+              id="input"
+              label="Input"
               type="text"
               fullWidth
               multiline
               minRows={2}
-              value={newQuestion.answer}
+              value={newQuestion.input}
               onChange={(e) =>
-                setNewQuestion({ ...newQuestion, answer: e.target.value })
+                setNewQuestion({ ...newQuestion, input: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              id="output"
+              label="Output"
+              type="text"
+              fullWidth
+              multiline
+              minRows={2}
+              value={newQuestion.output}
+              onChange={(e) =>
+                setNewQuestion({ ...newQuestion, output: e.target.value })
               }
             />
             <FormControl fullWidth margin="dense">

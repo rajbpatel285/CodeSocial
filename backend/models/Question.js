@@ -14,7 +14,11 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  answer: {
+  input: {
+    type: String,
+    required: true,
+  },
+  output: {
     type: String,
     required: true,
   },

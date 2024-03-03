@@ -2,24 +2,22 @@ const Question = require("../models/Question");
 const Contest = require("../models/Contest");
 const mongoose = require("mongoose");
 
-// Create and Save a new Question
 exports.create = async (req, res) => {
-  if (!req.body.question || !req.body.answer) {
+  if (!req.body) {
     return res.status(400).send({
       message: "Question content can not be empty",
     });
   }
 
-  // Create a Question
   const question = new Question({
     questionId: new mongoose.Types.ObjectId(),
     questionTitle: req.body.questionTitle,
     question: req.body.question,
-    answer: req.body.answer,
+    input: req.body.input,
+    output: req.body.output,
     difficulty: req.body.difficulty,
   });
 
-  // Save Question in the database
   try {
     const data = await question.save();
     res.send(data);
@@ -31,7 +29,6 @@ exports.create = async (req, res) => {
   }
 };
 
-// Retrieve and return all questions from the database.
 exports.findAll = async (req, res) => {
   try {
     const questions = await Question.find();
@@ -44,7 +41,6 @@ exports.findAll = async (req, res) => {
   }
 };
 
-// Find a single question with a questionId
 exports.findOne = async (req, res) => {
   try {
     const question = await Question.findOne({
@@ -68,23 +64,21 @@ exports.findOne = async (req, res) => {
   }
 };
 
-// Update a question identified by the questionId in the request
 exports.update = async (req, res) => {
-  // Validate Request
-  if (!req.body.question || !req.body.answer) {
+  if (!req.body) {
     return res.status(400).send({
       message: "Question content can not be empty",
     });
   }
 
-  // Find question and update it with the request body
   try {
     const question = await Question.findOneAndUpdate(
       { questionId: req.params.questionId },
       {
         questionTitle: req.body.questionTitle,
         question: req.body.question,
-        answer: req.body.answer,
+        input: req.body.input,
+        output: req.body.output,
         difficulty: req.body.difficulty,
       },
       { new: true }

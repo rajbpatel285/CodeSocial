@@ -102,7 +102,7 @@ function ContestDetail() {
           <b>Date:</b> {new Date(contest.date).toLocaleDateString()}
         </Typography>
         <Typography
-          variant="body1"
+          variant="body2"
           style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
         >
           {contest.description}

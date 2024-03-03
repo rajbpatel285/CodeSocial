@@ -24,7 +24,8 @@ function AdminQuestionPage() {
   const [open, setOpen] = useState(false);
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionText, setQuestionText] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
   const [difficulty, setDifficulty] = useState("");
 
   const userId = localStorage.getItem("userId");
@@ -49,7 +50,8 @@ function AdminQuestionPage() {
     setOpen(true);
     setQuestionTitle(question.questionTitle);
     setQuestionText(question.question);
-    setAnswer(question.answer);
+    setInput(question.input);
+    setOutput(question.output);
     setDifficulty(question.difficulty);
   };
 
@@ -60,7 +62,8 @@ function AdminQuestionPage() {
         {
           questionTitle,
           question: questionText,
-          answer,
+          input,
+          output,
           difficulty,
         }
       );
@@ -95,6 +98,59 @@ function AdminQuestionPage() {
       <AdminTopAppBar title="CodeSocial" />
       <AdminSecondaryNavbar />
       <div style={{ margin: "0 5%" }}>
+        <Typography
+          variant="h4"
+          style={{
+            fontWeight: "bold",
+            marginBottom: "10px",
+            textAlign: "center",
+            textDecoration: "underline",
+          }}
+        >
+          {question.questionTitle}
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{ marginBottom: "10px", textAlign: "center" }}
+        >
+          <b>Difficulty:</b> {question.difficulty}
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
+        >
+          {question.question}
+        </Typography>
+        <Typography
+          variant="body1"
+          style={{
+            whiteSpace: "pre-line",
+            fontWeight: "bold",
+          }}
+        >
+          Input
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
+        >
+          {question.input}
+        </Typography>
+        <Typography
+          variant="body1"
+          style={{
+            whiteSpace: "pre-line",
+            fontWeight: "bold",
+          }}
+        >
+          Output
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
+        >
+          {question.output}
+        </Typography>
         <Button
           variant="contained"
           color="primary"
@@ -116,32 +172,6 @@ function AdminQuestionPage() {
         >
           Delete Question
         </Button>
-        <Typography
-          variant="h4"
-          style={{
-            marginBottom: "20px",
-            marginTop: "20px",
-            fontWeight: "bold",
-          }}
-        >
-          {question.questionTitle}
-        </Typography>
-        <Typography variant="body2" style={{ marginBottom: "20px" }}>
-          Difficulty: {question.difficulty}
-        </Typography>
-        <Typography
-          variant="body1"
-          style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
-        >
-          {question.question}
-        </Typography>
-        <Typography
-          variant="body1"
-          style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
-        >
-          Answer: {question.answer}
-        </Typography>
-        {/* Update Question Dialog */}
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Update Question</DialogTitle>
           <DialogContent>
@@ -168,14 +198,25 @@ function AdminQuestionPage() {
             />
             <TextField
               margin="dense"
-              id="answer"
-              label="Answer"
+              id="input"
+              label="Input"
               type="text"
               fullWidth
               multiline
               rows={2}
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              id="output"
+              label="Output"
+              type="text"
+              fullWidth
+              multiline
+              rows={2}
+              value={output}
+              onChange={(e) => setOutput(e.target.value)}
             />
             <FormControl fullWidth margin="dense">
               <InputLabel id="difficulty-label">Difficulty</InputLabel>

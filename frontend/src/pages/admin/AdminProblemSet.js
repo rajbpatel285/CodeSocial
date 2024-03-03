@@ -32,7 +32,8 @@ function AdminProblemSet() {
   const [questions, setQuestions] = useState([]);
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionText, setQuestionText] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [order, setOrder] = useState("asc");
 
@@ -79,7 +80,8 @@ function AdminProblemSet() {
         {
           questionTitle,
           question: questionText,
-          answer,
+          input,
+          output,
           difficulty: parseInt(difficulty, 10),
         }
       );
@@ -87,7 +89,8 @@ function AdminProblemSet() {
       setOpen(false);
       setQuestionTitle("");
       setQuestionText("");
-      setAnswer("");
+      setInput("");
+      setOutput("");
       setDifficulty("");
     } catch (error) {
       console.error("Error adding question:", error);
@@ -181,12 +184,8 @@ function AdminProblemSet() {
             </TableBody>
           </Table>
         </TableContainer>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Add a New Question</DialogTitle>
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>Update Question</DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
@@ -201,32 +200,42 @@ function AdminProblemSet() {
             <TextField
               margin="dense"
               id="question"
-              label="Question"
+              label="Question Text"
               type="text"
               fullWidth
               multiline
-              minRows={3}
+              rows={4}
               value={questionText}
               onChange={(e) => setQuestionText(e.target.value)}
             />
             <TextField
               margin="dense"
-              id="answer"
-              label="Answer"
+              id="input"
+              label="Input"
               type="text"
               fullWidth
               multiline
-              minRows={2}
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
+              rows={2}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
             />
-            <FormControl fullWidth style={{ marginTop: "20px" }}>
+            <TextField
+              margin="dense"
+              id="output"
+              label="Output"
+              type="text"
+              fullWidth
+              multiline
+              rows={2}
+              value={output}
+              onChange={(e) => setOutput(e.target.value)}
+            />
+            <FormControl fullWidth margin="dense">
               <InputLabel id="difficulty-label">Difficulty</InputLabel>
               <Select
                 labelId="difficulty-label"
                 id="difficulty"
                 value={difficulty}
-                label="Difficulty"
                 onChange={(e) => setDifficulty(e.target.value)}
               >
                 <MenuItem value={1}>1</MenuItem>
