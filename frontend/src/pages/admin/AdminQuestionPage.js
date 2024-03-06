@@ -79,7 +79,7 @@ function AdminQuestionPage() {
       await axios.delete(
         `http://localhost:8000/question/questions/${questionId}`
       );
-      navigate("/adminproblemset"); // Adjust the navigate path as needed
+      navigate(-1);
     } catch (error) {
       console.error("Error deleting question:", error);
     }

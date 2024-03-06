@@ -292,10 +292,12 @@ function UserProfile() {
               <span style={{ color: "#6698e8" }}>Username :</span>{" "}
               {userDetails.username}
             </Typography>
-            <Typography variant="h5">
-              <span style={{ color: "#6698e8" }}>Email :</span>{" "}
-              {userDetails.email}
-            </Typography>
+            {canEditProfile && (
+              <Typography variant="h5">
+                <span style={{ color: "#6698e8" }}>Email :</span>{" "}
+                {userDetails.email}
+              </Typography>
+            )}
             <Typography variant="h5">
               <span style={{ color: "#6698e8" }}>Name :</span>{" "}
               {userDetails.name}
