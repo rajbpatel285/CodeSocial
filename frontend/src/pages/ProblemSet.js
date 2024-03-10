@@ -10,9 +10,18 @@ import {
   TableRow,
   Paper,
   TableSortLabel,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -21,12 +30,30 @@ function ProblemSet() {
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [questions, setQuestions] = useState([]);
+  const [allQuestions, setAllQuestions] = useState([]);
   const [order, setOrder] = useState("asc");
   const [filledStars, setFilledStars] = useState({});
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [showStarredOnly, setShowStarredOnly] = useState(false);
+  const [difficultyFilter, setDifficultyFilter] = useState({
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+  });
 
   useEffect(() => {
     fetchQuestions();
     fetchStarredQuestions();
+    setShowStarredOnly(false);
+    setDifficultyFilter({
+      1: false,
+      2: false,
+      3: false,
+      4: false,
+      5: false,
+    });
   }, []);
 
   const fetchQuestions = async () => {
@@ -38,6 +65,7 @@ function ProblemSet() {
         (question) => question.isPublished
       );
       setQuestions(publishedQuestions);
+      setAllQuestions(publishedQuestions);
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
@@ -85,6 +113,47 @@ function ProblemSet() {
     }
   };
 
+  const handleShowStarredOnlyChange = (event) => {
+    setShowStarredOnly(event.target.checked);
+  };
+
+  const handleDifficultyChange = (level) => (event) => {
+    setDifficultyFilter({ ...difficultyFilter, [level]: event.target.checked });
+  };
+
+  const applyFilters = () => {
+    let filteredQuestions = allQuestions;
+
+    if (showStarredOnly) {
+      filteredQuestions = filteredQuestions.filter(
+        (question) => filledStars[question.questionId]
+      );
+    }
+
+    if (Object.values(difficultyFilter).some((value) => value)) {
+      filteredQuestions = filteredQuestions.filter(
+        (question) => difficultyFilter[question.difficulty]
+      );
+    }
+
+    setQuestions(filteredQuestions);
+    setFilterOpen(false);
+  };
+
+  const removeAllFilters = () => {
+    setShowStarredOnly(false);
+    setDifficultyFilter({
+      1: false,
+      2: false,
+      3: false,
+      4: false,
+      5: false,
+    });
+    // Reset questions to all questions
+    setQuestions(allQuestions);
+    setFilterOpen(false);
+  };
+
   if (!userId || isAdmin) {
     return <Navigate to="/" replace />;
   }
@@ -98,12 +167,69 @@ function ProblemSet() {
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
       <div style={{ margin: "0 5%" }}>
-        <Typography
-          variant="h4"
-          style={{ fontWeight: "bold", marginBottom: "20px" }}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          Problem Set
-        </Typography>
+          <Typography
+            variant="h4"
+            style={{ fontWeight: "bold", marginBottom: "20px" }}
+          >
+            Problem Set
+          </Typography>
+          <Button variant="outlined" onClick={() => setFilterOpen(true)}>
+            <FilterAltIcon />
+            Filter
+          </Button>
+        </div>
+        <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
+          <DialogTitle>Filters</DialogTitle>
+          <DialogContent>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showStarredOnly}
+                    onChange={handleShowStarredOnlyChange}
+                  />
+                }
+                label="Show Starred Only"
+              />
+              <Typography
+                variant="subtitle1"
+                gutterBottom
+                style={{ marginTop: "20px" }}
+              >
+                Difficulty
+              </Typography>
+              {Array.from({ length: 5 }, (_, i) => (
+                <FormControlLabel
+                  key={i + 1}
+                  control={
+                    <Checkbox
+                      checked={difficultyFilter[i + 1]}
+                      onChange={handleDifficultyChange(i + 1)}
+                    />
+                  }
+                  label={`Level ${i + 1}`}
+                  style={{ marginLeft: "5px" }}
+                />
+              ))}
+            </FormGroup>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={removeAllFilters} color="primary">
+              Remove All Filters
+            </Button>
+            <Button onClick={applyFilters} color="primary">
+              Apply
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
           <Table aria-label="simple table">
             <TableHead>
