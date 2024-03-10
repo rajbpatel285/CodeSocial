@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -19,6 +19,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Alert,
 } from "@mui/material";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
@@ -34,10 +35,21 @@ function AdminContests() {
   const [level, setLevel] = useState("");
   const [date, setDate] = useState("");
   const [sortDirection, setSortDirection] = useState("asc");
+  const [alertMessage, setAlertMessage] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     fetchContests();
-  }, []);
+    if (location.state && location.state.message) {
+      setAlertMessage(location.state.message);
+      const timer = setTimeout(() => {
+        setAlertMessage(null);
+        navigate(location.pathname, { replace: true, state: {} });
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [location, navigate]);
 
   const fetchContests = async () => {
     try {
@@ -161,6 +173,15 @@ function AdminContests() {
             <Button onClick={handleCreateContest}>Create</Button>
           </DialogActions>
         </Dialog>
+        {alertMessage && (
+          <Alert
+            severity={alertMessage.includes("published") ? "success" : "error"}
+            onClose={() => setAlertMessage(null)}
+            sx={{ marginBottom: "20px" }}
+          >
+            {alertMessage}
+          </Alert>
+        )}
         <TableContainer component={Paper}>
           <Table>
             <TableHead>

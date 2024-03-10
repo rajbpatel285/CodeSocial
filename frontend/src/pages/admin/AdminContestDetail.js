@@ -99,8 +99,19 @@ function AdminContestDetail() {
 
   const handlePublishContest = async () => {
     try {
-      await axios.put(`http://localhost:8000/contest/${contestId}/publish`);
-      navigate("/admincontests");
+      const response = await axios.put(
+        `http://localhost:8000/contest/${contestId}/publish`
+      );
+      navigate("/admincontests", {
+        replace: true,
+        state: {
+          message: `Contest "${response.data.contest.contestName}" ${
+            response.data.message.includes("published")
+              ? "published"
+              : "withdrawn"
+          } successfully`,
+        },
+      });
     } catch (error) {
       console.error("Failed to publish contest", error);
     }
