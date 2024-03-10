@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -20,6 +20,7 @@ import {
   TableRow,
   Paper,
   TableSortLabel,
+  Alert,
 } from "@mui/material";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
@@ -36,6 +37,8 @@ function AdminProblemSet() {
   const [output, setOutput] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [order, setOrder] = useState("asc");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
     fetchQuestions();
@@ -96,8 +99,22 @@ function AdminProblemSet() {
       setInput("");
       setOutput("");
       setDifficulty("");
+      setAlertMessage(
+        `Question "${response.data.questionTitle}" added successfully`
+      );
+      setShowAlert(true);
+
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 5000);
     } catch (error) {
       console.error("Error adding question:", error);
+      setAlertMessage("Failed to add question");
+      setShowAlert(true);
+
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 5000);
     }
   };
 
@@ -124,6 +141,15 @@ function AdminProblemSet() {
         >
           Add Question
         </Button>
+        {showAlert && (
+          <Alert
+            onClose={() => setShowAlert(false)}
+            severity={alertMessage.includes("added") ? "success" : "error"}
+            style={{ marginBottom: "20px" }}
+          >
+            {alertMessage}
+          </Alert>
+        )}
         <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
           <Table aria-label="simple table">
             <TableHead>

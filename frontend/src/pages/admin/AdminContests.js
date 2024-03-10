@@ -46,7 +46,7 @@ function AdminContests() {
       const timer = setTimeout(() => {
         setAlertMessage(null);
         navigate(location.pathname, { replace: true, state: {} });
-      }, 4000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [location, navigate]);
