@@ -17,4 +17,7 @@ router.put("/questions/:questionId", questionController.update);
 // Delete a Question with questionId
 router.delete("/questions/:questionId", questionController.delete);
 
+// Inside routes/question.js or wherever you keep your routes
+router.post("/executePython", questionController.executePythonCode);
+
 module.exports = router;

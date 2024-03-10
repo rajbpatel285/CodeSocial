@@ -1,6 +1,7 @@
 const Question = require("../models/Question");
 const Contest = require("../models/Contest");
 const mongoose = require("mongoose");
+const axios = require("axios");
 
 exports.create = async (req, res) => {
   if (!req.body) {
@@ -137,5 +138,37 @@ exports.delete = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Could not delete question" });
+  }
+};
+
+exports.executePythonCode = async (req, res) => {
+  const { code } = req.body;
+
+  const clientId = "Your JDoodle Client ID";
+  const clientSecret = "Your JDoodle Client Secret";
+
+  try {
+    const response = await axios({
+      method: "post",
+      url: "https://api.jdoodle.com/v1/execute",
+      data: {
+        script: code,
+        language: "python3",
+        versionIndex: "3",
+        clientId: "b7685c40695e4cf1f500f45143fb8751",
+        clientSecret:
+          "9839cffc6250bd8fd91056a16bd16c5b718ee20a52cf8202a606fe0e01e307a0",
+      },
+    });
+
+    res.json({
+      output: response.data.output,
+      statusCode: response.data.statusCode,
+      memory: response.data.memory,
+      cpuTime: response.data.cpuTime,
+    });
+  } catch (error) {
+    console.error("Error executing Python code:", error);
+    res.status(500).send({ message: "Failed to execute Python code." });
   }
 };

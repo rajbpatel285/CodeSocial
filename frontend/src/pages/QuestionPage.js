@@ -9,6 +9,8 @@ import { Navigate } from "react-router-dom";
 function QuestionPage() {
   const { questionId } = useParams();
   const [question, setQuestion] = useState(null);
+  const [userCode, setUserCode] = useState("");
+  const [executionResult, setExecutionResult] = useState("");
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
@@ -24,6 +26,21 @@ function QuestionPage() {
       setQuestion(response.data);
     } catch (error) {
       console.error("Error fetching question:", error);
+    }
+  };
+
+  const handleTestCode = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/question/executePython",
+        {
+          code: userCode,
+        }
+      );
+      setExecutionResult(response.data.output);
+    } catch (error) {
+      console.error("Error testing code:", error.response.data);
+      setExecutionResult("Error executing code. Please try again.");
     }
   };
 
@@ -77,7 +94,7 @@ function QuestionPage() {
             variant="body2"
             style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
           >
-            {question.answer}
+            {question.input}
           </Typography>
           <Typography
             variant="body1"
@@ -92,7 +109,7 @@ function QuestionPage() {
             variant="body2"
             style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
           >
-            {question.answer}
+            {question.output}
           </Typography>
           <TextField
             label="Add Your Code here..."
@@ -100,12 +117,15 @@ function QuestionPage() {
             rows={8}
             variant="outlined"
             fullWidth
-            style={{ marginBottom: "5px" }}
+            value={userCode}
+            onChange={(e) => setUserCode(e.target.value)}
+            style={{ marginBottom: "10px" }}
           />
           <Button
             variant="contained"
             color="primary"
-            // onClick={handleTestCode}
+            onClick={handleTestCode}
+            style={{ marginRight: "10px" }}
           >
             Test
           </Button>
