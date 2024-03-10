@@ -149,7 +149,6 @@ function ProblemSet() {
       4: false,
       5: false,
     });
-    // Reset questions to all questions
     setQuestions(allQuestions);
     setFilterOpen(false);
   };

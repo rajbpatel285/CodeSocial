@@ -9,9 +9,17 @@ import {
   TableRow,
   Paper,
   TableSortLabel,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import axios from "axios";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { Navigate, Link } from "react-router-dom";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
@@ -20,14 +28,26 @@ function Standings() {
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [users, setUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [order, setOrder] = useState("desc");
   const [friends, setFriends] = useState([]);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [showOnlyFriends, setShowOnlyFriends] = useState(false);
+  const [ratingFilter, setRatingFilter] = useState({
+    GrandMaster: false,
+    Master: false,
+    Expert: false,
+    Professional: false,
+    Specialist: false,
+    Beginner: false,
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get("http://localhost:8000/user/users");
         setUsers(response.data);
+        setAllUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -43,9 +63,9 @@ function Standings() {
         console.error("Error fetching friends:", error);
       }
     };
-
     fetchUsers();
     fetchFriends();
+    resetFilters();
   }, []);
 
   const handleSort = () => {
@@ -57,13 +77,91 @@ function Standings() {
     setUsers([...sortedUsers]);
   };
 
+  const handleShowOnlyFriendsChange = (event) => {
+    setShowOnlyFriends(event.target.checked);
+  };
+
+  const handleRatingFilterChange = (name) => (event) => {
+    setRatingFilter({ ...ratingFilter, [name]: event.target.checked });
+  };
+
+  const applyFilters = () => {
+    let filteredUsers = allUsers;
+
+    if (showOnlyFriends) {
+      filteredUsers = filteredUsers.filter((user) =>
+        friends.includes(user.username)
+      );
+    }
+
+    const ratingCriteria = {
+      GrandMaster: 2500,
+      Master: 2300,
+      Expert: 2000,
+      Professional: 1600,
+      Specialist: 1200,
+      Beginner: 800,
+    };
+
+    if (Object.values(ratingFilter).some((value) => value)) {
+      filteredUsers = filteredUsers.filter((user) => {
+        return Object.entries(ratingFilter).some(([key, value]) => {
+          if (!value) return false;
+          const rating = user.rating;
+          const minRating = ratingCriteria[key];
+          const nextRating =
+            Object.values(ratingCriteria)[
+              Object.keys(ratingCriteria).indexOf(key) + 1
+            ] || Infinity;
+          console.log(minRating, nextRating);
+          return rating < minRating && rating >= nextRating;
+        });
+      });
+    }
+
+    setUsers(filteredUsers);
+    setFilterOpen(false);
+  };
+
+  const resetFilters = () => {
+    setShowOnlyFriends(false);
+    setRatingFilter({
+      GrandMaster: false,
+      Master: false,
+      Expert: false,
+      Professional: false,
+      Specialist: false,
+      Beginner: false,
+      Newbie: false,
+    });
+    setUsers(allUsers);
+  };
+
   const getRatingColor = (rating) => {
-    if (rating >= 2800) return "#ff8c00";
-    if (rating >= 2400) return "#008b8b";
+    if (rating >= 2500) return "#ff8c00";
+    if (rating >= 2300) return "#008b8b";
     if (rating >= 2000) return "#ff4500";
     if (rating >= 1600) return "#006400";
-    if (rating >= 1300) return "#00008b";
-    if (rating >= 1000) return "#8b0000";
+    if (rating >= 1200) return "#00008b";
+    if (rating >= 800) return "#8b0000";
+    return "#0000cd";
+  };
+
+  const getRatingColorFromTag = (name) => {
+    console.log(name);
+    console.log(1);
+    if (name == "GrandMaster") return "#ff8c00";
+    console.log(2);
+    if (name == "Master") return "#008b8b";
+    console.log(3);
+    if (name == "Expert") return "#ff4500";
+    console.log(4);
+    if (name == "Professional") return "#006400";
+    console.log(5);
+    if (name == "Specialist") return "#00008b";
+    console.log(6);
+    if (name == "Beginner") return "#8b0000";
+    console.log(7);
     return "#0000cd";
   };
 
@@ -80,12 +178,68 @@ function Standings() {
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
       <div style={{ margin: "0 5%" }}>
-        <Typography
-          variant="h4"
-          style={{ fontWeight: "bold", marginBottom: "20px" }}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          Standings
-        </Typography>
+          <Typography
+            variant="h4"
+            style={{ fontWeight: "bold", marginBottom: "20px" }}
+          >
+            Standings
+          </Typography>
+          <Button variant="outlined" onClick={() => setFilterOpen(true)}>
+            <FilterAltIcon />
+            Filter
+          </Button>
+        </div>
+        <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
+          <DialogTitle>Filter Options</DialogTitle>
+          <DialogContent>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showOnlyFriends}
+                    onChange={handleShowOnlyFriendsChange}
+                  />
+                }
+                label="Show Only Friends"
+              />
+              <Typography
+                variant="subtitle1"
+                gutterBottom
+                style={{ marginTop: "20px" }}
+              >
+                Rating
+              </Typography>
+              {Object.keys(ratingFilter).map((name) => (
+                <span style={{ color: getRatingColorFromTag(name) }}>
+                  <FormControlLabel
+                    key={name}
+                    control={
+                      <Checkbox
+                        checked={ratingFilter[name]}
+                        onChange={handleRatingFilterChange(name)}
+                      />
+                    }
+                    label={name}
+                    style={{ marginLeft: "5px" }}
+                  />
+                </span>
+              ))}
+            </FormGroup>
+            <Button onClick={resetFilters} color="primary">
+              Remove All Filters
+            </Button>
+            <Button onClick={applyFilters} color="primary">
+              Apply
+            </Button>
+          </DialogContent>
+        </Dialog>
         <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
           <Table>
             <TableHead>
