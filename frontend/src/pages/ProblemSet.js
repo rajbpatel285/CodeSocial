@@ -200,7 +200,7 @@ function ProblemSet() {
               <Typography
                 variant="subtitle1"
                 gutterBottom
-                style={{ marginTop: "20px" }}
+                style={{ marginTop: "10px", marginBottom: "10px" }}
               >
                 Difficulty
               </Typography>

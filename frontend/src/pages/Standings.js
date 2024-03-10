@@ -135,6 +135,7 @@ function Standings() {
       Newbie: false,
     });
     setUsers(allUsers);
+    setFilterOpen(false);
   };
 
   const getRatingColor = (rating) => {
@@ -148,20 +149,12 @@ function Standings() {
   };
 
   const getRatingColorFromTag = (name) => {
-    console.log(name);
-    console.log(1);
     if (name == "GrandMaster") return "#ff8c00";
-    console.log(2);
     if (name == "Master") return "#008b8b";
-    console.log(3);
     if (name == "Expert") return "#ff4500";
-    console.log(4);
     if (name == "Professional") return "#006400";
-    console.log(5);
     if (name == "Specialist") return "#00008b";
-    console.log(6);
     if (name == "Beginner") return "#8b0000";
-    console.log(7);
     return "#0000cd";
   };
 
@@ -212,7 +205,7 @@ function Standings() {
               <Typography
                 variant="subtitle1"
                 gutterBottom
-                style={{ marginTop: "20px" }}
+                style={{ marginTop: "10px", marginBottom: "10px" }}
               >
                 Rating
               </Typography>
