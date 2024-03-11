@@ -22,6 +22,7 @@ import {
   TableSortLabel,
   Alert,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
@@ -39,6 +40,10 @@ function AdminProblemSet() {
   const [order, setOrder] = useState("asc");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [inputVariableTypeData, setInputVariableTypeData] = useState([
+    { inputVariableName: "", inputVariableType: "" },
+  ]);
+  const [testCases, setTestCases] = useState([{ inputs: [], output: "" }]);
 
   useEffect(() => {
     fetchQuestions();
@@ -81,13 +86,15 @@ function AdminProblemSet() {
 
   const handleSave = async () => {
     try {
+      console.log(inputVariableTypeData);
+      console.log(testCases);
       const response = await axios.post(
         "http://localhost:8000/question/questions",
         {
           questionTitle,
           question: questionText,
-          input,
-          output,
+          inputVariableTypeData,
+          testCases,
           difficulty: parseInt(difficulty, 10),
           isPublished: true,
         }
@@ -116,6 +123,67 @@ function AdminProblemSet() {
         setShowAlert(false);
       }, 5000);
     }
+  };
+
+  const handleInputVariableTypeDataChange = (index, field) => (event) => {
+    const newInputVariableTypeData = [...inputVariableTypeData];
+    newInputVariableTypeData[index][field] = event.target.value;
+    setInputVariableTypeData(newInputVariableTypeData);
+  };
+
+  const addInputVariableTypeDataField = () => {
+    setInputVariableTypeData([
+      ...inputVariableTypeData,
+      { inputVariableName: "", inputVariableType: "" },
+    ]);
+  };
+
+  const removeInputVariableTypeDataField = (index) => {
+    const newInputVariableTypeData = inputVariableTypeData.filter(
+      (_, i) => i !== index
+    );
+    setInputVariableTypeData(newInputVariableTypeData);
+  };
+
+  const handleTestCaseOutputChange = (testIndex, value) => {
+    const updatedTestCases = [...testCases];
+    updatedTestCases[testIndex].output = value;
+    setTestCases(updatedTestCases);
+  };
+
+  const addTestCase = () => {
+    const newTestCase = {
+      inputs: inputVariableTypeData.map((variable) => ({
+        key: variable.inputVariableName,
+        value: "",
+      })),
+      output: "",
+    };
+    setTestCases([...testCases, newTestCase]);
+  };
+
+  // Handle changes to the test case inputs (adjusting for key-value pairs)
+  // Handler for test case input value change
+  const handleTestCaseInputChange = (
+    testIndex,
+    inputIndex,
+    keyOrValue,
+    newValue
+  ) => {
+    const updatedTestCases = [...testCases];
+    if (keyOrValue === "value") {
+      updatedTestCases[testIndex].inputs[inputIndex].value = newValue;
+    } else {
+      updatedTestCases[testIndex].inputs[inputIndex].key = newValue;
+    }
+    setTestCases(updatedTestCases);
+  };
+
+  const removeTestCase = (testIndex) => {
+    const updatedTestCases = testCases.filter(
+      (_, index) => index !== testIndex
+    );
+    setTestCases(updatedTestCases);
   };
 
   const cellStyle = {
@@ -207,7 +275,7 @@ function AdminProblemSet() {
           </Table>
         </TableContainer>
         <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogTitle>Update Question</DialogTitle>
+          <DialogTitle>Add a New Question</DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
@@ -222,7 +290,7 @@ function AdminProblemSet() {
             <TextField
               margin="dense"
               id="question"
-              label="Question Text"
+              label="Question Statement"
               type="text"
               fullWidth
               multiline
@@ -230,28 +298,64 @@ function AdminProblemSet() {
               value={questionText}
               onChange={(e) => setQuestionText(e.target.value)}
             />
-            <TextField
-              margin="dense"
-              id="input"
-              label="Input"
-              type="text"
-              fullWidth
-              multiline
-              rows={2}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
-            <TextField
-              margin="dense"
-              id="output"
-              label="Output"
-              type="text"
-              fullWidth
-              multiline
-              rows={2}
-              value={output}
-              onChange={(e) => setOutput(e.target.value)}
-            />
+            <Typography
+              variant="subtitle1"
+              gutterBottom
+              style={{ marginTop: "10px", marginBottom: "10px" }}
+            >
+              <b>Input Variables: </b>
+            </Typography>
+            {inputVariableTypeData.map((test, index) => (
+              <div
+                key={index}
+                style={{ display: "flex", gap: "20px", marginBottom: "20px" }}
+              >
+                <TextField
+                  label="Input Variable Name"
+                  type="text"
+                  fullWidth
+                  margin="dense"
+                  value={test.inputVariableName}
+                  onChange={handleInputVariableTypeDataChange(
+                    index,
+                    "inputVariableName"
+                  )}
+                  style={{ flex: 1 }}
+                />
+                <FormControl fullWidth margin="dense" style={{ flex: 1 }}>
+                  <InputLabel id="input-variable-type-label">
+                    Input Variable Type
+                  </InputLabel>
+                  <Select
+                    labelId="input-variable-type-label"
+                    id="inputVariableType"
+                    value={test.inputVariableType}
+                    onChange={handleInputVariableTypeDataChange(
+                      index,
+                      "inputVariableType"
+                    )}
+                  >
+                    <MenuItem value={"Integer"}>Integer</MenuItem>
+                    <MenuItem value={"Array"}>Array</MenuItem>
+                    <MenuItem value={"String"}>String</MenuItem>
+                  </Select>
+                </FormControl>
+                <Button
+                  onClick={() => removeInputVariableTypeDataField(index)}
+                  size="small"
+                >
+                  <CloseIcon />
+                </Button>
+              </div>
+            ))}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={addInputVariableTypeDataField}
+              style={{ marginBottom: "20px" }}
+            >
+              Add Test Data
+            </Button>
             <FormControl fullWidth margin="dense">
               <InputLabel id="difficulty-label">Difficulty</InputLabel>
               <Select
@@ -267,6 +371,59 @@ function AdminProblemSet() {
                 <MenuItem value={5}>5</MenuItem>
               </Select>
             </FormControl>
+            <Typography
+              variant="subtitle1"
+              gutterBottom
+              style={{ marginTop: "10px", marginBottom: "10px" }}
+            >
+              <b>Test Cases: </b>
+            </Typography>
+            {testCases.map((testCase, testIndex) => (
+              <div
+                key={testIndex}
+                style={{ display: "flex", gap: "20px", marginBottom: "20px" }}
+              >
+                {testCase.inputs.map((input, inputIndex) => (
+                  <TextField
+                    key={inputIndex}
+                    label={input.key}
+                    type="text"
+                    margin="dense"
+                    value={input.value}
+                    onChange={(e) =>
+                      handleTestCaseInputChange(
+                        testIndex,
+                        inputIndex,
+                        "value",
+                        e.target.value
+                      )
+                    }
+                    style={{ marginRight: 8 }}
+                  />
+                ))}
+                <TextField
+                  label="Output"
+                  type="text"
+                  margin="dense"
+                  value={testCase.output}
+                  onChange={(e) =>
+                    handleTestCaseOutputChange(testIndex, e.target.value)
+                  }
+                  style={{ marginRight: 8 }}
+                />
+                <Button onClick={() => removeTestCase(testIndex)}>
+                  <CloseIcon />
+                </Button>
+              </div>
+            ))}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={addTestCase}
+              style={{ marginBottom: "20px" }}
+            >
+              Add Test Case
+            </Button>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">

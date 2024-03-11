@@ -1,10 +1,27 @@
 const mongoose = require("mongoose");
 
+const testDataSchema = new mongoose.Schema(
+  {
+    inputs: [{ key: String, value: String }],
+    output: String,
+  },
+  { _id: false }
+);
+
+const inputVariableSchema = new mongoose.Schema(
+  {
+    inputVariableName: String,
+    inputVariableType: String,
+  },
+  { _id: false }
+);
+
 const questionSchema = new mongoose.Schema({
   questionId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     unique: true,
+    default: () => new mongoose.Types.ObjectId(),
   },
   questionTitle: {
     type: String,
@@ -14,14 +31,8 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  input: {
-    type: String,
-    required: true,
-  },
-  output: {
-    type: String,
-    required: true,
-  },
+  inputVariableTypeData: [inputVariableSchema],
+  testCases: [testDataSchema],
   difficulty: {
     type: Number,
     required: true,

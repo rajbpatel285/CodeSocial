@@ -6,27 +6,37 @@ const axios = require("axios");
 exports.create = async (req, res) => {
   if (!req.body) {
     return res.status(400).send({
-      message: "Question content can not be empty",
+      message: "Content cannot be empty",
     });
   }
 
-  const question = new Question({
-    questionId: new mongoose.Types.ObjectId(),
-    questionTitle: req.body.questionTitle,
-    question: req.body.question,
-    input: req.body.input,
-    output: req.body.output,
-    difficulty: req.body.difficulty,
-    isPublished: req.body.isPublished,
+  const {
+    questionTitle,
+    question,
+    inputVariableTypeData,
+    testCases,
+    difficulty,
+    isPublished,
+  } = req.body;
+
+  console.log(inputVariableTypeData, testCases);
+
+  const newQuestion = new Question({
+    questionTitle,
+    question,
+    inputVariableTypeData,
+    testCases,
+    difficulty,
+    isPublished,
   });
 
   try {
-    const data = await question.save();
+    const data = await newQuestion.save();
     res.send(data);
   } catch (error) {
     res.status(500).send({
       message:
-        error.message || "Some error occurred while creating the Question.",
+        error.message || "An error occurred while creating the question.",
     });
   }
 };
@@ -69,37 +79,53 @@ exports.findOne = async (req, res) => {
 exports.update = async (req, res) => {
   if (!req.body) {
     return res.status(400).send({
-      message: "Question content can not be empty",
+      message: "Content cannot be empty",
     });
   }
 
+  const { questionId } = req.params;
+  const {
+    questionTitle,
+    question,
+    inputVariableTypeData,
+    testcases,
+    difficulty,
+    isPublished,
+  } = req.body;
+
+  // Construct update object
+  const updateObject = {
+    questionTitle,
+    question,
+    inputVariableTypeData,
+    testcases,
+    difficulty,
+    isPublished,
+  };
+
   try {
-    const question = await Question.findOneAndUpdate(
-      { questionId: req.params.questionId },
-      {
-        questionTitle: req.body.questionTitle,
-        question: req.body.question,
-        input: req.body.input,
-        output: req.body.output,
-        difficulty: req.body.difficulty,
-      },
-      { new: true }
+    const updatedQuestion = await Question.findOneAndUpdate(
+      { _id: questionId },
+      updateObject,
+      { new: true } // This option returns the modified document
     );
 
-    if (!question) {
+    if (!updatedQuestion) {
       return res.status(404).send({
-        message: "Question not found with id " + req.params.questionId,
+        message: `Question not found with id ${questionId}`,
       });
     }
-    res.send(question);
+
+    res.send(updatedQuestion);
   } catch (error) {
+    // Handling potential errors, including format of the question ID
     if (error.kind === "ObjectId") {
       return res.status(404).send({
-        message: "Question not found with id " + req.params.questionId,
+        message: `Question not found with id ${questionId}`,
       });
     }
-    return res.status(500).send({
-      message: "Error updating question with id " + req.params.questionId,
+    res.status(500).send({
+      message: error.message || `Error updating question with id ${questionId}`,
     });
   }
 };
@@ -144,8 +170,9 @@ exports.delete = async (req, res) => {
 exports.executePythonCode = async (req, res) => {
   const { code } = req.body;
 
-  const clientId = "Your JDoodle Client ID";
-  const clientSecret = "Your JDoodle Client Secret";
+  const clientId = "b7685c40695e4cf1f500f45143fb8751";
+  const clientSecret =
+    "9839cffc6250bd8fd91056a16bd16c5b718ee20a52cf8202a606fe0e01e307a0";
 
   try {
     const response = await axios({
@@ -155,9 +182,8 @@ exports.executePythonCode = async (req, res) => {
         script: code,
         language: "python3",
         versionIndex: "3",
-        clientId: "b7685c40695e4cf1f500f45143fb8751",
-        clientSecret:
-          "9839cffc6250bd8fd91056a16bd16c5b718ee20a52cf8202a606fe0e01e307a0",
+        clientId: clientId,
+        clientSecret: clientSecret,
       },
     });
 
