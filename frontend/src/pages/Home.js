@@ -16,14 +16,11 @@ function Home() {
     <div>
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
-      <div style={{ margin: "0 5%" }}>
-        <Typography variant="h4" style={{ fontWeight: "bold" }}>
-          Hello {userId}
-        </Typography>
-        <Typography variant="body1">
-          Welcome to the home page of CodeSocial, where you can participate in
-          contests, solve problems, and check your standings among peers.
-        </Typography>
+      <div style={{ margin: "0 5%", textAlign: "center" }}>
+        <img
+          src={process.env.PUBLIC_URL + "/images/poster_image.png"}
+          alt="CodeSocial Home page poster"
+        />
       </div>
     </div>
   );

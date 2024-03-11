@@ -73,7 +73,6 @@ function TopAppBar({ title }) {
           onClose={handleClose}
         >
           <MenuItem onClick={redirectToProfile}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>Settings</MenuItem>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Toolbar>
