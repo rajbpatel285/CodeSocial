@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -34,8 +34,6 @@ function AdminProblemSet() {
   const [questions, setQuestions] = useState([]);
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionText, setQuestionText] = useState("");
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [order, setOrder] = useState("asc");
   const [showAlert, setShowAlert] = useState(false);
@@ -86,8 +84,6 @@ function AdminProblemSet() {
 
   const handleSave = async () => {
     try {
-      console.log(inputVariableTypeData);
-      console.log(testCases);
       const response = await axios.post(
         "http://localhost:8000/question/questions",
         {
@@ -95,17 +91,19 @@ function AdminProblemSet() {
           question: questionText,
           inputVariableTypeData,
           testCases,
-          difficulty: parseInt(difficulty, 10),
-          isPublished: true,
+          difficulty: difficulty,
+          isPublished: false,
         }
       );
       setQuestions([...questions, response.data]);
       setOpen(false);
       setQuestionTitle("");
       setQuestionText("");
-      setInput("");
-      setOutput("");
       setDifficulty("");
+      setInputVariableTypeData([
+        { inputVariableName: "", inputVariableType: "" },
+      ]);
+      setTestCases([{ inputs: [], output: "" }]);
       setAlertMessage(
         `Question "${response.data.questionTitle}" added successfully`
       );
@@ -162,8 +160,6 @@ function AdminProblemSet() {
     setTestCases([...testCases, newTestCase]);
   };
 
-  // Handle changes to the test case inputs (adjusting for key-value pairs)
-  // Handler for test case input value change
   const handleTestCaseInputChange = (
     testIndex,
     inputIndex,
@@ -354,7 +350,7 @@ function AdminProblemSet() {
               onClick={addInputVariableTypeDataField}
               style={{ marginBottom: "20px" }}
             >
-              Add Test Data
+              Add Test Input Variable
             </Button>
             <FormControl fullWidth margin="dense">
               <InputLabel id="difficulty-label">Difficulty</InputLabel>

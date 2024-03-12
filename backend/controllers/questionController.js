@@ -19,8 +19,6 @@ exports.create = async (req, res) => {
     isPublished,
   } = req.body;
 
-  console.log(inputVariableTypeData, testCases);
-
   const newQuestion = new Question({
     questionTitle,
     question,
@@ -88,7 +86,7 @@ exports.update = async (req, res) => {
     questionTitle,
     question,
     inputVariableTypeData,
-    testcases,
+    testCases,
     difficulty,
     isPublished,
   } = req.body;
@@ -98,16 +96,16 @@ exports.update = async (req, res) => {
     questionTitle,
     question,
     inputVariableTypeData,
-    testcases,
+    testCases,
     difficulty,
     isPublished,
   };
 
   try {
     const updatedQuestion = await Question.findOneAndUpdate(
-      { _id: questionId },
+      { questionId: questionId },
       updateObject,
-      { new: true } // This option returns the modified document
+      { new: true }
     );
 
     if (!updatedQuestion) {
