@@ -66,21 +66,26 @@ exports.update = async (req, res) => {
   const { contestId } = req.params;
 
   if (!req.body) {
-    return res
-      .status(400)
-      .send({ message: "Data to update can not be empty!" });
+    return res.status(400).send({ message: "Data to update cannot be empty!" });
   }
 
   try {
-    const contest = await Contest.findByIdAndUpdate(contestId, req.body, {
-      new: true,
-    });
+    const contest = await Contest.findOneAndUpdate(
+      { contestId: contestId }, // Use the _id field to match the contestId
+      req.body,
+      {
+        new: true, // Return the updated document
+        runValidators: true, // Optionally add this to run schema validations on the update
+      }
+    );
+
     if (!contest) {
       return res.status(404).send({
         message: `Cannot update Contest with id=${contestId}. Maybe Contest was not found!`,
       });
     }
-    res.send({ message: "Contest was updated successfully." });
+
+    res.send({ message: "Contest was updated successfully.", contest });
   } catch (error) {
     res
       .status(500)
@@ -92,7 +97,7 @@ exports.delete = async (req, res) => {
   const { contestId } = req.params;
 
   try {
-    const contest = await Contest.findByIdAndRemove(contestId);
+    const contest = await Contest.findOneAndDelete({ contestId: contestId });
     if (!contest) {
       return res.status(404).send({
         message: `Cannot delete Contest with id=${contestId}. Maybe Contest was not found!`,

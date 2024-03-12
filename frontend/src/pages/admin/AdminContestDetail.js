@@ -19,6 +19,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  DialogContentText,
 } from "@mui/material";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
@@ -40,28 +41,37 @@ function AdminContestDetail() {
     difficulty: "",
     isPublshed: false,
   });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [updateContest, setUpdateContest] = useState({
+    contestName: "",
+    description: "",
+    level: "",
+    date: "",
+  });
 
   useEffect(() => {
-    const fetchContestDetails = async () => {
-      try {
-        const { data } = await axios.get(
-          `http://localhost:8000/contest/${contestId}`
-        );
-        setContest(data);
-        const questionDetails = await Promise.all(
-          data.questionSet.map((questionId) =>
-            axios
-              .get(`http://localhost:8000/question/questions/${questionId}`)
-              .then((res) => res.data)
-          )
-        );
-        setQuestions(questionDetails);
-      } catch (error) {
-        console.error("Error fetching contest details:", error);
-      }
-    };
     fetchContestDetails();
   }, [contestId]);
+
+  const fetchContestDetails = async () => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:8000/contest/${contestId}`
+      );
+      setContest(data);
+      const questionDetails = await Promise.all(
+        data.questionSet.map((questionId) =>
+          axios
+            .get(`http://localhost:8000/question/questions/${questionId}`)
+            .then((res) => res.data)
+        )
+      );
+      setQuestions(questionDetails);
+    } catch (error) {
+      console.error("Error fetching contest details:", error);
+    }
+  };
 
   const handleAddQuestionToContest = async () => {
     try {
@@ -97,6 +107,38 @@ function AdminContestDetail() {
     }
   };
 
+  const handleUpdateContest = async () => {
+    try {
+      await axios.put(
+        `http://localhost:8000/contest/${contestId}`,
+        updateContest
+      );
+      setUpdateDialogOpen(false);
+      // Refresh contest details or navigate away after update
+      fetchContestDetails();
+    } catch (error) {
+      console.error("Failed to update contest", error);
+    }
+  };
+
+  const handleOpenUpdateDialog = () => {
+    setUpdateDialogOpen(true);
+    setUpdateContest({
+      contestName: contest.contestName,
+      description: contest.description,
+      level: contest.level,
+      date: contest.date.slice(0, 10),
+    });
+  };
+
+  const handleUpdateChange = (e) => {
+    const { name, value } = e.target;
+    setUpdateContest((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   const handlePublishContest = async () => {
     try {
       const response = await axios.put(
@@ -114,6 +156,18 @@ function AdminContestDetail() {
       });
     } catch (error) {
       console.error("Failed to publish contest", error);
+    }
+  };
+
+  const handleDeleteContest = async () => {
+    try {
+      await axios.delete(`http://localhost:8000/contest/${contestId}`);
+      navigate("/admincontests", {
+        replace: true,
+        state: { message: "Contest deleted successfully." },
+      });
+    } catch (error) {
+      console.error("Failed to delete contest", error);
     }
   };
 
@@ -242,6 +296,7 @@ function AdminContestDetail() {
               backgroundColor: contest.isPublished ? "#9a0007" : "#1b5e20",
             },
           }}
+          style={{ marginRight: "10px" }}
         >
           {contest.isPublished ? "Withdraw Contest" : "Publish Contest"}
         </Button>
@@ -323,6 +378,99 @@ function AdminContestDetail() {
           <DialogActions>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
             <Button onClick={handleAddQuestionToContest}>Add</Button>
+          </DialogActions>
+        </Dialog>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setDeleteDialogOpen(true)}
+          style={{ marginRight: "10px" }}
+        >
+          Delete Contest
+        </Button>
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+        >
+          <DialogTitle>Delete Contest</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this contest? This action cannot
+              be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleDeleteContest} color="secondary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleOpenUpdateDialog}
+          style={{ marginRight: "10px" }}
+        >
+          Update Contest
+        </Button>
+        <Dialog
+          open={updateDialogOpen}
+          onClose={() => setUpdateDialogOpen(false)}
+        >
+          <DialogTitle>Update Contest</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              name="contestName"
+              label="Contest Name"
+              type="text"
+              fullWidth
+              value={updateContest.contestName}
+              onChange={handleUpdateChange}
+            />
+            <TextField
+              margin="dense"
+              name="description"
+              label="Description"
+              type="text"
+              fullWidth
+              multiline
+              rows={4}
+              value={updateContest.description}
+              onChange={handleUpdateChange}
+            />
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="level-label">Level</InputLabel>
+              <Select
+                labelId="level-label"
+                name="level"
+                id="level"
+                value={updateContest.level}
+                onChange={handleUpdateChange}
+              >
+                <MenuItem value="Easy">Easy</MenuItem>
+                <MenuItem value="Medium">Medium</MenuItem>
+                <MenuItem value="Hard">Hard</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              margin="dense"
+              name="date"
+              label="Date"
+              type="date"
+              fullWidth
+              value={updateContest.date}
+              onChange={handleUpdateChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setUpdateDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleUpdateContest}>Update</Button>
           </DialogActions>
         </Dialog>
       </div>
