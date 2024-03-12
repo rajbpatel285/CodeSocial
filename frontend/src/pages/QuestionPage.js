@@ -3,6 +3,10 @@ import { useParams } from "react-router-dom";
 import { Typography, TextField, Button } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -14,8 +18,11 @@ function QuestionPage() {
   const [userCode, setUserCode] = useState("");
   const [executionResult, setExecutionResult] = useState("");
   const [expectedOutput, setExpectedOutput] = useState("");
-  const [testResult, setTestResult] = useState("");
+  const [customTestResult, setCustomTestResult] = useState("");
+  const [submitTestResult, setSubmitTestResult] = useState("");
   const [inputValues, setInputValues] = useState({});
+  const [expanded, setExpanded] = useState(false);
+  const [testCaseResults, setTestCaseResults] = useState([]);
 
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
@@ -56,7 +63,7 @@ function QuestionPage() {
         }
       );
       setExecutionResult(response.data.output.trim());
-      setTestResult(
+      setCustomTestResult(
         response.data.output.trim() === expectedOutput.trim()
           ? "passed"
           : "failed"
@@ -68,6 +75,43 @@ function QuestionPage() {
       );
       setExecutionResult("Error executing code. Please try again.");
     }
+  };
+
+  const handleSubmit = async () => {
+    let allPassed = true;
+    const results = [];
+
+    for (const testCase of question.testCases) {
+      const inputsArray = testCase.inputs.map((input) => input.value);
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/question/executePython",
+          {
+            code: userCode,
+            inputs: inputsArray,
+          }
+        );
+        const passed = response.data.output.trim() === testCase.output.trim();
+        results.push({
+          ...testCase,
+          passed,
+          returnedOutput: response.data.output.trim(),
+        });
+        allPassed &= passed;
+      } catch (error) {
+        console.error("Error testing code:", error);
+        allPassed = false;
+        results.push({
+          ...testCase,
+          passed: false,
+          returnedOutput: "Error executing code. Please try again.",
+        });
+      }
+    }
+
+    setTestCaseResults(results);
+    setExpanded(false);
+    setSubmitTestResult(allPassed ? "passed" : "failed");
   };
 
   if (!question) {
@@ -138,76 +182,133 @@ function QuestionPage() {
           onChange={(e) => setUserCode(e.target.value)}
           style={{ marginBottom: "10px" }}
         />
-        <Typography
-          variant="body1"
-          style={{
-            whiteSpace: "pre-line",
-            fontWeight: "bold",
-          }}
-        >
-          Test with Custom Input:
-        </Typography>
-        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-          {question.inputVariableTypeData.map((inputVar, index) => (
-            <TextField
-              key={index}
-              label={inputVar.inputVariableName}
-              variant="outlined"
-              value={inputValues[inputVar.inputVariableName] || ""}
-              onChange={(e) => handleInputChange(e, inputVar.inputVariableName)}
-              style={{ marginBottom: "10px" }}
-            />
-          ))}
-          <TextField
-            label="Expected Output"
-            variant="outlined"
-            value={expectedOutput}
-            onChange={(e) => setExpectedOutput(e.target.value)}
-            style={{ marginBottom: "10px" }}
-          />
-        </div>
+        <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography variant="body1" style={{ fontWeight: "bold" }}>
+              Test with Custom Input
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+              {question.inputVariableTypeData.map((inputVar, index) => (
+                <TextField
+                  key={index}
+                  label={inputVar.inputVariableName}
+                  variant="outlined"
+                  value={inputValues[inputVar.inputVariableName] || ""}
+                  onChange={(e) =>
+                    handleInputChange(e, inputVar.inputVariableName)
+                  }
+                  style={{ marginBottom: "10px" }}
+                />
+              ))}
+              <TextField
+                label="Expected Output"
+                variant="outlined"
+                value={expectedOutput}
+                onChange={(e) => setExpectedOutput(e.target.value)}
+                style={{ marginBottom: "10px" }}
+              />
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleTestCode}
+              style={{ marginRight: "10px" }}
+            >
+              Test
+            </Button>
+            {executionResult && (
+              <div style={{ marginTop: "20px", marginBottom: "20px" }}>
+                <Typography variant="body1" style={{ fontWeight: "bold" }}>
+                  Execution Result with Custom Input:
+                </Typography>
+                {Object.entries(inputValues).map(([key, value], index) => (
+                  <Typography variant="body2" key={index}>
+                    {key}: {value}
+                  </Typography>
+                ))}
+                <Typography variant="body2">
+                  Expected Output: {expectedOutput}
+                </Typography>
+                <Typography variant="body2">
+                  Returned Output: {executionResult}
+                </Typography>
+                {customTestResult &&
+                  (customTestResult === "passed" ? (
+                    <Typography variant="body1" color="green">
+                      <CheckCircleOutlineIcon color="success" /> Passed
+                    </Typography>
+                  ) : (
+                    <Typography variant="body1" color="red">
+                      <CancelIcon color="error" /> Failed
+                    </Typography>
+                  ))}
+              </div>
+            )}
+          </AccordionDetails>
+        </Accordion>
         <Button
           variant="contained"
           color="primary"
-          onClick={handleTestCode}
-          style={{ marginRight: "10px" }}
-        >
-          Test
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          // onClick={handleTestCode}
-          style={{ marginLeft: "5px" }}
+          onClick={handleSubmit}
+          style={{ marginTop: "10px" }}
         >
           Submit
         </Button>
-        {executionResult && (
-          <div style={{ marginTop: "20px", marginBottom: "20px" }}>
+        {submitTestResult && (
+          <div style={{ marginTop: "20px" }}>
             <Typography variant="body1" style={{ fontWeight: "bold" }}>
-              Execution Result with Custom Input:
+              Execution Result:
+              {submitTestResult &&
+                (submitTestResult === "passed" ? (
+                  <Typography variant="body1" color="green">
+                    <CheckCircleOutlineIcon color="success" /> Passed
+                  </Typography>
+                ) : (
+                  <Typography variant="body1" color="red">
+                    <CancelIcon color="error" /> Failed
+                  </Typography>
+                ))}
             </Typography>
-            {Object.entries(inputValues).map(([key, value], index) => (
-              <Typography variant="body2" key={index}>
-                {key}: {value}
-              </Typography>
-            ))}
-            <Typography variant="body2">
-              Expected Output: {expectedOutput}
-            </Typography>
-            <Typography variant="body2">
-              Returned Output: {executionResult}
-            </Typography>
-            {testResult &&
-              (testResult === "passed" ? (
-                <Typography variant="body1" color="green">
-                  <CheckCircleOutlineIcon color="success" /> Passed
-                </Typography>
-              ) : (
-                <Typography variant="body1" color="red">
-                  <CancelIcon color="error" /> Failed
-                </Typography>
+            <div style={{ display: "flex", flexDirection: "row", gap: "30px" }}>
+              {testCaseResults.map((result, index) => (
+                <div
+                  key={index}
+                  style={{ marginTop: "10px", marginBottom: "10px" }}
+                >
+                  <Typography variant="body1" style={{ fontWeight: "bold" }}>
+                    Test Case {index + 1}
+                  </Typography>
+                  <div>
+                    <Typography variant="body2">
+                      {result.inputs
+                        .map((input) => `${input.key}: ${input.value}`)
+                        .join(", ")}
+                    </Typography>
+                    <Typography variant="body2">
+                      Expected Output: {result.output}
+                    </Typography>
+                    <Typography variant="body2">
+                      Returned Output: {result.returnedOutput}
+                    </Typography>
+                    {result.passed ? (
+                      <Typography variant="body1" color="green">
+                        <CheckCircleOutlineIcon color="success" /> Passed
+                      </Typography>
+                    ) : (
+                      <Typography variant="body1" color="red">
+                        <CancelIcon color="error" /> Failed
+                      </Typography>
+                    )}
+                  </div>
+                </div>
               ))}
+            </div>
           </div>
         )}
       </div>
