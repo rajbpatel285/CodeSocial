@@ -91,7 +91,6 @@ exports.update = async (req, res) => {
     isPublished,
   } = req.body;
 
-  // Construct update object
   const updateObject = {
     questionTitle,
     question,
@@ -116,7 +115,6 @@ exports.update = async (req, res) => {
 
     res.send(updatedQuestion);
   } catch (error) {
-    // Handling potential errors, including format of the question ID
     if (error.kind === "ObjectId") {
       return res.status(404).send({
         message: `Question not found with id ${questionId}`,

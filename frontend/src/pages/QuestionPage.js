@@ -11,6 +11,8 @@ function QuestionPage() {
   const [question, setQuestion] = useState(null);
   const [userCode, setUserCode] = useState("");
   const [executionResult, setExecutionResult] = useState("");
+  const [inputValues, setInputValues] = useState({});
+
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
@@ -24,9 +26,21 @@ function QuestionPage() {
         `http://localhost:8000/question/questions/${questionId}`
       );
       setQuestion(response.data);
+      const initialValues = {};
+      response.data.inputVariableTypeData.forEach((inputVar) => {
+        initialValues[inputVar.inputVariableName] = "";
+      });
+      setInputValues(initialValues);
     } catch (error) {
       console.error("Error fetching question:", error);
     }
+  };
+
+  const handleInputChange = (e, inputName) => {
+    setInputValues({
+      ...inputValues,
+      [inputName]: e.target.value,
+    });
   };
 
   const handleTestCode = async () => {
@@ -103,7 +117,7 @@ function QuestionPage() {
           </div>
         ))}
         <TextField
-          label="Add Your Code here..."
+          label="Write Your Code here..."
           multiline
           rows={8}
           variant="outlined"
@@ -112,6 +126,27 @@ function QuestionPage() {
           onChange={(e) => setUserCode(e.target.value)}
           style={{ marginBottom: "10px" }}
         />
+        <Typography
+          variant="body1"
+          style={{
+            whiteSpace: "pre-line",
+            fontWeight: "bold",
+          }}
+        >
+          Test Custom Input:
+        </Typography>
+        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+          {question.inputVariableTypeData.map((inputVar, index) => (
+            <TextField
+              key={index}
+              label={inputVar.inputVariableName}
+              variant="outlined"
+              value={inputValues[inputVar.inputVariableName] || ""}
+              onChange={(e) => handleInputChange(e, inputVar.inputVariableName)}
+              style={{ marginBottom: "10px" }}
+            />
+          ))}
+        </div>
         <Button
           variant="contained"
           color="primary"
