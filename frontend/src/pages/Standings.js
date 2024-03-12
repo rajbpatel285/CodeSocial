@@ -170,7 +170,7 @@ function Standings() {
     <div>
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
-      <div style={{ margin: "0 5%" }}>
+      <div style={{ margin: "0 5% 2% 5%" }}>
         <div
           style={{
             display: "flex",

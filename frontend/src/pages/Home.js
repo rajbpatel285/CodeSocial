@@ -16,7 +16,7 @@ function Home() {
     <div>
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
-      <div style={{ margin: "0 5%", textAlign: "center" }}>
+      <div style={{ margin: "0 5% 2% 5%", textAlign: "center" }}>
         <img
           src={process.env.PUBLIC_URL + "/images/poster_image.png"}
           alt="CodeSocial Home page poster"

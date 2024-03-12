@@ -62,12 +62,6 @@ function SecondaryNavbar() {
         >
           Standings
         </NavButton>
-        <NavButton
-          onClick={() => handleNavigation("/help")}
-          className={location.pathname === "/help" ? "active" : ""}
-        >
-          Help
-        </NavButton>
       </Toolbar>
     </AppBar>
   );

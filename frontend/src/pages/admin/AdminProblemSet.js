@@ -190,7 +190,7 @@ function AdminProblemSet() {
     <div>
       <AdminTopAppBar title="CodeSocial" />
       <AdminSecondaryNavbar />
-      <div style={{ margin: "0 5%" }}>
+      <div style={{ margin: "0 5% 2% 5%" }}>
         <Typography
           variant="h4"
           style={{ fontWeight: "bold", marginBottom: "20px" }}

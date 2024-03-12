@@ -69,7 +69,7 @@ function ContestDetail() {
     <div>
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
-      <div style={{ margin: "0 5%" }}>
+      <div style={{ margin: "0 5% 2% 5%" }}>
         <Typography
           variant="h4"
           style={{

@@ -5,7 +5,6 @@ import Signup from "./pages/Signup";
 import Contests from "./pages/Contests";
 import ProblemSet from "./pages/ProblemSet";
 import Standings from "./pages/Standings";
-import Help from "./pages/Help";
 import QuestionPage from "./pages/QuestionPage";
 import ContestDetail from "./pages/ContestDetail";
 import UserProfile from "./pages/UserProfile";
@@ -13,7 +12,12 @@ import AdminProblemSet from "./pages/admin/AdminProblemSet";
 import AdminContests from "./pages/admin/AdminContests";
 import AdminQuestionPage from "./pages/admin/AdminQuestionPage";
 import AdminContestDetail from "./pages/admin/AdminContestDetail";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 function App() {
   return (
@@ -26,7 +30,6 @@ function App() {
           <Route path="/contests" element={<Contests />} />
           <Route path="/problemset" element={<ProblemSet />} />
           <Route path="/standings" element={<Standings />} />
-          <Route path="/help" element={<Help />} />
           <Route path="/question/:questionId" element={<QuestionPage />} />
           <Route path="/contestdetail/:contestId" element={<ContestDetail />} />
           <Route
@@ -43,6 +46,7 @@ function App() {
             path="/admincontestdetail/:contestId"
             element={<AdminContestDetail />}
           />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </div>

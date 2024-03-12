@@ -20,6 +20,8 @@ function Login() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   useEffect(() => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("isAdmin");
     const isDataValid = emailOrUsername && password;
     setIsButtonDisabled(!isDataValid);
   }, [emailOrUsername, password]);
