@@ -92,7 +92,7 @@ function AdminProblemSet() {
           inputVariableTypeData,
           testCases,
           difficulty: difficulty,
-          isPublished: false,
+          isPublished: true,
         }
       );
       setQuestions([...questions, response.data]);

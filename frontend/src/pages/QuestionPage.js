@@ -74,70 +74,60 @@ function QuestionPage() {
         >
           <b>Difficulty:</b> {question.difficulty}
         </Typography>
-        <div style={{ marginBottom: "10px" }}>
-          <Typography
-            variant="body2"
-            style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
-          >
-            {question.question}
-          </Typography>
-          <Typography
-            variant="body1"
-            style={{
-              whiteSpace: "pre-line",
-              fontWeight: "bold",
-            }}
-          >
-            Input
-          </Typography>
-          <Typography
-            variant="body2"
-            style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
-          >
-            {question.input}
-          </Typography>
-          <Typography
-            variant="body1"
-            style={{
-              whiteSpace: "pre-line",
-              fontWeight: "bold",
-            }}
-          >
-            Output
-          </Typography>
-          <Typography
-            variant="body2"
-            style={{ whiteSpace: "pre-line", marginBottom: "20px" }}
-          >
-            {question.output}
-          </Typography>
-          <TextField
-            label="Add Your Code here..."
-            multiline
-            rows={8}
-            variant="outlined"
-            fullWidth
-            value={userCode}
-            onChange={(e) => setUserCode(e.target.value)}
-            style={{ marginBottom: "10px" }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleTestCode}
-            style={{ marginRight: "10px" }}
-          >
-            Test
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            // onClick={handleTestCode}
-            style={{ marginLeft: "5px" }}
-          >
-            Submit
-          </Button>
-        </div>
+        <Typography
+          variant="body2"
+          style={{ whiteSpace: "pre-line", marginBottom: "10px" }}
+        >
+          {question.question}
+        </Typography>
+        <Typography
+          variant="body1"
+          style={{
+            whiteSpace: "pre-line",
+            fontWeight: "bold",
+          }}
+        >
+          Test Cases:
+        </Typography>
+        {question.testCases.map((testCase, index) => (
+          <div key={index} style={{ marginBottom: "10px" }}>
+            <Typography variant="body2" style={{ fontWeight: "bold" }}>
+              Case {index + 1}:
+            </Typography>
+            {testCase.inputs.map((input, inputIndex) => (
+              <Typography key={inputIndex} variant="body2">
+                {input.key}: {input.value}
+              </Typography>
+            ))}
+            <Typography variant="body2">Output: {testCase.output}</Typography>
+          </div>
+        ))}
+        <TextField
+          label="Add Your Code here..."
+          multiline
+          rows={8}
+          variant="outlined"
+          fullWidth
+          value={userCode}
+          onChange={(e) => setUserCode(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleTestCode}
+          style={{ marginRight: "10px" }}
+        >
+          Test
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          // onClick={handleTestCode}
+          style={{ marginLeft: "5px" }}
+        >
+          Submit
+        </Button>
       </div>
     </div>
   );

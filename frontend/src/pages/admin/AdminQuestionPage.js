@@ -72,7 +72,6 @@ function AdminQuestionPage() {
           inputVariableTypeData,
           testCases,
           difficulty,
-          isPublished: false,
         }
       );
       setQuestion(response.data);
@@ -255,28 +254,6 @@ function AdminQuestionPage() {
               value={questionText}
               onChange={(e) => setQuestionText(e.target.value)}
             />
-            {/* <TextField
-              margin="dense"
-              id="input"
-              label="Input"
-              type="text"
-              fullWidth
-              multiline
-              rows={2}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
-            <TextField
-              margin="dense"
-              id="output"
-              label="Output"
-              type="text"
-              fullWidth
-              multiline
-              rows={2}
-              value={output}
-              onChange={(e) => setOutput(e.target.value)}
-            /> */}
             <Typography
               variant="subtitle1"
               gutterBottom
