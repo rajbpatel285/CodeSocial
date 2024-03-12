@@ -45,15 +45,23 @@ function QuestionPage() {
 
   const handleTestCode = async () => {
     try {
+      const inputsArray = question.inputVariableTypeData.map(
+        (inputVar) => inputValues[inputVar.inputVariableName]
+      );
+
       const response = await axios.post(
         "http://localhost:8000/question/executePython",
         {
           code: userCode,
+          inputs: inputsArray, // Send the inputs array along with the code
         }
       );
       setExecutionResult(response.data.output);
     } catch (error) {
-      console.error("Error testing code:", error.response.data);
+      console.error(
+        "Error testing code:",
+        error.response ? error.response.data : error
+      );
       setExecutionResult("Error executing code. Please try again.");
     }
   };

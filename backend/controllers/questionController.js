@@ -164,11 +164,13 @@ exports.delete = async (req, res) => {
 };
 
 exports.executePythonCode = async (req, res) => {
-  const { code } = req.body;
+  const { code, inputs } = req.body;
 
   const clientId = "b7685c40695e4cf1f500f45143fb8751";
   const clientSecret =
     "9839cffc6250bd8fd91056a16bd16c5b718ee20a52cf8202a606fe0e01e307a0";
+
+  const stdin = inputs.join("\n");
 
   try {
     const response = await axios({
@@ -176,6 +178,7 @@ exports.executePythonCode = async (req, res) => {
       url: "https://api.jdoodle.com/v1/execute",
       data: {
         script: code,
+        stdin: stdin,
         language: "python3",
         versionIndex: "3",
         clientId: clientId,
