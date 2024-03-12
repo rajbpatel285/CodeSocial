@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Typography, TextField, Button } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CancelIcon from "@mui/icons-material/Cancel";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -11,6 +13,8 @@ function QuestionPage() {
   const [question, setQuestion] = useState(null);
   const [userCode, setUserCode] = useState("");
   const [executionResult, setExecutionResult] = useState("");
+  const [expectedOutput, setExpectedOutput] = useState("");
+  const [testResult, setTestResult] = useState("");
   const [inputValues, setInputValues] = useState({});
 
   const userId = localStorage.getItem("userId");
@@ -26,11 +30,6 @@ function QuestionPage() {
         `http://localhost:8000/question/questions/${questionId}`
       );
       setQuestion(response.data);
-      const initialValues = {};
-      response.data.inputVariableTypeData.forEach((inputVar) => {
-        initialValues[inputVar.inputVariableName] = "";
-      });
-      setInputValues(initialValues);
     } catch (error) {
       console.error("Error fetching question:", error);
     }
@@ -53,10 +52,15 @@ function QuestionPage() {
         "http://localhost:8000/question/executePython",
         {
           code: userCode,
-          inputs: inputsArray, // Send the inputs array along with the code
+          inputs: inputsArray,
         }
       );
-      setExecutionResult(response.data.output);
+      setExecutionResult(response.data.output.trim());
+      setTestResult(
+        response.data.output.trim() === expectedOutput.trim()
+          ? "passed"
+          : "failed"
+      );
     } catch (error) {
       console.error(
         "Error testing code:",
@@ -141,7 +145,7 @@ function QuestionPage() {
             fontWeight: "bold",
           }}
         >
-          Test Custom Input:
+          Test with Custom Input:
         </Typography>
         <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
           {question.inputVariableTypeData.map((inputVar, index) => (
@@ -154,6 +158,13 @@ function QuestionPage() {
               style={{ marginBottom: "10px" }}
             />
           ))}
+          <TextField
+            label="Expected Output"
+            variant="outlined"
+            value={expectedOutput}
+            onChange={(e) => setExpectedOutput(e.target.value)}
+            style={{ marginBottom: "10px" }}
+          />
         </div>
         <Button
           variant="contained"
@@ -171,6 +182,34 @@ function QuestionPage() {
         >
           Submit
         </Button>
+        {executionResult && (
+          <div style={{ marginTop: "20px", marginBottom: "20px" }}>
+            <Typography variant="body1" style={{ fontWeight: "bold" }}>
+              Execution Result with Custom Input:
+            </Typography>
+            {Object.entries(inputValues).map(([key, value], index) => (
+              <Typography variant="body2" key={index}>
+                {key}: {value}
+              </Typography>
+            ))}
+            <Typography variant="body2">
+              Expected Output: {expectedOutput}
+            </Typography>
+            <Typography variant="body2">
+              Returned Output: {executionResult}
+            </Typography>
+            {testResult &&
+              (testResult === "passed" ? (
+                <Typography variant="body1" color="green">
+                  <CheckCircleOutlineIcon color="success" /> Passed
+                </Typography>
+              ) : (
+                <Typography variant="body1" color="red">
+                  <CancelIcon color="error" /> Failed
+                </Typography>
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );
