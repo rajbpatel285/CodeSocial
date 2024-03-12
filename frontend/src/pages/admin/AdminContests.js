@@ -68,7 +68,11 @@ function AdminContests() {
         level,
         date,
       });
-      console.log(response.data);
+      setAlertMessage(`Contest "${response.data.contestName}" created`);
+      const timer = setTimeout(() => {
+        setAlertMessage(null);
+        navigate(location.pathname, { replace: true, state: {} });
+      }, 5000);
       fetchContests();
       setOpen(false);
     } catch (error) {
@@ -175,7 +179,12 @@ function AdminContests() {
         </Dialog>
         {alertMessage && (
           <Alert
-            severity={alertMessage.includes("published") ? "success" : "error"}
+            severity={
+              alertMessage.includes("published") ||
+              alertMessage.includes("created")
+                ? "success"
+                : "error"
+            }
             onClose={() => setAlertMessage(null)}
             sx={{ marginBottom: "20px" }}
           >

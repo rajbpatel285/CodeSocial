@@ -151,7 +151,7 @@ function AdminContestDetail() {
             response.data.message.includes("published")
               ? "published"
               : "withdrawn"
-          } successfully`,
+          }`,
         },
       });
     } catch (error) {
@@ -161,10 +161,14 @@ function AdminContestDetail() {
 
   const handleDeleteContest = async () => {
     try {
-      await axios.delete(`http://localhost:8000/contest/${contestId}`);
+      const response = await axios.delete(
+        `http://localhost:8000/contest/${contestId}`
+      );
       navigate("/admincontests", {
         replace: true,
-        state: { message: "Contest deleted successfully." },
+        state: {
+          message: `Contest "${response.data.contest.contestName}" deleted`,
+        },
       });
     } catch (error) {
       console.error("Failed to delete contest", error);

@@ -104,9 +104,7 @@ function AdminProblemSet() {
         { inputVariableName: "", inputVariableType: "" },
       ]);
       setTestCases([{ inputs: [], output: "" }]);
-      setAlertMessage(
-        `Question "${response.data.questionTitle}" added successfully`
-      );
+      setAlertMessage(`Question "${response.data.questionTitle}" added `);
       setShowAlert(true);
 
       setTimeout(() => {

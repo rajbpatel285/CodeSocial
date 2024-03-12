@@ -113,7 +113,6 @@ function Standings() {
             Object.values(ratingCriteria)[
               Object.keys(ratingCriteria).indexOf(key) + 1
             ] || Infinity;
-          console.log(minRating, nextRating);
           return rating < minRating && rating >= nextRating;
         });
       });

@@ -71,11 +71,11 @@ exports.update = async (req, res) => {
 
   try {
     const contest = await Contest.findOneAndUpdate(
-      { contestId: contestId }, // Use the _id field to match the contestId
+      { contestId: contestId },
       req.body,
       {
-        new: true, // Return the updated document
-        runValidators: true, // Optionally add this to run schema validations on the update
+        new: true,
+        runValidators: true,
       }
     );
 
@@ -103,7 +103,7 @@ exports.delete = async (req, res) => {
         message: `Cannot delete Contest with id=${contestId}. Maybe Contest was not found!`,
       });
     }
-    res.send({ message: "Contest was deleted successfully!" });
+    res.send({ message: "Contest was deleted successfully!", contest });
   } catch (error) {
     res
       .status(500)
