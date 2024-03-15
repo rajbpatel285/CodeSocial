@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-// Customized button with hover effect
 const NavButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
   "&.active": {

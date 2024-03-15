@@ -58,7 +58,6 @@ function UserProfile() {
           name: response.data.name,
           email: response.data.email,
         });
-        // After setting user details, check friendship
         checkFriendship(response.data._id);
       } catch (error) {
         console.error("Error fetching user details:", error);

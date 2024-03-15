@@ -1,4 +1,3 @@
-// models/Contest.js
 const mongoose = require("mongoose");
 
 const contestSchema = new mongoose.Schema({

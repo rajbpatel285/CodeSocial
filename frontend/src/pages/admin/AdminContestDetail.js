@@ -114,7 +114,6 @@ function AdminContestDetail() {
         updateContest
       );
       setUpdateDialogOpen(false);
-      // Refresh contest details or navigate away after update
       fetchContestDetails();
     } catch (error) {
       console.error("Failed to update contest", error);
