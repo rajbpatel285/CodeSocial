@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, TextField, Button } from "@mui/material";
+import {
+  Typography,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Accordion from "@mui/material/Accordion";
@@ -23,6 +31,7 @@ function QuestionPage() {
   const [inputValues, setInputValues] = useState({});
   const [expanded, setExpanded] = useState(false);
   const [testCaseResults, setTestCaseResults] = useState([]);
+  const [programmingLanguage, setProgrammingLanguage] = useState("");
 
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
@@ -50,13 +59,16 @@ function QuestionPage() {
   };
 
   const handleTestCode = async () => {
+    const apiEndpoint =
+      programmingLanguage === "python" ? "executePython" : "executeJava";
+
     try {
       const inputsArray = question.inputVariableTypeData.map(
         (inputVar) => inputValues[inputVar.inputVariableName]
       );
 
       const response = await axios.post(
-        "http://localhost:8000/question/executePython",
+        `http://localhost:8000/question/${apiEndpoint}`,
         {
           code: userCode,
           inputs: inputsArray,
@@ -78,6 +90,8 @@ function QuestionPage() {
   };
 
   const handleSubmit = async () => {
+    const apiEndpoint =
+      programmingLanguage === "python" ? "executePython" : "executeJava";
     let allPassed = true;
     const results = [];
 
@@ -85,7 +99,7 @@ function QuestionPage() {
       const inputsArray = testCase.inputs.map((input) => input.value);
       try {
         const response = await axios.post(
-          "http://localhost:8000/question/executePython",
+          `http://localhost:8000/question/${apiEndpoint}`,
           {
             code: userCode,
             inputs: inputsArray,
@@ -172,6 +186,21 @@ function QuestionPage() {
             <Typography variant="body2">Output: {testCase.output}</Typography>
           </div>
         ))}
+        <FormControl style={{ marginBottom: "20px", width: "20%" }}>
+          <InputLabel id="programming-language-label">
+            Programming Language
+          </InputLabel>
+          <Select
+            labelId="programming-language-label"
+            id="programmingLanguage"
+            value={programmingLanguage}
+            label="Programming Language"
+            onChange={(e) => setProgrammingLanguage(e.target.value)}
+          >
+            <MenuItem value={"python"}>Python</MenuItem>
+            <MenuItem value={"java"}>Java</MenuItem>
+          </Select>
+        </FormControl>
         <TextField
           label="Write Your Code here..."
           multiline
@@ -218,9 +247,15 @@ function QuestionPage() {
               variant="contained"
               color="primary"
               onClick={handleTestCode}
-              style={{ marginRight: "10px" }}
+              style={{ marginTop: "10px" }}
+              disabled={!programmingLanguage}
             >
-              Test
+              Test{" "}
+              {programmingLanguage === "python"
+                ? "Python Code"
+                : programmingLanguage === "java"
+                ? "Java Code"
+                : ""}
             </Button>
             {executionResult && (
               <div style={{ marginTop: "20px", marginBottom: "20px" }}>
@@ -257,8 +292,14 @@ function QuestionPage() {
           color="primary"
           onClick={handleSubmit}
           style={{ marginTop: "10px" }}
+          disabled={!programmingLanguage}
         >
-          Submit
+          Submit{" "}
+          {programmingLanguage === "python"
+            ? "Python Code"
+            : programmingLanguage === "java"
+            ? "Java Code"
+            : ""}
         </Button>
         {submitTestResult && (
           <div style={{ marginTop: "20px" }}>
