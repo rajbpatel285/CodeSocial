@@ -125,12 +125,18 @@ function AdminContestDetail() {
 
   const handleUpdateContest = async () => {
     try {
-      await axios.put(
+      const response = await axios.put(
         `http://localhost:8000/contest/${contestId}`,
         updateContest
       );
       setUpdateDialogOpen(false);
       fetchContestDetails();
+      setAlertMessage(
+        `Contest "${response.data.contest.contestName}" updated successfully`
+      );
+      const timer = setTimeout(() => {
+        setAlertMessage(null);
+      }, 5000);
     } catch (error) {
       console.error("Failed to update contest", error);
     }
@@ -209,7 +215,7 @@ function AdminContestDetail() {
       <div style={{ margin: "0 5% 2% 5%" }}>
         {alertMessage && (
           <Alert
-            severity="error"
+            severity={alertMessage.includes("deleted") ? "error" : "success"}
             onClose={() => setAlertMessage(null)}
             sx={{ marginBottom: "20px" }}
           >
