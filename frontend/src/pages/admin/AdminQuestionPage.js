@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   TextField,
   Typography,
@@ -12,6 +13,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
@@ -25,13 +27,13 @@ function AdminQuestionPage() {
   const [open, setOpen] = useState(false);
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionText, setQuestionText] = useState("");
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [inputVariableTypeData, setInputVariableTypeData] = useState([
     { inputVariableName: "", inputVariableType: "" },
   ]);
   const [testCases, setTestCases] = useState([{ inputs: [], output: "" }]);
+  const [alertMessage, setAlertMessage] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
@@ -55,8 +57,6 @@ function AdminQuestionPage() {
     setOpen(true);
     setQuestionTitle(question.questionTitle);
     setQuestionText(question.question);
-    setInput(question.input);
-    setOutput(question.output);
     setDifficulty(question.difficulty);
     setInputVariableTypeData(question.inputVariableTypeData);
     setTestCases(question.testCases);
@@ -76,6 +76,12 @@ function AdminQuestionPage() {
       );
       setQuestion(response.data);
       setOpen(false);
+      setAlertMessage(
+        `Question "${response.data.questionTitle}" updated successfully`
+      );
+      const timer = setTimeout(() => {
+        setAlertMessage(null);
+      }, 5000);
     } catch (error) {
       console.error("Error updating question:", error);
     }
@@ -83,10 +89,15 @@ function AdminQuestionPage() {
 
   const handleDeleteQuestion = async () => {
     try {
-      await axios.delete(
+      const response = await axios.delete(
         `http://localhost:8000/question/questions/${questionId}`
       );
-      navigate(-1);
+      navigate(-1, {
+        replace: true,
+        state: {
+          message: `Question "${response.data.questionDeleted.questionTitle}" deleted`,
+        },
+      });
     } catch (error) {
       console.error("Error deleting question:", error);
     }
@@ -164,6 +175,15 @@ function AdminQuestionPage() {
       <AdminTopAppBar title="CodeSocial" />
       <AdminSecondaryNavbar />
       <div style={{ margin: "0 5% 2% 5%" }}>
+        {alertMessage && (
+          <Alert
+            severity="success"
+            onClose={() => setAlertMessage(null)}
+            sx={{ marginBottom: "20px" }}
+          >
+            {alertMessage}
+          </Alert>
+        )}
         <Typography
           variant="h4"
           style={{
@@ -220,16 +240,28 @@ function AdminQuestionPage() {
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => {
-            if (
-              window.confirm("Are you sure you want to delete this question?")
-            ) {
-              handleDeleteQuestion();
-            }
-          }}
+          onClick={() => setDeleteDialogOpen(true)}
         >
           Delete Question
         </Button>
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+        >
+          <DialogTitle>Delete Contest</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this question? This action cannot
+              be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleDeleteQuestion} color="secondary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Update Question</DialogTitle>
           <DialogContent>

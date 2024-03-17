@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Navigate, Link } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  Navigate,
+  Link,
+  useLocation,
+} from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -20,6 +26,7 @@ import {
   TableRow,
   Paper,
   DialogContentText,
+  Alert,
 } from "@mui/material";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
@@ -49,9 +56,18 @@ function AdminContestDetail() {
     level: "",
     date: "",
   });
+  const [alertMessage, setAlertMessage] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
     fetchContestDetails();
+    if (location.state && location.state.message) {
+      setAlertMessage(location.state.message);
+      const timer = setTimeout(() => {
+        setAlertMessage(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
   }, [contestId]);
 
   const fetchContestDetails = async () => {
@@ -191,6 +207,15 @@ function AdminContestDetail() {
       <AdminTopAppBar title="CodeSocial" />
       <AdminSecondaryNavbar />
       <div style={{ margin: "0 5% 2% 5%" }}>
+        {alertMessage && (
+          <Alert
+            severity="error"
+            onClose={() => setAlertMessage(null)}
+            sx={{ marginBottom: "20px" }}
+          >
+            {alertMessage}
+          </Alert>
+        )}
         <Typography
           variant="h4"
           style={{

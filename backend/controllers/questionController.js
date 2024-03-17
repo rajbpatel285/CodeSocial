@@ -156,6 +156,7 @@ exports.delete = async (req, res) => {
     res.send({
       message: "Question removed from contest(s) and deleted successfully",
       removalResult,
+      questionDeleted,
     });
   } catch (error) {
     console.log(error);

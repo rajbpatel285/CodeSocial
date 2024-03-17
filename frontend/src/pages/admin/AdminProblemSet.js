@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useLocation } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -42,9 +42,17 @@ function AdminProblemSet() {
     { inputVariableName: "", inputVariableType: "" },
   ]);
   const [testCases, setTestCases] = useState([{ inputs: [], output: "" }]);
+  const location = useLocation();
 
   useEffect(() => {
     fetchQuestions();
+    if (location.state && location.state.message) {
+      setAlertMessage(location.state.message);
+      const timer = setTimeout(() => {
+        setAlertMessage(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const fetchQuestions = async () => {
