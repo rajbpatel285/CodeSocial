@@ -14,4 +14,6 @@ router.delete("/questions/:questionId", questionController.delete);
 
 router.post("/executePython", questionController.executePythonCode);
 
+router.post("/executeJava", questionController.executeJavaCode);
+
 module.exports = router;

@@ -41,7 +41,7 @@ function Login() {
         localStorage.setItem("isAdmin", response.data.isAdmin);
         response.data.isAdmin
           ? navigate("/adminproblemset")
-          : navigate("/home"); // Redirect based on isAdmin
+          : navigate("/home");
       } else {
         if (response.data.message === "incorrect password") {
           setErrorMessage("Password is incorrect");
