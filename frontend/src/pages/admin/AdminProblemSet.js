@@ -9,6 +9,9 @@ import {
   TextField,
   Typography,
   FormControl,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
   InputLabel,
   Select,
   MenuItem,
@@ -23,6 +26,7 @@ import {
   Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
@@ -43,9 +47,25 @@ function AdminProblemSet() {
   ]);
   const [testCases, setTestCases] = useState([{ inputs: [], output: "" }]);
   const location = useLocation();
+  const [allQuestions, setAllQuestions] = useState([]);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [difficultyFilter, setDifficultyFilter] = useState({
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+  });
 
   useEffect(() => {
     fetchQuestions();
+    setDifficultyFilter({
+      1: false,
+      2: false,
+      3: false,
+      4: false,
+      5: false,
+    });
     if (location.state && location.state.message) {
       setAlertMessage(location.state.message);
       const timer = setTimeout(() => {
@@ -64,6 +84,7 @@ function AdminProblemSet() {
         (question) => question.isPublished
       );
       setQuestions(publishedQuestions);
+      setAllQuestions(publishedQuestions);
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
@@ -188,6 +209,35 @@ function AdminProblemSet() {
     setTestCases(updatedTestCases);
   };
 
+  const handleDifficultyChange = (level) => (event) => {
+    setDifficultyFilter({ ...difficultyFilter, [level]: event.target.checked });
+  };
+
+  const applyFilters = () => {
+    let filteredQuestions = allQuestions;
+
+    if (Object.values(difficultyFilter).some((value) => value)) {
+      filteredQuestions = filteredQuestions.filter(
+        (question) => difficultyFilter[question.difficulty]
+      );
+    }
+
+    setQuestions(filteredQuestions);
+    setFilterOpen(false);
+  };
+
+  const removeAllFilters = () => {
+    setDifficultyFilter({
+      1: false,
+      2: false,
+      3: false,
+      4: false,
+      5: false,
+    });
+    setQuestions(allQuestions);
+    setFilterOpen(false);
+  };
+
   const cellStyle = {
     border: "3px solid rgba(224, 224, 224, 1)",
   };
@@ -203,14 +253,61 @@ function AdminProblemSet() {
         >
           Problem Set
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleClickOpen}
-          style={{ marginBottom: "20px" }}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          Add Question
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleClickOpen}
+            style={{ marginBottom: "20px" }}
+          >
+            Add Question
+          </Button>
+          <Button variant="outlined" onClick={() => setFilterOpen(true)}>
+            <FilterAltIcon />
+            Filter
+          </Button>
+        </div>
+        <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
+          <DialogTitle>Filters</DialogTitle>
+          <DialogContent>
+            <FormGroup>
+              <Typography
+                variant="subtitle1"
+                gutterBottom
+                style={{ marginTop: "20px" }}
+              >
+                Difficulty
+              </Typography>
+              {Array.from({ length: 5 }, (_, i) => (
+                <FormControlLabel
+                  key={i + 1}
+                  control={
+                    <Checkbox
+                      checked={difficultyFilter[i + 1]}
+                      onChange={handleDifficultyChange(i + 1)}
+                    />
+                  }
+                  label={`Level ${i + 1}`}
+                  style={{ marginLeft: "5px" }}
+                />
+              ))}
+            </FormGroup>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={removeAllFilters} color="primary">
+              Remove All Filters
+            </Button>
+            <Button onClick={applyFilters} color="primary">
+              Apply
+            </Button>
+          </DialogActions>
+        </Dialog>
         {showAlert && (
           <Alert
             onClose={() => setShowAlert(false)}

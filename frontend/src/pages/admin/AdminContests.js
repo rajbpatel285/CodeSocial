@@ -167,6 +167,12 @@ function AdminContests() {
       <AdminTopAppBar title="CodeSocial" />
       <AdminSecondaryNavbar />
       <div style={{ margin: "0 5% 2% 5%" }}>
+        <Typography
+          variant="h4"
+          style={{ fontWeight: "bold", marginBottom: "20px" }}
+        >
+          Contests
+        </Typography>
         <div
           style={{
             display: "flex",
@@ -174,12 +180,14 @@ function AdminContests() {
             alignItems: "center",
           }}
         >
-          <Typography
-            variant="h4"
-            style={{ fontWeight: "bold", marginBottom: "20px" }}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpen(true)}
+            style={{ marginBottom: "20px" }}
           >
-            Contests
-          </Typography>
+            Add Contest
+          </Button>
           <Button variant="outlined" onClick={() => setFilterOpen(true)}>
             <FilterAltIcon />
             Filter
@@ -256,14 +264,6 @@ function AdminContests() {
             </Button>
           </DialogContent>
         </Dialog>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpen(true)}
-          style={{ marginBottom: "20px" }}
-        >
-          Add Contest
-        </Button>
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Add a New Contest</DialogTitle>
           <DialogContent>
