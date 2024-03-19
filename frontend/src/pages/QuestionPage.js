@@ -197,8 +197,8 @@ function QuestionPage() {
             label="Programming Language"
             onChange={(e) => setProgrammingLanguage(e.target.value)}
           >
-            <MenuItem value={"python"}>Python</MenuItem>
             <MenuItem value={"java"}>Java</MenuItem>
+            <MenuItem value={"python"}>Python</MenuItem>
           </Select>
         </FormControl>
         <TextField

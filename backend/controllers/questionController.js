@@ -4,25 +4,12 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 
 exports.create = async (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Content cannot be empty",
-    });
-  }
-
-  const {
-    questionTitle,
-    question,
-    inputVariableTypeData,
-    testCases,
-    difficulty,
-    isPublished,
-  } = req.body;
+  const { questionTitle, question, testCases, difficulty, isPublished } =
+    req.body;
 
   const newQuestion = new Question({
     questionTitle,
     question,
-    inputVariableTypeData,
     testCases,
     difficulty,
     isPublished,
@@ -216,7 +203,6 @@ exports.executeJavaCode = async (req, res) => {
         script: code,
         stdin: stdin,
         language: "java",
-        versionIndex: "3",
         clientId: clientId,
         clientSecret: clientSecret,
       },

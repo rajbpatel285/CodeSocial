@@ -2,16 +2,8 @@ const mongoose = require("mongoose");
 
 const testDataSchema = new mongoose.Schema(
   {
-    inputs: [{ key: String, value: String }],
+    input: String,
     output: String,
-  },
-  { _id: false }
-);
-
-const inputVariableSchema = new mongoose.Schema(
-  {
-    inputVariableName: String,
-    inputVariableType: String,
   },
   { _id: false }
 );
@@ -31,7 +23,6 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  inputVariableTypeData: [inputVariableSchema],
   testCases: [testDataSchema],
   difficulty: {
     type: Number,
