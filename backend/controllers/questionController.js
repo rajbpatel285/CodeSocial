@@ -158,15 +158,13 @@ exports.executePythonCode = async (req, res) => {
   const clientSecret =
     "9839cffc6250bd8fd91056a16bd16c5b718ee20a52cf8202a606fe0e01e307a0";
 
-  const stdin = inputs.join("\n");
-
   try {
     const response = await axios({
       method: "post",
       url: "https://api.jdoodle.com/v1/execute",
       data: {
         script: code,
-        stdin: stdin,
+        stdin: inputs,
         language: "python3",
         versionIndex: "3",
         clientId: clientId,
@@ -193,15 +191,13 @@ exports.executeJavaCode = async (req, res) => {
   const clientSecret =
     "9839cffc6250bd8fd91056a16bd16c5b718ee20a52cf8202a606fe0e01e307a0";
 
-  const stdin = inputs.join("\n");
-
   try {
     const response = await axios({
       method: "post",
       url: "https://api.jdoodle.com/v1/execute",
       data: {
         script: code,
-        stdin: stdin,
+        stdin: inputs,
         language: "java",
         clientId: clientId,
         clientSecret: clientSecret,

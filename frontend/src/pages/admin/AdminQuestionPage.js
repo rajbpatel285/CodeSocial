@@ -221,14 +221,25 @@ function AdminQuestionPage() {
             <Typography variant="body2" style={{ fontWeight: "bold" }}>
               Case {index + 1}:
             </Typography>
-            {testCase.inputs.map((input, inputIndex) => (
-              <Typography key={inputIndex} variant="body2">
-                {input.key}: {input.value}
-              </Typography>
-            ))}
-            <Typography variant="body2">Output: {testCase.output}</Typography>
+            <Typography variant="body2">Input:</Typography>
+            <Typography
+              component="pre"
+              variant="body2"
+              style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+            >
+              {testCase.input}
+            </Typography>
+            <Typography variant="body2">Output:</Typography>
+            <Typography
+              component="pre"
+              variant="body2"
+              style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+            >
+              {testCase.output}
+            </Typography>
           </div>
         ))}
+
         <Button
           variant="contained"
           color="primary"

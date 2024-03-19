@@ -28,7 +28,7 @@ function QuestionPage() {
   const [expectedOutput, setExpectedOutput] = useState("");
   const [customTestResult, setCustomTestResult] = useState("");
   const [submitTestResult, setSubmitTestResult] = useState("");
-  const [inputValues, setInputValues] = useState({});
+  const [testInput, setTestInput] = useState("");
   const [expanded, setExpanded] = useState(false);
   const [testCaseResults, setTestCaseResults] = useState([]);
   const [programmingLanguage, setProgrammingLanguage] = useState("");
@@ -51,27 +51,18 @@ function QuestionPage() {
     }
   };
 
-  const handleInputChange = (e, inputName) => {
-    setInputValues({
-      ...inputValues,
-      [inputName]: e.target.value,
-    });
-  };
-
   const handleTestCode = async () => {
     const apiEndpoint =
       programmingLanguage === "python" ? "executePython" : "executeJava";
 
     try {
-      const inputsArray = question.inputVariableTypeData.map(
-        (inputVar) => inputValues[inputVar.inputVariableName]
-      );
+      const inputValue = testInput;
 
       const response = await axios.post(
         `http://localhost:8000/question/${apiEndpoint}`,
         {
           code: userCode,
-          inputs: inputsArray,
+          inputs: inputValue,
         }
       );
       setExecutionResult(response.data.output.trim());
@@ -96,13 +87,13 @@ function QuestionPage() {
     const results = [];
 
     for (const testCase of question.testCases) {
-      const inputsArray = testCase.inputs.map((input) => input.value);
+      const inputValue = testCase.input;
       try {
         const response = await axios.post(
           `http://localhost:8000/question/${apiEndpoint}`,
           {
             code: userCode,
-            inputs: inputsArray,
+            inputs: inputValue,
           }
         );
         const passed = response.data.output.trim() === testCase.output.trim();
@@ -178,12 +169,22 @@ function QuestionPage() {
             <Typography variant="body2" style={{ fontWeight: "bold" }}>
               Case {index + 1}:
             </Typography>
-            {testCase.inputs.map((input, inputIndex) => (
-              <Typography key={inputIndex} variant="body2">
-                {input.key}: {input.value}
-              </Typography>
-            ))}
-            <Typography variant="body2">Output: {testCase.output}</Typography>
+            <Typography variant="body2">Input:</Typography>
+            <Typography
+              component="pre"
+              variant="body2"
+              style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+            >
+              {testCase.input}
+            </Typography>
+            <Typography variant="body2">Output:</Typography>
+            <Typography
+              component="pre"
+              variant="body2"
+              style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+            >
+              {testCase.output}
+            </Typography>
           </div>
         ))}
         <FormControl style={{ marginBottom: "20px", width: "20%" }}>
@@ -223,20 +224,19 @@ function QuestionPage() {
           </AccordionSummary>
           <AccordionDetails>
             <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-              {question.inputVariableTypeData.map((inputVar, index) => (
-                <TextField
-                  key={index}
-                  label={inputVar.inputVariableName}
-                  variant="outlined"
-                  value={inputValues[inputVar.inputVariableName] || ""}
-                  onChange={(e) =>
-                    handleInputChange(e, inputVar.inputVariableName)
-                  }
-                  style={{ marginBottom: "10px" }}
-                />
-              ))}
+              <TextField
+                label="Input"
+                multiline
+                rows={3}
+                variant="outlined"
+                value={testInput}
+                onChange={(e) => setTestInput(e.target.value)}
+                style={{ marginBottom: "10px" }}
+              />
               <TextField
                 label="Expected Output"
+                multiline
+                rows={3}
                 variant="outlined"
                 value={expectedOutput}
                 onChange={(e) => setExpectedOutput(e.target.value)}
@@ -262,16 +262,29 @@ function QuestionPage() {
                 <Typography variant="body1" style={{ fontWeight: "bold" }}>
                   Execution Result with Custom Input:
                 </Typography>
-                {Object.entries(inputValues).map(([key, value], index) => (
-                  <Typography variant="body2" key={index}>
-                    {key}: {value}
-                  </Typography>
-                ))}
-                <Typography variant="body2">
-                  Expected Output: {expectedOutput}
+                <Typography variant="body2">Input:</Typography>
+                <Typography
+                  component="pre"
+                  variant="body2"
+                  style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+                >
+                  {testInput}
                 </Typography>
-                <Typography variant="body2">
-                  Returned Output: {executionResult}
+                <Typography variant="body2">Expected Output:</Typography>
+                <Typography
+                  component="pre"
+                  variant="body2"
+                  style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+                >
+                  {expectedOutput}
+                </Typography>
+                <Typography variant="body2">Returned Output:</Typography>
+                <Typography
+                  component="pre"
+                  variant="body2"
+                  style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+                >
+                  {executionResult}
                 </Typography>
                 {customTestResult &&
                   (customTestResult === "passed" ? (
@@ -326,16 +339,29 @@ function QuestionPage() {
                     Test Case {index + 1}
                   </Typography>
                   <div>
-                    <Typography variant="body2">
-                      {result.inputs
-                        .map((input) => `${input.key}: ${input.value}`)
-                        .join(", ")}
+                    <Typography variant="body2">Input:</Typography>
+                    <Typography
+                      component="pre"
+                      variant="body2"
+                      style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+                    >
+                      {result.input}
                     </Typography>
-                    <Typography variant="body2">
-                      Expected Output: {result.output}
+                    <Typography variant="body2">Expected Output:</Typography>
+                    <Typography
+                      component="pre"
+                      variant="body2"
+                      style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+                    >
+                      {result.output}
                     </Typography>
-                    <Typography variant="body2">
-                      Returned Output: {result.returnedOutput}
+                    <Typography variant="body2">Returned Output:</Typography>
+                    <Typography
+                      component="pre"
+                      variant="body2"
+                      style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+                    >
+                      {result.returnedOutput}
                     </Typography>
                     {result.passed ? (
                       <Typography variant="body1" color="green">
