@@ -5,12 +5,15 @@ const mongoose = require("mongoose");
 exports.create = async (req, res) => {
   const { contestName, description, level, date } = req.body;
 
+  const adjustedDate = new Date(date);
+  adjustedDate.setDate(adjustedDate.getDate() + 1);
+
   const contest = new Contest({
     contestId: new mongoose.Types.ObjectId(),
     contestName,
     description,
     level,
-    date,
+    date: adjustedDate,
     questionSet: [],
     isPublished: false,
   });
