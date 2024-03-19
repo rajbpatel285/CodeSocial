@@ -69,19 +69,12 @@ exports.update = async (req, res) => {
   }
 
   const { questionId } = req.params;
-  const {
-    questionTitle,
-    question,
-    inputVariableTypeData,
-    testCases,
-    difficulty,
-    isPublished,
-  } = req.body;
+  const { questionTitle, question, testCases, difficulty, isPublished } =
+    req.body;
 
   const updateObject = {
     questionTitle,
     question,
-    inputVariableTypeData,
     testCases,
     difficulty,
     isPublished,

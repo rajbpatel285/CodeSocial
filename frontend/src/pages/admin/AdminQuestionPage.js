@@ -28,10 +28,7 @@ function AdminQuestionPage() {
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionText, setQuestionText] = useState("");
   const [difficulty, setDifficulty] = useState("");
-  const [inputVariableTypeData, setInputVariableTypeData] = useState([
-    { inputVariableName: "", inputVariableType: "" },
-  ]);
-  const [testCases, setTestCases] = useState([{ inputs: [], output: "" }]);
+  const [testCases, setTestCases] = useState([{ input: "", output: "" }]);
   const [alertMessage, setAlertMessage] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -58,7 +55,6 @@ function AdminQuestionPage() {
     setQuestionTitle(question.questionTitle);
     setQuestionText(question.question);
     setDifficulty(question.difficulty);
-    setInputVariableTypeData(question.inputVariableTypeData);
     setTestCases(question.testCases);
   };
 
@@ -69,7 +65,6 @@ function AdminQuestionPage() {
         {
           questionTitle,
           question: questionText,
-          inputVariableTypeData,
           testCases,
           difficulty,
         }
@@ -103,56 +98,18 @@ function AdminQuestionPage() {
     }
   };
 
-  const handleInputVariableTypeDataChange = (index, field) => (event) => {
-    const newInputVariableTypeData = [...inputVariableTypeData];
-    newInputVariableTypeData[index][field] = event.target.value;
-    setInputVariableTypeData(newInputVariableTypeData);
-  };
-
-  const addInputVariableTypeDataField = () => {
-    setInputVariableTypeData([
-      ...inputVariableTypeData,
-      { inputVariableName: "", inputVariableType: "" },
-    ]);
-  };
-
-  const removeInputVariableTypeDataField = (index) => {
-    const newInputVariableTypeData = inputVariableTypeData.filter(
-      (_, i) => i !== index
-    );
-    setInputVariableTypeData(newInputVariableTypeData);
-  };
-
-  const handleTestCaseOutputChange = (testIndex, value) => {
-    const updatedTestCases = [...testCases];
-    updatedTestCases[testIndex].output = value;
+  const handleTestCaseChange = (index, field, value) => {
+    const updatedTestCases = testCases.map((testCase, i) => {
+      if (i === index) {
+        return { ...testCase, [field]: value };
+      }
+      return testCase;
+    });
     setTestCases(updatedTestCases);
   };
 
   const addTestCase = () => {
-    const newTestCase = {
-      inputs: inputVariableTypeData.map((variable) => ({
-        key: variable.inputVariableName,
-        value: "",
-      })),
-      output: "",
-    };
-    setTestCases([...testCases, newTestCase]);
-  };
-
-  const handleTestCaseInputChange = (
-    testIndex,
-    inputIndex,
-    keyOrValue,
-    newValue
-  ) => {
-    const updatedTestCases = [...testCases];
-    if (keyOrValue === "value") {
-      updatedTestCases[testIndex].inputs[inputIndex].value = newValue;
-    } else {
-      updatedTestCases[testIndex].inputs[inputIndex].key = newValue;
-    }
-    setTestCases(updatedTestCases);
+    setTestCases([...testCases, { input: "", output: "" }]);
   };
 
   const removeTestCase = (testIndex) => {
@@ -302,58 +259,52 @@ function AdminQuestionPage() {
               gutterBottom
               style={{ marginTop: "10px", marginBottom: "10px" }}
             >
-              <b>Input Variables: </b>
+              <b>Test Cases: </b>
             </Typography>
-            {inputVariableTypeData.map((test, index) => (
+            {testCases.map((testCase, index) => (
               <div
                 key={index}
-                style={{ display: "flex", gap: "20px", marginBottom: "20px" }}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
               >
                 <TextField
-                  label="Input Variable Name"
-                  type="text"
+                  label="Test Case Input"
+                  multiline
+                  rows={3}
+                  value={testCase.input}
+                  onChange={(e) =>
+                    handleTestCaseChange(index, "input", e.target.value)
+                  }
                   fullWidth
                   margin="dense"
-                  value={test.inputVariableName}
-                  onChange={handleInputVariableTypeDataChange(
-                    index,
-                    "inputVariableName"
-                  )}
-                  style={{ flex: 1 }}
                 />
-                <FormControl fullWidth margin="dense" style={{ flex: 1 }}>
-                  <InputLabel id="input-variable-type-label">
-                    Input Variable Type
-                  </InputLabel>
-                  <Select
-                    labelId="input-variable-type-label"
-                    id="inputVariableType"
-                    value={test.inputVariableType}
-                    onChange={handleInputVariableTypeDataChange(
-                      index,
-                      "inputVariableType"
-                    )}
-                  >
-                    <MenuItem value={"Integer"}>Integer</MenuItem>
-                    <MenuItem value={"Array"}>Array</MenuItem>
-                    <MenuItem value={"String"}>String</MenuItem>
-                  </Select>
-                </FormControl>
-                <Button
-                  onClick={() => removeInputVariableTypeDataField(index)}
-                  size="small"
-                >
+                <TextField
+                  label="Test Case Output"
+                  multiline
+                  rows={3}
+                  value={testCase.output}
+                  onChange={(e) =>
+                    handleTestCaseChange(index, "output", e.target.value)
+                  }
+                  fullWidth
+                  margin="dense"
+                />
+                <Button onClick={() => removeTestCase(index)}>
                   <CloseIcon />
                 </Button>
               </div>
             ))}
             <Button
+              onClick={addTestCase}
               variant="contained"
               color="primary"
-              onClick={addInputVariableTypeDataField}
-              style={{ marginBottom: "20px" }}
+              style={{ marginTop: "10px" }}
             >
-              Add Test Input Variable
+              Add Test Case
             </Button>
             <FormControl fullWidth margin="dense">
               <InputLabel id="difficulty-label">Difficulty</InputLabel>
@@ -370,59 +321,6 @@ function AdminQuestionPage() {
                 <MenuItem value={5}>5</MenuItem>
               </Select>
             </FormControl>
-            <Typography
-              variant="subtitle1"
-              gutterBottom
-              style={{ marginTop: "10px", marginBottom: "10px" }}
-            >
-              <b>Test Cases: </b>
-            </Typography>
-            {testCases.map((testCase, testIndex) => (
-              <div
-                key={testIndex}
-                style={{ display: "flex", gap: "20px", marginBottom: "20px" }}
-              >
-                {testCase.inputs.map((input, inputIndex) => (
-                  <TextField
-                    key={inputIndex}
-                    label={input.key}
-                    type="text"
-                    margin="dense"
-                    value={input.value}
-                    onChange={(e) =>
-                      handleTestCaseInputChange(
-                        testIndex,
-                        inputIndex,
-                        "value",
-                        e.target.value
-                      )
-                    }
-                    style={{ marginRight: 8 }}
-                  />
-                ))}
-                <TextField
-                  label="Output"
-                  type="text"
-                  margin="dense"
-                  value={testCase.output}
-                  onChange={(e) =>
-                    handleTestCaseOutputChange(testIndex, e.target.value)
-                  }
-                  style={{ marginRight: 8 }}
-                />
-                <Button onClick={() => removeTestCase(testIndex)}>
-                  <CloseIcon />
-                </Button>
-              </div>
-            ))}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={addTestCase}
-              style={{ marginBottom: "20px" }}
-            >
-              Add Test Case
-            </Button>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
