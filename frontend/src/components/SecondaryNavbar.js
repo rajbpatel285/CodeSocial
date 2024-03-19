@@ -59,7 +59,7 @@ function SecondaryNavbar() {
           onClick={() => handleNavigation("/standings")}
           className={location.pathname === "/standings" ? "active" : ""}
         >
-          Standings
+          Leaderboard
         </NavButton>
       </Toolbar>
     </AppBar>
