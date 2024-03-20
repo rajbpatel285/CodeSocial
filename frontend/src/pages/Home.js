@@ -20,6 +20,7 @@ function Home() {
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [contests, setContests] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,8 +52,19 @@ function Home() {
       }
     };
 
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/user/users");
+        const topUsers = response.data.slice(0, 3);
+        setUsers(topUsers);
+      } catch (error) {
+        console.error("Failed to fetch users", error);
+      }
+    };
+
     fetchContests();
     fetchQuestions();
+    fetchUsers();
   }, []);
 
   if (!userId || isAdmin) {
@@ -221,6 +233,73 @@ function Home() {
             variant="contained"
             color="primary"
             onClick={() => navigate("/problemset")}
+          >
+            See More
+          </Button>
+        </div>
+        <Typography
+          variant="h4"
+          style={{
+            fontWeight: "bold",
+            marginBottom: "20px",
+            textAlign: "center",
+          }}
+        >
+          User Standings
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ ...cellStyle, fontWeight: "bold" }}>
+                  Username
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold" }}
+                  align="center"
+                >
+                  Rating
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((user, index) => (
+                <TableRow key={index}>
+                  <TableCell component="th" scope="row" style={cellStyle}>
+                    <Link
+                      to={`/userprofile/${user.username}`}
+                      style={{
+                        textDecoration: "underline",
+                        color: "#1976d2",
+                        cursor: "pointer",
+                        "&:hover": {
+                          textDecoration: "underline",
+                          color: "#1976d2",
+                        },
+                      }}
+                    >
+                      {user.username}
+                    </Link>
+                  </TableCell>
+                  <TableCell style={cellStyle} align="center">
+                    {user.rating}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "20px",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate("/standings")}
           >
             See More
           </Button>
