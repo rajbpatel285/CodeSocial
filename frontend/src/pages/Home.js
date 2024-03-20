@@ -19,6 +19,7 @@ function Home() {
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const [contests, setContests] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,7 +36,23 @@ function Home() {
       }
     };
 
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/question/questions"
+        );
+        const publishedQuestions = response.data
+          .filter((question) => question.isPublished)
+          .sort((a, b) => a.difficulty - b.difficulty)
+          .slice(0, 3);
+        setQuestions(publishedQuestions);
+      } catch (error) {
+        console.error("Failed to fetch questions", error);
+      }
+    };
+
     fetchContests();
+    fetchQuestions();
   }, []);
 
   if (!userId || isAdmin) {
@@ -135,6 +152,75 @@ function Home() {
             variant="contained"
             color="primary"
             onClick={() => navigate("/contests")}
+          >
+            See More
+          </Button>
+        </div>
+        <Typography
+          variant="h4"
+          style={{
+            fontWeight: "bold",
+            marginBottom: "20px",
+            textAlign: "center",
+          }}
+        >
+          Questions
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "80%" }}
+                >
+                  Problem
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, width: "20%", fontWeight: "bold" }}
+                  align="center"
+                >
+                  Difficulty
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {questions.map((question) => (
+                <TableRow key={question.questionId}>
+                  <TableCell component="th" scope="row" style={cellStyle}>
+                    <Link
+                      to={`/question/${question.questionId}`}
+                      style={{
+                        textDecoration: "underline",
+                        color: "#1976d2",
+                        cursor: "pointer",
+                        "&:hover": {
+                          textDecoration: "underline",
+                          color: "#1976d2",
+                        },
+                      }}
+                    >
+                      {question.questionTitle}
+                    </Link>
+                  </TableCell>
+                  <TableCell style={cellStyle} align="center">
+                    {question.difficulty}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "20px",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate("/problemset")}
           >
             See More
           </Button>
