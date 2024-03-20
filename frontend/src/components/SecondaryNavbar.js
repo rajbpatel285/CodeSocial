@@ -53,7 +53,7 @@ function SecondaryNavbar() {
           onClick={() => handleNavigation("/problemset")}
           className={location.pathname === "/problemset" ? "active" : ""}
         >
-          Problem Set
+          Question Bank
         </NavButton>
         <NavButton
           onClick={() => handleNavigation("/standings")}

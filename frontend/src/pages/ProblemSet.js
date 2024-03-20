@@ -178,7 +178,7 @@ function ProblemSet() {
             variant="h4"
             style={{ fontWeight: "bold", marginBottom: "20px" }}
           >
-            Problem Set
+            Question Bank
           </Typography>
           <Button variant="outlined" onClick={() => setFilterOpen(true)}>
             <FilterAltIcon />
