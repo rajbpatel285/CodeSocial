@@ -53,7 +53,11 @@ function QuestionPage() {
 
   const handleTestCode = async () => {
     const apiEndpoint =
-      programmingLanguage === "python" ? "executePython" : "executeJava";
+      programmingLanguage === "python"
+        ? "executePython"
+        : programmingLanguage === "java"
+        ? "java"
+        : "cplusplus";
 
     try {
       const inputValue = testInput;
@@ -82,7 +86,11 @@ function QuestionPage() {
 
   const handleSubmit = async () => {
     const apiEndpoint =
-      programmingLanguage === "python" ? "executePython" : "executeJava";
+      programmingLanguage === "python"
+        ? "executePython"
+        : programmingLanguage === "java"
+        ? "executeJava"
+        : "executeCplusplus";
     let allPassed = true;
     const results = [];
 
@@ -198,6 +206,7 @@ function QuestionPage() {
             label="Programming Language"
             onChange={(e) => setProgrammingLanguage(e.target.value)}
           >
+            <MenuItem value={"cplusplus"}>C++</MenuItem>
             <MenuItem value={"java"}>Java</MenuItem>
             <MenuItem value={"python"}>Python</MenuItem>
           </Select>
@@ -255,6 +264,8 @@ function QuestionPage() {
                 ? "Python Code"
                 : programmingLanguage === "java"
                 ? "Java Code"
+                : programmingLanguage === "cplusplus"
+                ? "C++ Code"
                 : ""}
             </Button>
             {executionResult && (
@@ -312,6 +323,8 @@ function QuestionPage() {
             ? "Python Code"
             : programmingLanguage === "java"
             ? "Java Code"
+            : programmingLanguage === "cplusplus"
+            ? "C++ Code"
             : ""}
         </Button>
         {submitTestResult && (

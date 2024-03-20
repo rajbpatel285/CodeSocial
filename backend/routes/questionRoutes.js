@@ -16,4 +16,6 @@ router.post("/executePython", questionController.executePythonCode);
 
 router.post("/executeJava", questionController.executeJavaCode);
 
+router.post("/executeCplusplus", questionController.executeCplusplus);
+
 module.exports = router;
