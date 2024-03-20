@@ -64,6 +64,7 @@ function ProblemSet() {
       const publishedQuestions = response.data.filter(
         (question) => question.isPublished
       );
+      publishedQuestions.sort((a, b) => a.difficulty - b.difficulty);
       setQuestions(publishedQuestions);
       setAllQuestions(publishedQuestions);
     } catch (error) {

@@ -8,6 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
   Paper,
   Dialog,
   DialogTitle,
@@ -38,22 +39,32 @@ function Contests() {
     end: null,
   });
   const [allContests, setAllContests] = useState([]);
+  const [dateOrder, setDateOrder] = useState("desc");
 
   useEffect(() => {
     fetchContests();
-  }, []);
+  }, [dateOrder]);
 
   const fetchContests = async () => {
     try {
       const response = await axios.get("http://localhost:8000/contest");
-      const publishedContests = response.data.filter(
-        (contest) => contest.isPublished
-      );
+      let publishedContests = response.data
+        .filter((contest) => contest.isPublished)
+        .sort((a, b) =>
+          dateOrder === "asc"
+            ? new Date(a.date) - new Date(b.date)
+            : new Date(b.date) - new Date(a.date)
+        );
+
       setContests(publishedContests);
       setAllContests(publishedContests);
     } catch (error) {
       console.error("Failed to fetch contests", error);
     }
+  };
+
+  const toggleDateSort = () => {
+    setDateOrder(dateOrder === "asc" ? "desc" : "asc");
   };
 
   const handleDifficultyChange = (level) => (event) => {
@@ -218,8 +229,12 @@ function Contests() {
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  sortDirection={dateOrder}
+                  onClick={toggleDateSort}
                 >
-                  Date
+                  <TableSortLabel active direction={dateOrder}>
+                    Date
+                  </TableSortLabel>
                 </TableCell>
               </TableRow>
             </TableHead>
