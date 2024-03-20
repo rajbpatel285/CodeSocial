@@ -71,10 +71,6 @@ function Contests() {
     setDifficultyFilter({ ...difficultyFilter, [level]: event.target.checked });
   };
 
-  const handleDateChange = (type) => (date) => {
-    setDateRange({ ...dateRange, [type]: date });
-  };
-
   const applyFilters = () => {
     let filteredContests = allContests;
 
@@ -109,6 +105,29 @@ function Contests() {
     });
     setContests(allContests);
     setFilterOpen(false);
+  };
+
+  const handleRegister = async (contestId) => {
+    try {
+      await axios.post(`http://localhost:8000/contest/register/${contestId}`, {
+        userId,
+      });
+      fetchContests();
+    } catch (error) {
+      console.error("Error registering for contest", error);
+    }
+  };
+
+  const handleUnregister = async (contestId) => {
+    try {
+      await axios.post(
+        `http://localhost:8000/contest/unregister/${contestId}`,
+        { userId }
+      );
+      fetchContests();
+    } catch (error) {
+      console.error("Error unregistering from contest", error);
+    }
   };
 
   if (!userId || isAdmin) {
@@ -218,7 +237,7 @@ function Contests() {
             <TableHead>
               <TableRow>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "70%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "55%" }}
                 >
                   Contest Name
                 </TableCell>
@@ -236,6 +255,9 @@ function Contests() {
                     Date
                   </TableSortLabel>
                 </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -269,6 +291,25 @@ function Contests() {
                   </TableCell>
                   <TableCell style={{ ...cellStyle, width: "15%" }}>
                     {new Date(contest.date).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell style={cellStyle}>
+                    {contest.registeredUsers.includes(userId) ? (
+                      <Button
+                        variant="contained"
+                        style={{ backgroundColor: "red", color: "white" }}
+                        onClick={() => handleUnregister(contest.contestId)}
+                      >
+                        Unregister
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        style={{ backgroundColor: "green", color: "white" }}
+                        onClick={() => handleRegister(contest.contestId)}
+                      >
+                        Register
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

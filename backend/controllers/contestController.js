@@ -16,6 +16,7 @@ exports.create = async (req, res) => {
     date: adjustedDate,
     questionSet: [],
     isPublished: false,
+    registeredUsers: [],
   });
 
   try {
@@ -178,5 +179,37 @@ exports.togglePublishContest = async (req, res) => {
     res.status(500).send({
       message: `Error toggling publish state for contest with id=${contestId}.`,
     });
+  }
+};
+
+exports.registerForContest = async (req, res) => {
+  const { userId } = req.body;
+  const { contestId } = req.params;
+
+  try {
+    const updatedContest = await Contest.findOneAndUpdate(
+      { contestId: contestId },
+      { $addToSet: { registeredUsers: userId } },
+      { new: true }
+    );
+    res.json(updatedContest);
+  } catch (error) {
+    res.status(500).send({ message: "Error registering for contest." });
+  }
+};
+
+exports.unregisterFromContest = async (req, res) => {
+  const { userId } = req.body;
+  const { contestId } = req.params;
+
+  try {
+    const updatedContest = await Contest.findOneAndUpdate(
+      { contestId: contestId },
+      { $pull: { registeredUsers: userId } },
+      { new: true }
+    );
+    res.json(updatedContest);
+  } catch (error) {
+    res.status(500).send({ message: "Error unregistering from contest." });
   }
 };

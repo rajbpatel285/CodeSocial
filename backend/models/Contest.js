@@ -32,6 +32,11 @@ const contestSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  registeredUsers: [
+    {
+      type: String,
+    },
+  ],
 });
 
 module.exports = mongoose.model("Contest", contestSchema);

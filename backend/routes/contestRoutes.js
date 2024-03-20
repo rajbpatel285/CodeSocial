@@ -17,4 +17,8 @@ router.put("/addQuestion/:contestId", contestController.addQuestionToContest);
 
 router.put("/:contestId/publish", contestController.togglePublishContest);
 
+router.post("/register/:contestId", contestController.registerForContest);
+
+router.post("/unregister/:contestId", contestController.unregisterFromContest);
+
 module.exports = router;
