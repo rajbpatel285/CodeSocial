@@ -61,7 +61,7 @@ function AdminContests() {
       const timer = setTimeout(() => {
         setAlertMessage(null);
         navigate(location.pathname, { replace: true, state: {} });
-      }, 5000);
+      }, 4000);
       return () => clearTimeout(timer);
     }
   }, [location, navigate]);
@@ -88,7 +88,7 @@ function AdminContests() {
       const timer = setTimeout(() => {
         setAlertMessage(null);
         navigate(location.pathname, { replace: true, state: {} });
-      }, 5000);
+      }, 4000);
       fetchContests();
       setOpen(false);
     } catch (error) {

@@ -65,7 +65,7 @@ function AdminContestDetail() {
       setAlertMessage(location.state.message);
       const timer = setTimeout(() => {
         setAlertMessage(null);
-      }, 5000);
+      }, 4000);
       return () => clearTimeout(timer);
     }
   }, [contestId]);
@@ -163,7 +163,7 @@ function AdminContestDetail() {
       );
       const timer = setTimeout(() => {
         setAlertMessage(null);
-      }, 5000);
+      }, 4000);
     } catch (error) {
       console.error("Failed to update contest", error);
     }
@@ -286,7 +286,10 @@ function AdminContestDetail() {
         >
           {contest.description}
         </Typography>
-        <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+        <TableContainer
+          component={Paper}
+          style={{ marginTop: "20px", marginBottom: "20px" }}
+        >
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>

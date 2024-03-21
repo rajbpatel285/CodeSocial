@@ -131,7 +131,7 @@ function AdminProblemSet() {
 
       setTimeout(() => {
         setShowAlert(false);
-      }, 5000);
+      }, 4000);
     } catch (error) {
       console.error("Error adding question:", error);
       setAlertMessage("Failed to add question");
@@ -139,7 +139,7 @@ function AdminProblemSet() {
 
       setTimeout(() => {
         setShowAlert(false);
-      }, 5000);
+      }, 4000);
     }
   };
 

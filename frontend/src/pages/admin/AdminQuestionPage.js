@@ -76,7 +76,7 @@ function AdminQuestionPage() {
       );
       const timer = setTimeout(() => {
         setAlertMessage(null);
-      }, 5000);
+      }, 4000);
     } catch (error) {
       console.error("Error updating question:", error);
     }
