@@ -154,6 +154,8 @@ function ProblemSet() {
     setFilterOpen(false);
   };
 
+  const questionsCount = questions.length;
+
   if (!userId || isAdmin) {
     return <Navigate to="/" replace />;
   }
@@ -185,6 +187,9 @@ function ProblemSet() {
             Filter
           </Button>
         </div>
+        <Typography variant="subtitle1" style={{ marginBottom: "10px" }}>
+          Displaying {questionsCount} questions
+        </Typography>
         <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
           <DialogTitle>Filters</DialogTitle>
           <DialogContent>
@@ -229,7 +234,6 @@ function ProblemSet() {
             </Button>
           </DialogActions>
         </Dialog>
-
         <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
           <Table aria-label="simple table">
             <TableHead>
@@ -237,7 +241,7 @@ function ProblemSet() {
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "70%" }}
                 >
-                  Problem
+                  Question
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}

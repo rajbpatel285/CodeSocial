@@ -17,7 +17,6 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
-import AdsClickIcon from "@mui/icons-material/AdsClick";
 import BalanceIcon from "@mui/icons-material/Balance";
 import AssuredWorkloadIcon from "@mui/icons-material/AssuredWorkload";
 import Tooltip from "@mui/material/Tooltip";

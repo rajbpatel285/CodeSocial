@@ -18,6 +18,7 @@ import SecondaryNavbar from "../components/SecondaryNavbar";
 function Home() {
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
+  const [username, setUsername] = useState("");
   const [contests, setContests] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [users, setUsers] = useState([]);
@@ -62,10 +63,25 @@ function Home() {
       }
     };
 
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/user/profile/${userId}`
+        );
+        setUsername(response.data.username); // Assuming the response data has a username field
+      } catch (error) {
+        console.error("Failed to fetch user details", error);
+      }
+    };
+
+    if (userId) {
+      fetchUserDetails();
+    }
+
     fetchContests();
     fetchQuestions();
     fetchUsers();
-  }, []);
+  }, [userId]);
 
   if (!userId || isAdmin) {
     return <Navigate to="/" replace />;
@@ -79,18 +95,37 @@ function Home() {
     <div>
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
-      <div style={{ margin: "0 5% 2% 5%", textAlign: "center" }}>
-        <img
-          src={process.env.PUBLIC_URL + "/images/poster_image.png"}
-          alt="CodeSocial Home page poster"
-          style={{ marginBottom: "20px" }}
-        />
+      <div style={{ margin: "0 5% 2% 5%" }}>
+        <Typography variant="h5" style={{ marginTop: "20px" }}>
+          <b>Welcome</b>,{" "}
+          <Link
+            to={`/userprofile/${userId}`}
+            style={{
+              textDecoration: "underline",
+              color: "#1976d2",
+              cursor: "pointer",
+              "&:hover": {
+                textDecoration: "underline",
+                color: "#1976d2",
+              },
+            }}
+          >
+            {username}
+          </Link>
+        </Typography>
+        <div style={{ textAlign: "center" }}>
+          <img
+            src={process.env.PUBLIC_URL + "/images/poster_image.png"}
+            alt="CodeSocial Home page poster"
+            style={{ marginBottom: "20px" }}
+          />
+        </div>
         <Typography
           variant="h4"
           style={{
             fontWeight: "bold",
             marginBottom: "20px",
-            textAlign: "center",
+            // textAlign: "center",
           }}
         >
           Upcoming Contests
@@ -173,7 +208,7 @@ function Home() {
           style={{
             fontWeight: "bold",
             marginBottom: "20px",
-            textAlign: "center",
+            // textAlign: "center",
           }}
         >
           Questions
@@ -185,7 +220,7 @@ function Home() {
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "80%" }}
                 >
-                  Problem
+                  Question
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, width: "20%", fontWeight: "bold" }}
@@ -242,7 +277,7 @@ function Home() {
           style={{
             fontWeight: "bold",
             marginBottom: "20px",
-            textAlign: "center",
+            // textAlign: "center",
           }}
         >
           User Standings

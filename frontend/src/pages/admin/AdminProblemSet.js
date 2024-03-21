@@ -158,21 +158,6 @@ function AdminProblemSet() {
     setTestCases(testCases.filter((_, i) => i !== index));
   };
 
-  const handleTestCaseInputChange = (
-    testIndex,
-    inputIndex,
-    keyOrValue,
-    newValue
-  ) => {
-    const updatedTestCases = [...testCases];
-    if (keyOrValue === "value") {
-      updatedTestCases[testIndex].inputs[inputIndex].value = newValue;
-    } else {
-      updatedTestCases[testIndex].inputs[inputIndex].key = newValue;
-    }
-    setTestCases(updatedTestCases);
-  };
-
   const handleDifficultyChange = (level) => (event) => {
     setDifficultyFilter({ ...difficultyFilter, [level]: event.target.checked });
   };
@@ -202,6 +187,8 @@ function AdminProblemSet() {
     setFilterOpen(false);
   };
 
+  const questionsCount = questions.length;
+
   const cellStyle = {
     border: "3px solid rgba(224, 224, 224, 1)",
   };
@@ -228,7 +215,7 @@ function AdminProblemSet() {
             variant="contained"
             color="primary"
             onClick={handleClickOpen}
-            style={{ marginBottom: "20px" }}
+            style={{ marginBottom: "10px" }}
           >
             Add Question
           </Button>
@@ -237,6 +224,9 @@ function AdminProblemSet() {
             Filter
           </Button>
         </div>
+        <Typography variant="subtitle1" style={{ marginBottom: "10px" }}>
+          Displaying {questionsCount} questions
+        </Typography>
         <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
           <DialogTitle>Filters</DialogTitle>
           <DialogContent>
@@ -288,7 +278,7 @@ function AdminProblemSet() {
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "85%" }}
                 >
-                  Problem
+                  Question
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}

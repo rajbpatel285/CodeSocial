@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Navigate, Link } from "react-router-dom";
+import { useParams, Navigate, Link } from "react-router-dom";
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -114,7 +104,7 @@ function ContestDetail() {
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "80%" }}
                 >
-                  Problem
+                  Question
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "20%" }}

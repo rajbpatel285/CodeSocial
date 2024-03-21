@@ -56,8 +56,8 @@ function QuestionPage() {
       programmingLanguage === "python"
         ? "executePython"
         : programmingLanguage === "java"
-        ? "java"
-        : "cplusplus";
+        ? "executeJava"
+        : "executeCplusplus";
 
     try {
       const inputValue = testInput;

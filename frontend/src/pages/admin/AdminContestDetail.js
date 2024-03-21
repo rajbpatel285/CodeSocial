@@ -296,7 +296,7 @@ function AdminContestDetail() {
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "80%" }}
                 >
-                  Problem
+                  Question
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "20%" }}

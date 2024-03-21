@@ -90,6 +90,10 @@ function AdminContests() {
         navigate(location.pathname, { replace: true, state: {} });
       }, 4000);
       fetchContests();
+      setDate("");
+      setContestName("");
+      setDescription("");
+      setLevel("");
       setOpen(false);
     } catch (error) {
       console.error("Failed to create contest", error);
@@ -112,10 +116,6 @@ function AdminContests() {
 
   const handleDifficultyChange = (level) => (event) => {
     setDifficultyFilter({ ...difficultyFilter, [level]: event.target.checked });
-  };
-
-  const handleDateChange = (type) => (date) => {
-    setDateRange({ ...dateRange, [type]: date });
   };
 
   const applyFilters = () => {
