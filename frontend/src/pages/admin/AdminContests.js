@@ -38,6 +38,8 @@ function AdminContests() {
   const [description, setDescription] = useState("");
   const [level, setLevel] = useState("");
   const [date, setDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [sortDirection, setSortDirection] = useState("asc");
   const [alertMessage, setAlertMessage] = useState(null);
   const navigate = useNavigate();
@@ -77,12 +79,15 @@ function AdminContests() {
   };
 
   const handleCreateContest = async () => {
+    const startDate = new Date(date + "T" + startTime);
+    const endDate = new Date(date + "T" + endTime);
     try {
       const response = await axios.post("http://localhost:8000/contest", {
         contestName,
         description,
         level,
-        date,
+        startTime: startDate.toISOString(),
+        endTime: endDate.toISOString(),
       });
       setAlertMessage(`Contest "${response.data.contestName}" created`);
       const timer = setTimeout(() => {
@@ -91,6 +96,8 @@ function AdminContests() {
       }, 4000);
       fetchContests();
       setDate("");
+      setStartTime("");
+      setEndTime("");
       setContestName("");
       setDescription("");
       setLevel("");
@@ -102,12 +109,10 @@ function AdminContests() {
 
   const toggleSortDate = () => {
     const sortedContests = [...contests].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
       if (sortDirection === "asc") {
-        return dateA - dateB;
+        return a.startTime.localeCompare(b.startTime);
       } else {
-        return dateB - dateA;
+        return b.startTime.localeCompare(a.startTime);
       }
     });
     setContests(sortedContests);
@@ -305,13 +310,40 @@ function AdminContests() {
             <TextField
               margin="dense"
               id="date"
-              label="Date"
+              label="Contest Date"
               type="date"
               fullWidth
               value={date}
               onChange={(e) => setDate(e.target.value)}
               InputLabelProps={{
                 shrink: true,
+              }}
+            />
+            <TextField
+              margin="dense"
+              id="startTime"
+              label="Start Time"
+              type="time"
+              fullWidth
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              margin="dense"
+              id="endTime"
+              label="End Time"
+              type="time"
+              fullWidth
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                min: startTime,
               }}
             />
           </DialogContent>
@@ -339,25 +371,29 @@ function AdminContests() {
             <TableHead>
               <TableRow>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "55%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "50%" }}
                 >
                   Contest Name
                 </TableCell>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "10%" }}
                 >
                   Level
                 </TableCell>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "10%" }}
                   onClick={toggleSortDate}
                   sx={{ cursor: "pointer" }}
                 >
                   Date {sortDirection === "asc" ? "↑" : "↓"}
                 </TableCell>
-
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "20%" }}
+                >
+                  Time
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "10%" }}
                 >
                   Status
                 </TableCell>
@@ -370,7 +406,7 @@ function AdminContests() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell
-                    style={{ ...cellStyle, width: "55%" }}
+                    style={{ ...cellStyle, width: "50%" }}
                     component="th"
                     scope="row"
                   >
@@ -389,13 +425,20 @@ function AdminContests() {
                       {contest.contestName}
                     </Link>
                   </TableCell>
-                  <TableCell style={{ ...cellStyle, width: "15%" }}>
+                  <TableCell style={{ ...cellStyle, width: "10%" }}>
                     {contest.level}
                   </TableCell>
-                  <TableCell style={{ ...cellStyle, width: "15%" }}>
-                    {new Date(contest.date).toLocaleDateString()}
+                  <TableCell style={{ ...cellStyle, width: "10%" }}>
+                    {new Date(contest.startTime).toLocaleDateString()}
                   </TableCell>
-                  <TableCell style={{ ...cellStyle, width: "15%" }}>
+                  <TableCell style={{ ...cellStyle, width: "20%" }}>
+                    {`${new Date(
+                      contest.startTime
+                    ).toLocaleTimeString()} - ${new Date(
+                      contest.endTime
+                    ).toLocaleTimeString()}`}
+                  </TableCell>
+                  <TableCell style={{ ...cellStyle, width: "10%" }}>
                     {contest.isPublished ? (
                       <Typography style={{ color: "green" }}>
                         Published

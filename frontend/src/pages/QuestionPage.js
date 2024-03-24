@@ -164,14 +164,16 @@ function QuestionPage() {
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
       <div style={{ margin: "0 5% 2% 5%" }}>
-        <Typography
-          variant="h6"
-          style={{
-            textAlign: "center",
-          }}
-        >
-          {isSolved && <CheckCircleOutlineIcon color="success" />} Solved
-        </Typography>
+        {isSolved && (
+          <Typography
+            variant="h6"
+            style={{
+              textAlign: "center",
+            }}
+          >
+            <CheckCircleOutlineIcon color="success" /> Solved
+          </Typography>
+        )}
         <Typography
           variant="h4"
           style={{
