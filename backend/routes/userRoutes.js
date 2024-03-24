@@ -11,5 +11,6 @@ router.post("/addFriend", userController.addFriend);
 router.post("/removeFriend", userController.removeFriend);
 router.get("/checkFriendship", userController.checkFriendship);
 router.get("/friends/:userId", userController.fetchFriends);
+router.post("/questionSolved", userController.addQuestionToSolved);
 
 module.exports = router;

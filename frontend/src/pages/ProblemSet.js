@@ -22,6 +22,7 @@ import {
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -42,6 +43,7 @@ function ProblemSet() {
     4: false,
     5: false,
   });
+  const [solvedQuestions, setSolvedQuestions] = useState([]);
 
   useEffect(() => {
     fetchQuestions();
@@ -54,6 +56,7 @@ function ProblemSet() {
       4: false,
       5: false,
     });
+    fetchSolvedQuestions();
   }, []);
 
   const fetchQuestions = async () => {
@@ -152,6 +155,17 @@ function ProblemSet() {
     });
     setQuestions(allQuestions);
     setFilterOpen(false);
+  };
+
+  const fetchSolvedQuestions = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/user/profile/${userId}`
+      );
+      setSolvedQuestions(response.data.questionsSolved);
+    } catch (error) {
+      console.error("Error fetching friends:", error);
+    }
   };
 
   const questionsCount = questions.length;
@@ -282,6 +296,15 @@ function ProblemSet() {
                     >
                       {question.questionTitle}
                     </Link>
+                    {solvedQuestions.includes(question.questionId) && (
+                      <CheckCircleOutlineIcon
+                        style={{
+                          marginLeft: 8,
+                          fontSize: "1.2rem",
+                        }}
+                        color="success"
+                      />
+                    )}
                   </TableCell>
                   <TableCell
                     style={{ ...cellStyle, width: "15%" }}

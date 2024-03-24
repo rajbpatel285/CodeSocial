@@ -43,6 +43,12 @@ const userSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  questionsSolved: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Question",
+    },
+  ],
 });
 
 userSchema.pre("save", async function (next) {

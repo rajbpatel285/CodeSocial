@@ -32,12 +32,14 @@ function QuestionPage() {
   const [expanded, setExpanded] = useState(false);
   const [testCaseResults, setTestCaseResults] = useState([]);
   const [programmingLanguage, setProgrammingLanguage] = useState("");
+  const [isSolved, setIsSolved] = useState(false);
 
   const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
   useEffect(() => {
     fetchQuestion();
+    checkIfSolved();
   }, []);
 
   const fetchQuestion = async () => {
@@ -111,6 +113,17 @@ function QuestionPage() {
           returnedOutput: response.data.output.trim(),
         });
         allPassed &= passed;
+        if (allPassed) {
+          try {
+            await axios.post(`http://localhost:8000/user/questionSolved`, {
+              userId,
+              questionId,
+            });
+            setIsSolved(true);
+          } catch (error) {
+            console.error("Error marking question as solved:", error);
+          }
+        }
       } catch (error) {
         console.error("Error testing code:", error);
         allPassed = false;
@@ -127,6 +140,17 @@ function QuestionPage() {
     setSubmitTestResult(allPassed ? "passed" : "failed");
   };
 
+  const checkIfSolved = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/user/profile/${userId}`
+      );
+      setIsSolved(response.data.questionsSolved.includes(questionId));
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+
   if (!question) {
     return <div>Loading...</div>;
   }
@@ -140,6 +164,14 @@ function QuestionPage() {
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
       <div style={{ margin: "0 5% 2% 5%" }}>
+        <Typography
+          variant="h6"
+          style={{
+            textAlign: "center",
+          }}
+        >
+          {isSolved && <CheckCircleOutlineIcon color="success" />} Solved
+        </Typography>
         <Typography
           variant="h4"
           style={{

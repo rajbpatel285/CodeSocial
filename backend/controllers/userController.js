@@ -183,3 +183,28 @@ exports.fetchFriends = async (req, res) => {
     res.status(500).send({ message: "Error fetching friends", error });
   }
 };
+
+exports.addQuestionToSolved = async (req, res) => {
+  const { questionId, userId } = req.body;
+
+  try {
+    const user = await User.findOne({
+      $or: [{ email: userId }, { username: userId }],
+    });
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    user.questionsSolved.push(questionId);
+
+    await user.save();
+
+    res.status(200).send({
+      message: "Question added to solved questions successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Error adding question to solved questions:", error);
+    res.status(500).send({ message: "Server error" });
+  }
+};
