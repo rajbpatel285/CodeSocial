@@ -55,6 +55,8 @@ function AdminContestDetail() {
     description: "",
     level: "",
     date: "",
+    startTime: "",
+    endTime: "",
   });
   const [alertMessage, setAlertMessage] = useState(null);
   const location = useLocation();
@@ -151,31 +153,53 @@ function AdminContestDetail() {
   };
 
   const handleUpdateContest = async () => {
+    const startDateIso = new Date(
+      `${updateContest.date}T${updateContest.startTime}`
+    ).toISOString();
+    const endDateIso = new Date(
+      `${updateContest.date}T${updateContest.endTime}`
+    ).toISOString();
+
+    const updatedContestDetails = {
+      ...updateContest,
+      startTime: startDateIso,
+      endTime: endDateIso,
+    };
+
     try {
       const response = await axios.put(
         `http://localhost:8000/contest/${contestId}`,
-        updateContest
+        updatedContestDetails
       );
-      setUpdateDialogOpen(false);
-      fetchContestDetails();
       setAlertMessage(
         `Contest "${response.data.contest.contestName}" updated successfully`
       );
       const timer = setTimeout(() => {
         setAlertMessage(null);
       }, 4000);
+      fetchContestDetails();
+      setUpdateDialogOpen(false);
     } catch (error) {
       console.error("Failed to update contest", error);
+      setAlertMessage("Failed to update contest. Please try again.");
     }
   };
 
   const handleOpenUpdateDialog = () => {
     setUpdateDialogOpen(true);
+    const localStartTime = new Date(contest.startTime)
+      .toLocaleTimeString("en-GB")
+      .slice(0, 5);
+    const localEndTime = new Date(contest.endTime)
+      .toLocaleTimeString("en-GB")
+      .slice(0, 5);
     setUpdateContest({
       contestName: contest.contestName,
       description: contest.description,
       level: contest.level,
-      date: contest.date.slice(0, 10),
+      date: contest.startTime.slice(0, 10),
+      startTime: localStartTime,
+      endTime: localEndTime,
     });
   };
 
@@ -278,7 +302,19 @@ function AdminContestDetail() {
             textAlign: "center",
           }}
         >
-          <b>Date:</b> {new Date(contest.date).toLocaleDateString()}
+          <b>Date:</b> {new Date(contest.startTime).toLocaleDateString()}
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{
+            whiteSpace: "pre-line",
+            marginBottom: "10px",
+            textAlign: "center",
+          }}
+        >
+          <b>Time:</b> {new Date(contest.startTime).toLocaleTimeString()}
+          {" - "}
+          {new Date(contest.endTime).toLocaleTimeString()}
         </Typography>
         <Typography
           variant="body"
@@ -552,6 +588,30 @@ function AdminContestDetail() {
               type="date"
               fullWidth
               value={updateContest.date}
+              onChange={handleUpdateChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              margin="dense"
+              name="startTime"
+              label="Start Time"
+              type="time"
+              fullWidth
+              value={updateContest.startTime}
+              onChange={handleUpdateChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              margin="dense"
+              name="endTime"
+              label="End Time"
+              type="time"
+              fullWidth
+              value={updateContest.endTime}
               onChange={handleUpdateChange}
               InputLabelProps={{
                 shrink: true,

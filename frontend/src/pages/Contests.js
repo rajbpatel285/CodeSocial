@@ -8,7 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TableSortLabel,
   Paper,
   Dialog,
   DialogTitle,
@@ -39,23 +38,18 @@ function Contests() {
     end: null,
   });
   const [allContests, setAllContests] = useState([]);
-  const [dateOrder, setDateOrder] = useState("desc");
+  const [sortDirection, setSortDirection] = useState("asc");
 
   useEffect(() => {
     fetchContests();
-  }, [dateOrder]);
+  }, []);
 
   const fetchContests = async () => {
     try {
       const response = await axios.get("http://localhost:8000/contest");
-      let publishedContests = response.data
-        .filter((contest) => contest.isPublished)
-        .sort((a, b) =>
-          dateOrder === "asc"
-            ? new Date(a.date) - new Date(b.date)
-            : new Date(b.date) - new Date(a.date)
-        );
-
+      let publishedContests = response.data.filter(
+        (contest) => contest.isPublished
+      );
       setContests(publishedContests);
       setAllContests(publishedContests);
     } catch (error) {
@@ -63,8 +57,16 @@ function Contests() {
     }
   };
 
-  const toggleDateSort = () => {
-    setDateOrder(dateOrder === "asc" ? "desc" : "asc");
+  const toggleSortDate = () => {
+    const sortedContests = [...contests].sort((a, b) => {
+      if (sortDirection === "asc") {
+        return a.startTime.localeCompare(b.startTime);
+      } else {
+        return b.startTime.localeCompare(a.startTime);
+      }
+    });
+    setContests(sortedContests);
+    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
   };
 
   const handleDifficultyChange = (level) => (event) => {
@@ -248,12 +250,10 @@ function Contests() {
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
-                  sortDirection={dateOrder}
-                  onClick={toggleDateSort}
+                  onClick={toggleSortDate}
+                  sx={{ cursor: "pointer" }}
                 >
-                  <TableSortLabel active direction={dateOrder}>
-                    Date
-                  </TableSortLabel>
+                  Date {sortDirection === "asc" ? "↑" : "↓"}
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
@@ -267,7 +267,7 @@ function Contests() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell
-                    style={{ ...cellStyle, width: "70%" }}
+                    style={{ ...cellStyle, width: "55%" }}
                     component="th"
                     scope="row"
                   >
@@ -290,7 +290,7 @@ function Contests() {
                     {contest.level}
                   </TableCell>
                   <TableCell style={{ ...cellStyle, width: "15%" }}>
-                    {new Date(contest.date).toLocaleDateString()}
+                    {new Date(contest.startTime).toLocaleDateString()}
                   </TableCell>
                   <TableCell style={cellStyle}>
                     {contest.registeredUsers.includes(userId) ? (

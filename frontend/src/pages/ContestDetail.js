@@ -89,7 +89,19 @@ function ContestDetail() {
             textAlign: "center",
           }}
         >
-          <b>Date:</b> {new Date(contest.date).toLocaleDateString()}
+          <b>Date:</b> {new Date(contest.startTime).toLocaleDateString()}
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{
+            whiteSpace: "pre-line",
+            marginBottom: "10px",
+            textAlign: "center",
+          }}
+        >
+          <b>Time:</b> {new Date(contest.startTime).toLocaleTimeString()}
+          {" - "}
+          {new Date(contest.endTime).toLocaleTimeString()}
         </Typography>
         <Typography
           variant="body2"
