@@ -44,6 +44,7 @@ function ProblemSet() {
     5: false,
   });
   const [solvedQuestions, setSolvedQuestions] = useState([]);
+  const [showSolvedOnly, setShowSolvedOnly] = useState(false);
 
   useEffect(() => {
     fetchQuestions();
@@ -134,6 +135,12 @@ function ProblemSet() {
       );
     }
 
+    if (showSolvedOnly) {
+      filteredQuestions = filteredQuestions.filter((question) =>
+        solvedQuestions.includes(question.questionId)
+      );
+    }
+
     if (Object.values(difficultyFilter).some((value) => value)) {
       filteredQuestions = filteredQuestions.filter(
         (question) => difficultyFilter[question.difficulty]
@@ -216,6 +223,17 @@ function ProblemSet() {
                   />
                 }
                 label="Show Starred Only"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showSolvedOnly}
+                    onChange={(event) =>
+                      setShowSolvedOnly(event.target.checked)
+                    }
+                  />
+                }
+                label="Show Solved Only"
               />
               <Typography
                 variant="subtitle1"
