@@ -25,6 +25,7 @@ import {
   Alert,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import AddIcon from "@mui/icons-material/Add";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
@@ -191,6 +192,7 @@ function AdminContests() {
             onClick={() => setOpen(true)}
             style={{ marginBottom: "20px" }}
           >
+            <AddIcon style={{ marginRight: "5px" }} />
             Add Contest
           </Button>
           <Button variant="outlined" onClick={() => setFilterOpen(true)}>

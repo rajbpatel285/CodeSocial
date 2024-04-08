@@ -10,6 +10,7 @@ import {
   Link as MuiLink,
   Alert,
 } from "@mui/material";
+import LoginIcon from "@mui/icons-material/Login";
 
 function Login() {
   const navigate = useNavigate();
@@ -128,6 +129,7 @@ function Login() {
             sx={{ mt: 3, mb: 2 }}
             disabled={isButtonDisabled}
           >
+            <LoginIcon style={{ marginRight: "5px" }} />
             Sign In
           </Button>
           {errorMessage && (

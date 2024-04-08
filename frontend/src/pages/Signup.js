@@ -10,6 +10,7 @@ import {
   Link as MuiLink,
   Alert,
 } from "@mui/material";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 function Signup() {
   const navigate = useNavigate();
@@ -195,6 +196,7 @@ function Signup() {
             sx={{ mt: 3, mb: 2 }}
             disabled={isButtonDisabled}
           >
+            <HowToRegIcon style={{ marginRight: "5px" }} />
             Sign up
           </Button>
           {errorMessage && (

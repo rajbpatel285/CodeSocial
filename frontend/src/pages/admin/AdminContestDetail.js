@@ -29,6 +29,11 @@ import {
   Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
+import SendIcon from "@mui/icons-material/Send";
+import BackHandIcon from "@mui/icons-material/BackHand";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
@@ -322,6 +327,149 @@ function AdminContestDetail() {
         >
           {contest.description}
         </Typography>
+        <div
+          style={{
+            marginTop: "20px",
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={handlePublishContest}
+            sx={{
+              backgroundColor: contest.isPublished ? "#d32f2f" : "#2e7d32",
+              "&:hover": {
+                backgroundColor: contest.isPublished ? "#9a0007" : "#1b5e20",
+              },
+            }}
+            style={{ marginRight: "10px" }}
+          >
+            {contest.isPublished ? (
+              <BackHandIcon style={{ marginRight: "5px" }} />
+            ) : (
+              <SendIcon style={{ marginRight: "5px" }} />
+            )}
+            {contest.isPublished ? "Withdraw Contest" : "Publish Contest"}
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setDeleteDialogOpen(true)}
+            style={{ marginRight: "10px" }}
+          >
+            <DeleteIcon style={{ marginRight: "5px" }} />
+            Delete Contest
+          </Button>
+          <Dialog
+            open={deleteDialogOpen}
+            onClose={() => setDeleteDialogOpen(false)}
+          >
+            <DialogTitle>Delete Contest</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to delete this contest? This action cannot
+                be undone.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+              <Button onClick={handleDeleteContest} color="secondary">
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenUpdateDialog}
+            style={{ marginRight: "10px" }}
+          >
+            <ChangeCircleIcon style={{ marginRight: "5px" }} />
+            Update Contest
+          </Button>
+          <Dialog
+            open={updateDialogOpen}
+            onClose={() => setUpdateDialogOpen(false)}
+          >
+            <DialogTitle>Update Contest</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="contestName"
+                label="Contest Name"
+                type="text"
+                fullWidth
+                value={updateContest.contestName}
+                onChange={handleUpdateChange}
+              />
+              <TextField
+                margin="dense"
+                name="description"
+                label="Description"
+                type="text"
+                fullWidth
+                multiline
+                rows={4}
+                value={updateContest.description}
+                onChange={handleUpdateChange}
+              />
+              <FormControl fullWidth margin="dense">
+                <InputLabel id="level-label">Level</InputLabel>
+                <Select
+                  labelId="level-label"
+                  name="level"
+                  id="level"
+                  value={updateContest.level}
+                  onChange={handleUpdateChange}
+                >
+                  <MenuItem value="Easy">Easy</MenuItem>
+                  <MenuItem value="Medium">Medium</MenuItem>
+                  <MenuItem value="Hard">Hard</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                margin="dense"
+                name="date"
+                label="Date"
+                type="date"
+                fullWidth
+                value={updateContest.date}
+                onChange={handleUpdateChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                margin="dense"
+                name="startTime"
+                label="Start Time"
+                type="time"
+                fullWidth
+                value={updateContest.startTime}
+                onChange={handleUpdateChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                margin="dense"
+                name="endTime"
+                label="End Time"
+                type="time"
+                fullWidth
+                value={updateContest.endTime}
+                onChange={handleUpdateChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setUpdateDialogOpen(false)}>Cancel</Button>
+              <Button onClick={handleUpdateContest}>Update</Button>
+            </DialogActions>
+          </Dialog>
+        </div>
         <TableContainer
           component={Paper}
           style={{ marginTop: "20px", marginBottom: "20px" }}
@@ -385,20 +533,8 @@ function AdminContestDetail() {
           onClick={() => setOpen(true)}
           style={{ marginRight: "10px" }}
         >
+          <AddIcon style={{ marginRight: "5px" }} />
           Add Question
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handlePublishContest}
-          sx={{
-            backgroundColor: contest.isPublished ? "#d32f2f" : "#2e7d32",
-            "&:hover": {
-              backgroundColor: contest.isPublished ? "#9a0007" : "#1b5e20",
-            },
-          }}
-          style={{ marginRight: "10px" }}
-        >
-          {contest.isPublished ? "Withdraw Contest" : "Publish Contest"}
         </Button>
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Add a New Question</DialogTitle>
@@ -504,123 +640,6 @@ function AdminContestDetail() {
           <DialogActions>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
             <Button onClick={handleAddQuestionToContest}>Add</Button>
-          </DialogActions>
-        </Dialog>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => setDeleteDialogOpen(true)}
-          style={{ marginRight: "10px" }}
-        >
-          Delete Contest
-        </Button>
-        <Dialog
-          open={deleteDialogOpen}
-          onClose={() => setDeleteDialogOpen(false)}
-        >
-          <DialogTitle>Delete Contest</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete this contest? This action cannot
-              be undone.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleDeleteContest} color="secondary">
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleOpenUpdateDialog}
-          style={{ marginRight: "10px" }}
-        >
-          Update Contest
-        </Button>
-        <Dialog
-          open={updateDialogOpen}
-          onClose={() => setUpdateDialogOpen(false)}
-        >
-          <DialogTitle>Update Contest</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              name="contestName"
-              label="Contest Name"
-              type="text"
-              fullWidth
-              value={updateContest.contestName}
-              onChange={handleUpdateChange}
-            />
-            <TextField
-              margin="dense"
-              name="description"
-              label="Description"
-              type="text"
-              fullWidth
-              multiline
-              rows={4}
-              value={updateContest.description}
-              onChange={handleUpdateChange}
-            />
-            <FormControl fullWidth margin="dense">
-              <InputLabel id="level-label">Level</InputLabel>
-              <Select
-                labelId="level-label"
-                name="level"
-                id="level"
-                value={updateContest.level}
-                onChange={handleUpdateChange}
-              >
-                <MenuItem value="Easy">Easy</MenuItem>
-                <MenuItem value="Medium">Medium</MenuItem>
-                <MenuItem value="Hard">Hard</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              margin="dense"
-              name="date"
-              label="Date"
-              type="date"
-              fullWidth
-              value={updateContest.date}
-              onChange={handleUpdateChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              margin="dense"
-              name="startTime"
-              label="Start Time"
-              type="time"
-              fullWidth
-              value={updateContest.startTime}
-              onChange={handleUpdateChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              margin="dense"
-              name="endTime"
-              label="End Time"
-              type="time"
-              fullWidth
-              value={updateContest.endTime}
-              onChange={handleUpdateChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setUpdateDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleUpdateContest}>Update</Button>
           </DialogActions>
         </Dialog>
       </div>

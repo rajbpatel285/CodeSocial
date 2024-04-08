@@ -8,6 +8,7 @@ import {
   MenuItem,
   Box,
 } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
 
@@ -72,8 +73,14 @@ function TopAppBar({ title }) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={redirectToProfile}>Profile</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem onClick={redirectToProfile}>
+            <AccountCircle style={{ marginRight: "5px" }} />
+            Profile
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>
+            <LogoutIcon style={{ marginRight: "5px" }} />
+            Logout
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

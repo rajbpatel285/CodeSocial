@@ -21,6 +21,9 @@ import BalanceIcon from "@mui/icons-material/Balance";
 import AssuredWorkloadIcon from "@mui/icons-material/AssuredWorkload";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -318,19 +321,30 @@ function UserProfile() {
           </div>
         </Paper>
         {canEditProfile && (
-          <Button variant="outlined" onClick={handleOpenEditDialog}>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginRight: "10px" }}
+            onClick={handleOpenEditDialog}
+          >
+            <EditIcon style={{ marginRight: "5px" }} />
             Edit Profile
           </Button>
         )}
         {!canEditProfile && (
           <Button
-            variant="outlined"
+            variant="contained"
+            color="primary"
             onClick={toggleFriendship}
             style={{
-              color: isFriend ? "red" : "green",
-              borderColor: isFriend ? "red" : "green",
+              backgroundColor: isFriend ? "red" : "green",
             }}
           >
+            {isFriend ? (
+              <DeleteIcon style={{ marginRight: "5px" }} />
+            ) : (
+              <AddIcon style={{ marginRight: "5px" }} />
+            )}
             {isFriend ? "Delete Friend" : "Add Friend"}
           </Button>
         )}

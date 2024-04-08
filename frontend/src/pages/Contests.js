@@ -19,6 +19,8 @@ import {
   TextField,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import NoAccountsIcon from "@mui/icons-material/NoAccounts";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -39,6 +41,8 @@ function Contests() {
   });
   const [allContests, setAllContests] = useState([]);
   const [sortDirection, setSortDirection] = useState("asc");
+  const [username, setUsername] = useState("");
+  const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
     fetchContests();
@@ -52,6 +56,11 @@ function Contests() {
       );
       setContests(publishedContests);
       setAllContests(publishedContests);
+      const userDetails = await axios.get(
+        `http://localhost:8000/user/profile/${userId}`
+      );
+      setUserEmail(userDetails.data.email);
+      setUsername(userDetails.data.username);
     } catch (error) {
       console.error("Failed to fetch contests", error);
     }
@@ -293,12 +302,14 @@ function Contests() {
                     {new Date(contest.startTime).toLocaleDateString()}
                   </TableCell>
                   <TableCell style={cellStyle}>
-                    {contest.registeredUsers.includes(userId) ? (
+                    {contest.registeredUsers.includes(userEmail) ||
+                    contest.registeredUsers.includes(username) ? (
                       <Button
                         variant="contained"
                         style={{ backgroundColor: "red", color: "white" }}
                         onClick={() => handleUnregister(contest.contestId)}
                       >
+                        <NoAccountsIcon style={{ marginRight: "5px" }} />
                         Unregister
                       </Button>
                     ) : (
@@ -307,6 +318,7 @@ function Contests() {
                         style={{ backgroundColor: "green", color: "white" }}
                         onClick={() => handleRegister(contest.contestId)}
                       >
+                        <HowToRegIcon style={{ marginRight: "5px" }} />
                         Register
                       </Button>
                     )}

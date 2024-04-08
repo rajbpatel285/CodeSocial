@@ -16,6 +16,8 @@ import {
   Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
@@ -203,6 +205,7 @@ function AdminQuestionPage() {
           onClick={handleOpenDialog}
           style={{ marginRight: "10px" }}
         >
+          <ChangeCircleIcon style={{ marginRight: "5px" }} />
           Update Question
         </Button>
         <Button
@@ -210,6 +213,7 @@ function AdminQuestionPage() {
           color="secondary"
           onClick={() => setDeleteDialogOpen(true)}
         >
+          <DeleteIcon style={{ marginRight: "5px" }} />
           Delete Question
         </Button>
         <Dialog

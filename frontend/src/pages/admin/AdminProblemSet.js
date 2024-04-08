@@ -26,6 +26,7 @@ import {
   Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
@@ -217,6 +218,7 @@ function AdminProblemSet() {
             onClick={handleClickOpen}
             style={{ marginBottom: "10px" }}
           >
+            <AddIcon style={{ marginRight: "5px" }} />
             Add Question
           </Button>
           <Button variant="outlined" onClick={() => setFilterOpen(true)}>

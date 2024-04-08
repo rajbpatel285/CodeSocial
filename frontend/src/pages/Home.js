@@ -11,6 +11,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import axios from "axios";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
@@ -200,6 +201,7 @@ function Home() {
             color="primary"
             onClick={() => navigate("/contests")}
           >
+            <ReadMoreIcon style={{ marginRight: "5px" }} />
             See More
           </Button>
         </div>
@@ -269,6 +271,7 @@ function Home() {
             color="primary"
             onClick={() => navigate("/problemset")}
           >
+            <ReadMoreIcon style={{ marginRight: "5px" }} />
             See More
           </Button>
         </div>
@@ -336,6 +339,7 @@ function Home() {
             color="primary"
             onClick={() => navigate("/standings")}
           >
+            <ReadMoreIcon style={{ marginRight: "5px" }} />
             See More
           </Button>
         </div>
