@@ -14,6 +14,7 @@ exports.create = async (req, res) => {
     endTime,
     questionSet: [],
     isPublished: false,
+    isEnded: false,
     registeredUsers: [],
   });
 
@@ -209,5 +210,36 @@ exports.unregisterFromContest = async (req, res) => {
     res.json(updatedContest);
   } catch (error) {
     res.status(500).send({ message: "Error unregistering from contest." });
+  }
+};
+
+exports.endContest = async (req, res) => {
+  const { contestId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(contestId)) {
+    return res.status(400).send({ message: "Invalid contest ID format." });
+  }
+
+  try {
+    const updatedContest = await Contest.findOneAndUpdate(
+      { contestId: contestId },
+      { $set: { isEnded: true } },
+      { new: true }
+    );
+
+    if (!updatedContest) {
+      return res.status(404).send({
+        message: `Cannot find contest with id=${contestId}. Maybe contest was not found!`,
+      });
+    }
+
+    res.send({
+      message: "Contest has been ended successfully.",
+      contest: updatedContest,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: `Error ending contest with id=${contestId}.`,
+    });
   }
 };

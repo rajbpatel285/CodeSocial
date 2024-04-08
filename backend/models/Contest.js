@@ -36,6 +36,10 @@ const contestSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isEnded: {
+    type: Boolean,
+    default: false,
+  },
   registeredUsers: [
     {
       type: String,
