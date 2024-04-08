@@ -213,6 +213,37 @@ exports.unregisterFromContest = async (req, res) => {
   }
 };
 
+exports.setContestLive = async (req, res) => {
+  const { contestId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(contestId)) {
+    return res.status(400).send({ message: "Invalid contest ID format." });
+  }
+
+  try {
+    const updatedContest = await Contest.findOneAndUpdate(
+      { contestId: contestId },
+      { $set: { isLive: true } },
+      { new: true }
+    );
+
+    if (!updatedContest) {
+      return res.status(404).send({
+        message: `Cannot find contest with id=${contestId}. Maybe contest was not found!`,
+      });
+    }
+
+    res.send({
+      message: "Contest has been set to live successfully.",
+      contest: updatedContest,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: `Error ending contest with id=${contestId}.`,
+    });
+  }
+};
+
 exports.endContest = async (req, res) => {
   const { contestId } = req.params;
 
