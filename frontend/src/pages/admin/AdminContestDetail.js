@@ -34,6 +34,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 import SendIcon from "@mui/icons-material/Send";
 import BackHandIcon from "@mui/icons-material/BackHand";
+import SensorsIcon from "@mui/icons-material/Sensors";
+import BlockIcon from "@mui/icons-material/Block";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
@@ -236,6 +238,38 @@ function AdminContestDetail() {
     }
   };
 
+  const handleSetContestLive = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/contest/${contestId}/setLive`
+      );
+      navigate("/admincontests", {
+        replace: true,
+        state: {
+          message: `Contest "${response.data.contest.contestName}" is live`,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to set contest live", error);
+    }
+  };
+
+  const handleEndContest = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/contest/${contestId}/end`
+      );
+      navigate("/admincontests", {
+        replace: true,
+        state: {
+          message: `Contest "${response.data.contest.contestName}" is ended`,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to end contest", error);
+    }
+  };
+
   const handleDeleteContest = async () => {
     try {
       const response = await axios.delete(
@@ -335,6 +369,7 @@ function AdminContestDetail() {
           <Button
             variant="contained"
             onClick={handlePublishContest}
+            disabled={contest.isLive || contest.isEnded}
             sx={{
               backgroundColor: contest.isPublished ? "#d32f2f" : "#2e7d32",
               "&:hover": {
@@ -350,6 +385,41 @@ function AdminContestDetail() {
             )}
             {contest.isPublished ? "Withdraw Contest" : "Publish Contest"}
           </Button>
+          <Button
+            variant="contained"
+            onClick={handleSetContestLive}
+            disabled={!contest.isPublished || contest.isLive || contest.isEnded}
+            sx={{
+              backgroundColor: "#4caf50",
+              "&:hover": {
+                backgroundColor: "#388e3c",
+              },
+            }}
+            style={{ marginRight: "10px" }}
+          >
+            <SensorsIcon style={{ marginRight: "5px" }} />
+            Set Live
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleEndContest}
+            disabled={!contest.isLive || contest.isEnded}
+            sx={{
+              backgroundColor: "#f44336",
+              "&:hover": {
+                backgroundColor: "#d32f2f",
+              },
+            }}
+          >
+            <BlockIcon style={{ marginRight: "5px" }} />
+            End Contest
+          </Button>
+        </div>
+        <div
+          style={{
+            marginTop: "20px",
+          }}
+        >
           <Button
             variant="contained"
             color="secondary"
@@ -377,6 +447,12 @@ function AdminContestDetail() {
               </Button>
             </DialogActions>
           </Dialog>
+        </div>
+        <div
+          style={{
+            marginTop: "20px",
+          }}
+        >
           <Button
             variant="contained"
             color="primary"

@@ -12,7 +12,5 @@ router.post("/removeFriend", userController.removeFriend);
 router.get("/checkFriendship", userController.checkFriendship);
 router.get("/friends/:userId", userController.fetchFriends);
 router.post("/questionSolved", userController.addQuestionToSolved);
-router.put("/:contestId/end", contestController.endContest);
-router.put("/:contestId/setLive", contestController.setContestLive);
 
 module.exports = router;

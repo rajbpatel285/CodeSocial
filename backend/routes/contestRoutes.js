@@ -21,4 +21,8 @@ router.post("/register/:contestId", contestController.registerForContest);
 
 router.post("/unregister/:contestId", contestController.unregisterFromContest);
 
+router.put("/:contestId/end", contestController.endContest);
+
+router.put("/:contestId/setLive", contestController.setContestLive);
+
 module.exports = router;

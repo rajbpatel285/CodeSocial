@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import AddIcon from "@mui/icons-material/Add";
+import SensorsIcon from "@mui/icons-material/Sensors";
 import AdminTopAppBar from "../../components/AdminTopAppBar";
 import AdminSecondaryNavbar from "../../components/AdminSecondaryNavbar";
 import axios from "axios";
@@ -358,7 +359,8 @@ function AdminContests() {
           <Alert
             severity={
               alertMessage.includes("published") ||
-              alertMessage.includes("created")
+              alertMessage.includes("created") ||
+              alertMessage.includes("live")
                 ? "success"
                 : "error"
             }
@@ -441,7 +443,13 @@ function AdminContests() {
                     ).toLocaleTimeString()}`}
                   </TableCell>
                   <TableCell style={{ ...cellStyle, width: "10%" }}>
-                    {contest.isPublished ? (
+                    {contest.isEnded ? (
+                      <Typography style={{ color: "grey" }}>Ended</Typography>
+                    ) : contest.isLive ? (
+                      <Typography style={{ color: "Blue" }}>
+                        <SensorsIcon /> Live
+                      </Typography>
+                    ) : contest.isPublished ? (
                       <Typography style={{ color: "green" }}>
                         Published
                       </Typography>
