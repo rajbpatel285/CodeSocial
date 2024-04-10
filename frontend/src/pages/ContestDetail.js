@@ -78,6 +78,7 @@ function ContestDetail() {
               <SensorsIcon /> Live
             </>
           ) : null}
+          {contest.isEnded ? <>Contest has ended</> : null}
         </div>
         <Typography
           variant="h4"

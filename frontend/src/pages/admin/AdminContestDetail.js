@@ -312,6 +312,20 @@ function AdminContestDetail() {
             {alertMessage}
           </Alert>
         )}
+        <div
+          style={{
+            fontWeight: "bold",
+            textAlign: "center",
+            color: "blue",
+          }}
+        >
+          {contest.isLive && !contest.isEnded ? (
+            <>
+              <SensorsIcon /> Live
+            </>
+          ) : null}
+          {contest.isEnded ? <>Contest has ended</> : null}
+        </div>
         <Typography
           variant="h4"
           style={{
@@ -458,6 +472,7 @@ function AdminContestDetail() {
             color="primary"
             onClick={handleOpenUpdateDialog}
             style={{ marginRight: "10px" }}
+            disabled={contest.isEnded}
           >
             <ChangeCircleIcon style={{ marginRight: "5px" }} />
             Update Contest
@@ -608,6 +623,7 @@ function AdminContestDetail() {
           color="primary"
           onClick={() => setOpen(true)}
           style={{ marginRight: "10px" }}
+          disabled={contest.isEnded}
         >
           <AddIcon style={{ marginRight: "5px" }} />
           Add Question
