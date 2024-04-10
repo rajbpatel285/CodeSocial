@@ -95,12 +95,11 @@ function Standings() {
     }
 
     const ratingCriteria = {
-      GrandMaster: 2500,
-      Master: 2300,
-      Expert: 2000,
-      Professional: 1600,
-      Specialist: 1200,
-      Beginner: 800,
+      Master: 2500,
+      Expert: 2300,
+      Professional: 2000,
+      Specialist: 1600,
+      Beginner: 1200,
     };
 
     if (Object.values(ratingFilter).some((value) => value)) {

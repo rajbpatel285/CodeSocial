@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useNavigate } from "react-router-dom";
 import {
   Typography,
   Table,
@@ -21,6 +21,8 @@ import {
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import NoAccountsIcon from "@mui/icons-material/NoAccounts";
+import SensorsIcon from "@mui/icons-material/Sensors";
+import LoginIcon from "@mui/icons-material/Login";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -43,6 +45,7 @@ function Contests() {
   const [sortDirection, setSortDirection] = useState("asc");
   const [username, setUsername] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchContests();
@@ -139,6 +142,10 @@ function Contests() {
     } catch (error) {
       console.error("Error unregistering from contest", error);
     }
+  };
+
+  const handleEnter = (contest) => {
+    navigate(`/contestdetail/${contest.contestId}`);
   };
 
   if (!userId || isAdmin) {
@@ -302,16 +309,42 @@ function Contests() {
                     {new Date(contest.startTime).toLocaleDateString()}
                   </TableCell>
                   <TableCell style={cellStyle}>
-                    {contest.registeredUsers.includes(userEmail) ||
-                    contest.registeredUsers.includes(username) ? (
-                      <Button
-                        variant="contained"
-                        style={{ backgroundColor: "red", color: "white" }}
-                        onClick={() => handleUnregister(contest.contestId)}
-                      >
-                        <NoAccountsIcon style={{ marginRight: "5px" }} />
-                        Unregister
-                      </Button>
+                    {contest.isEnded ? (
+                      <Typography style={{ color: "grey" }}>Ended</Typography>
+                    ) : contest.isLive ? (
+                      <Typography style={{ color: "Blue" }}>
+                        <SensorsIcon /> Live
+                        {contest.registeredUsers.includes(userEmail) ||
+                        contest.registeredUsers.includes(username) ? (
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleEnter(contest)}
+                          >
+                            <LoginIcon style={{ marginRight: "5px" }} />
+                            Enter
+                          </Button>
+                        ) : (
+                          <Typography style={{ color: "grey" }}>
+                            Not registered
+                          </Typography>
+                        )}
+                      </Typography>
+                    ) : contest.registeredUsers.includes(userEmail) ||
+                      contest.registeredUsers.includes(username) ? (
+                      <div>
+                        <Typography style={{ color: "green" }}>
+                          Registered
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          style={{ backgroundColor: "red", color: "white" }}
+                          onClick={() => handleUnregister(contest.contestId)}
+                        >
+                          <NoAccountsIcon style={{ marginRight: "5px" }} />
+                          Unregister
+                        </Button>
+                      </div>
                     ) : (
                       <Button
                         variant="contained"

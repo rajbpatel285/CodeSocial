@@ -10,6 +10,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import SensorsIcon from "@mui/icons-material/Sensors";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -28,14 +29,19 @@ function ContestDetail() {
           `http://localhost:8000/contest/${contestId}`
         );
         setContest(data);
-        const questionDetails = await Promise.all(
-          data.questionSet.map((questionId) =>
-            axios
-              .get(`http://localhost:8000/question/questions/${questionId}`)
-              .then((res) => res.data)
-          )
-        );
-        setQuestions(questionDetails);
+        if (
+          data.isEnded ||
+          (data.isLive && data.registeredUsers.includes(userId))
+        ) {
+          const questionDetails = await Promise.all(
+            data.questionSet.map((questionId) =>
+              axios
+                .get(`http://localhost:8000/question/questions/${questionId}`)
+                .then((res) => res.data)
+            )
+          );
+          setQuestions(questionDetails);
+        }
       } catch (error) {
         console.error("Error fetching contest details:", error);
       }
@@ -60,6 +66,19 @@ function ContestDetail() {
       <TopAppBar title="CodeSocial" />
       <SecondaryNavbar />
       <div style={{ margin: "0 5% 2% 5%" }}>
+        <div
+          style={{
+            fontWeight: "bold",
+            textAlign: "center",
+            color: "blue",
+          }}
+        >
+          {contest.isLive && !contest.isEnded ? (
+            <>
+              <SensorsIcon /> Live
+            </>
+          ) : null}
+        </div>
         <Typography
           variant="h4"
           style={{
@@ -109,60 +128,71 @@ function ContestDetail() {
         >
           {contest.description}
         </Typography>
-        <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "80%" }}
-                >
-                  Question
-                </TableCell>
-                <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "20%" }}
-                  align="center"
-                >
-                  Difficulty
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {questions.map((question) => (
-                <TableRow
-                  key={question.questionId}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
+        {contest.isEnded ||
+        (contest.isLive && contest.registeredUsers.includes(userId)) ? (
+          <TableContainer component={Paper} style={{ marginBottom: "20px" }}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
                   <TableCell
-                    style={{ ...cellStyle, width: "80%" }}
-                    component="th"
-                    scope="row"
+                    style={{ ...cellStyle, fontWeight: "bold", width: "80%" }}
                   >
-                    <Link
-                      to={`/question/${question.questionId}`}
-                      style={{
-                        textDecoration: "underline",
-                        color: "#1976d2",
-                        cursor: "pointer",
-                        "&:hover": {
-                          textDecoration: "underline",
-                          color: "#1976d2",
-                        },
-                      }}
-                    >
-                      {question.questionTitle}
-                    </Link>
+                    Question
                   </TableCell>
                   <TableCell
-                    style={{ ...cellStyle, width: "20%" }}
+                    style={{ ...cellStyle, fontWeight: "bold", width: "20%" }}
                     align="center"
                   >
-                    {question.difficulty}
+                    Difficulty
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {questions.map((question) => (
+                  <TableRow
+                    key={question.questionId}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell
+                      style={{ ...cellStyle, width: "80%" }}
+                      component="th"
+                      scope="row"
+                    >
+                      <Link
+                        to={`/question/${question.questionId}`}
+                        style={{
+                          textDecoration: "underline",
+                          color: "#1976d2",
+                          cursor: "pointer",
+                          "&:hover": {
+                            textDecoration: "underline",
+                            color: "#1976d2",
+                          },
+                        }}
+                      >
+                        {question.questionTitle}
+                      </Link>
+                    </TableCell>
+                    <TableCell
+                      style={{ ...cellStyle, width: "20%" }}
+                      align="center"
+                    >
+                      {question.difficulty}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : contest.isLive && !contest.registeredUsers.includes(userId) ? (
+          <Typography variant="h6" color="textSecondary" textAlign="center">
+            Contest is live, but you are not registered.
+          </Typography>
+        ) : (
+          <Typography variant="h6" color="textSecondary" textAlign="center">
+            Contest has not started, come back later.
+          </Typography>
+        )}
       </div>
     </div>
   );
