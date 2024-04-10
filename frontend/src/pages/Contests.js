@@ -255,21 +255,26 @@ function Contests() {
             <TableHead>
               <TableRow>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "55%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "45%" }}
                 >
                   Contest Name
                 </TableCell>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "10%" }}
                 >
                   Level
                 </TableCell>
                 <TableCell
-                  style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
+                  style={{ ...cellStyle, fontWeight: "bold", width: "10%" }}
                   onClick={toggleSortDate}
                   sx={{ cursor: "pointer" }}
                 >
                   Date {sortDirection === "asc" ? "↑" : "↓"}
+                </TableCell>
+                <TableCell
+                  style={{ ...cellStyle, fontWeight: "bold", width: "20%" }}
+                >
+                  Time
                 </TableCell>
                 <TableCell
                   style={{ ...cellStyle, fontWeight: "bold", width: "15%" }}
@@ -283,7 +288,7 @@ function Contests() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell
-                    style={{ ...cellStyle, width: "55%" }}
+                    style={{ ...cellStyle, width: "45%" }}
                     component="th"
                     scope="row"
                   >
@@ -302,13 +307,20 @@ function Contests() {
                       {contest.contestName}
                     </Link>
                   </TableCell>
-                  <TableCell style={{ ...cellStyle, width: "15%" }}>
+                  <TableCell style={{ ...cellStyle, width: "10%" }}>
                     {contest.level}
                   </TableCell>
-                  <TableCell style={{ ...cellStyle, width: "15%" }}>
+                  <TableCell style={{ ...cellStyle, width: "10%" }}>
                     {new Date(contest.startTime).toLocaleDateString()}
                   </TableCell>
-                  <TableCell style={cellStyle}>
+                  <TableCell style={{ ...cellStyle, width: "20%" }}>
+                    {`${new Date(
+                      contest.startTime
+                    ).toLocaleTimeString()} - ${new Date(
+                      contest.endTime
+                    ).toLocaleTimeString()}`}
+                  </TableCell>
+                  <TableCell style={{ ...cellStyle, width: "15%" }}>
                     {contest.isEnded ? (
                       <Typography style={{ color: "grey" }}>Ended</Typography>
                     ) : contest.isLive ? (

@@ -126,7 +126,6 @@ function Home() {
           style={{
             fontWeight: "bold",
             marginBottom: "20px",
-            // textAlign: "center",
           }}
         >
           Upcoming Contests
@@ -182,7 +181,7 @@ function Home() {
                     {contest.level}
                   </TableCell>
                   <TableCell style={{ ...cellStyle, width: "15%" }}>
-                    {new Date(contest.date).toLocaleDateString()}
+                    {new Date(contest.startTime).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
               ))}
@@ -210,7 +209,6 @@ function Home() {
           style={{
             fontWeight: "bold",
             marginBottom: "20px",
-            // textAlign: "center",
           }}
         >
           Questions
@@ -280,7 +278,6 @@ function Home() {
           style={{
             fontWeight: "bold",
             marginBottom: "20px",
-            // textAlign: "center",
           }}
         >
           User Standings
