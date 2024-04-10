@@ -11,6 +11,7 @@ import {
   Paper,
 } from "@mui/material";
 import SensorsIcon from "@mui/icons-material/Sensors";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import TopAppBar from "../components/TopAppBar";
 import SecondaryNavbar from "../components/SecondaryNavbar";
 import axios from "axios";
@@ -21,6 +22,7 @@ function ContestDetail() {
   const { contestId } = useParams();
   const [contest, setContest] = useState(null);
   const [questions, setQuestions] = useState([]);
+  const [solvedQuestions, setSolvedQuestions] = useState([]);
 
   useEffect(() => {
     const fetchContestDetails = async () => {
@@ -47,7 +49,19 @@ function ContestDetail() {
       }
     };
     fetchContestDetails();
+    fetchSolvedQuestions();
   }, [contestId]);
+
+  const fetchSolvedQuestions = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/user/profile/${userId}`
+      );
+      setSolvedQuestions(response.data.questionsSolved);
+    } catch (error) {
+      console.error("Error fetching friends:", error);
+    }
+  };
 
   if (!contest) {
     return <div>Loading...</div>;
@@ -173,6 +187,15 @@ function ContestDetail() {
                       >
                         {question.questionTitle}
                       </Link>
+                      {solvedQuestions.includes(question.questionId) && (
+                        <CheckCircleOutlineIcon
+                          style={{
+                            marginLeft: 8,
+                            fontSize: "1.2rem",
+                          }}
+                          color="success"
+                        />
+                      )}
                     </TableCell>
                     <TableCell
                       style={{ ...cellStyle, width: "20%" }}
