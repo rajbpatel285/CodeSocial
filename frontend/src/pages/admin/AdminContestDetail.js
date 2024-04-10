@@ -278,7 +278,7 @@ function AdminContestDetail() {
       navigate("/admincontests", {
         replace: true,
         state: {
-          message: `Contest "${response.data.contest.contestName}" deleted`,
+          message: `Contest "${response.data.deletedContest.contestName}" deleted`,
         },
       });
     } catch (error) {

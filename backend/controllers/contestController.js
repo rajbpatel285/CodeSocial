@@ -100,14 +100,29 @@ exports.delete = async (req, res) => {
   const { contestId } = req.params;
 
   try {
-    const contest = await Contest.findOneAndDelete({ contestId: contestId });
+    const contest = await Contest.findOne({ contestId: contestId });
     if (!contest) {
       return res.status(404).send({
-        message: `Cannot delete Contest with id=${contestId}. Maybe Contest was not found!`,
+        message: `Cannot find Contest with id=${contestId}.`,
       });
     }
-    res.send({ message: "Contest was deleted successfully!", contest });
+
+    await Promise.all(
+      contest.questionSet.map((questionId) =>
+        Question.deleteOne({ questionId: questionId })
+      )
+    );
+
+    const deletedContest = await Contest.findOneAndDelete({
+      contestId: contestId,
+    });
+
+    res.send({
+      message: "Contest and its questions were deleted successfully!",
+      deletedContest,
+    });
   } catch (error) {
+    console.error("Error deleting contest and its questions:", error);
     res
       .status(500)
       .send({ message: "Could not delete Contest with id=" + contestId });
@@ -156,16 +171,6 @@ exports.togglePublishContest = async (req, res) => {
       { contestId: contestId },
       { $set: { isPublished: isPublishedToggle } },
       { new: true }
-    );
-
-    await Promise.all(
-      contest.questionSet.map(async (questionIdValue) => {
-        await Question.findOneAndUpdate(
-          { questionId: questionIdValue },
-          { $set: { isPublished: isPublishedToggle } },
-          { new: true }
-        );
-      })
     );
 
     const action = isPublishedToggle ? "published" : "withdrawn";
@@ -263,6 +268,16 @@ exports.endContest = async (req, res) => {
         message: `Cannot find contest with id=${contestId}. Maybe contest was not found!`,
       });
     }
+
+    await Promise.all(
+      updatedContest.questionSet.map(async (questionIdValue) => {
+        await Question.findOneAndUpdate(
+          { questionId: questionIdValue },
+          { $set: { isPublished: true } },
+          { new: true }
+        );
+      })
+    );
 
     res.send({
       message: "Contest has been ended successfully.",
