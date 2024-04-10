@@ -73,8 +73,9 @@ function AdminContests() {
   const fetchContests = async () => {
     try {
       const response = await axios.get("http://localhost:8000/contest");
-      setContests(response.data);
-      setAllContests(response.data);
+      const reversedContests = response.data.reverse();
+      setContests(reversedContests);
+      setAllContests(reversedContests);
     } catch (error) {
       console.error("Failed to fetch contests", error);
     }

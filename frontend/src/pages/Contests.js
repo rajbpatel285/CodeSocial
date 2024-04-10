@@ -57,8 +57,9 @@ function Contests() {
       let publishedContests = response.data.filter(
         (contest) => contest.isPublished
       );
-      setContests(publishedContests);
-      setAllContests(publishedContests);
+      const reversedContests = publishedContests.reverse();
+      setContests(reversedContests);
+      setAllContests(reversedContests);
       const userDetails = await axios.get(
         `http://localhost:8000/user/profile/${userId}`
       );
