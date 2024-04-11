@@ -312,7 +312,6 @@ exports.calculateAndUpdateContestScores = async (contestId) => {
     );
 
     let userScores = users.map((user) => {
-      console.log("YESSSSSSS + ", user);
       const numSolved = user.questionsSolved.filter((q) =>
         contest.questionSet.includes(q)
       ).length;
