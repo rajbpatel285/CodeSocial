@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const MONGODB_URI = "mongodb://0.0.0.0:27017/react-login-tut";
+const MONGODB_URI =
+  "mongodb+srv://rajpatel_28:rajpatel%40123@codesocial.jnblfii.mongodb.net/?retryWrites=true&w=majority&appName=CodeSocial/codesocial-db";
 
 mongoose
   .connect(MONGODB_URI)
