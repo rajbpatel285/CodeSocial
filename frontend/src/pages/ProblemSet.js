@@ -209,7 +209,7 @@ function ProblemSet() {
           </Button>
         </div>
         <Typography variant="subtitle1" style={{ marginBottom: "10px" }}>
-          Displaying {questionsCount} questions
+          Solved {solvedQuestions.length} of {questionsCount} questions
         </Typography>
         <Dialog open={filterOpen} onClose={() => setFilterOpen(false)}>
           <DialogTitle>Filters</DialogTitle>

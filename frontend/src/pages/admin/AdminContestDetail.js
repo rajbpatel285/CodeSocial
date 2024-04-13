@@ -108,7 +108,7 @@ function AdminContestDetail() {
       );
       const createdQuestion = questionResponse.data;
 
-      const updateContestResponse = await axios.put(
+      await axios.put(
         `https://codesocial-axmd.onrender.com/contest/addQuestion/${contestId}`,
         {
           questionId: createdQuestion.questionId,

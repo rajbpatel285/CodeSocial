@@ -149,12 +149,12 @@ function Standings() {
   };
 
   const getRatingColorFromTag = (name) => {
-    if (name == "GrandMaster") return "#ff8c00";
-    if (name == "Master") return "#008b8b";
-    if (name == "Expert") return "#ff4500";
-    if (name == "Professional") return "#006400";
-    if (name == "Specialist") return "#00008b";
-    if (name == "Beginner") return "#8b0000";
+    if (name === "GrandMaster") return "#ff8c00";
+    if (name === "Master") return "#008b8b";
+    if (name === "Expert") return "#ff4500";
+    if (name === "Professional") return "#006400";
+    if (name === "Specialist") return "#00008b";
+    if (name === "Beginner") return "#8b0000";
     return "#0000cd";
   };
 
