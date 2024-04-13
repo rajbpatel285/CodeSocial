@@ -214,6 +214,11 @@ function ContestDetail() {
           <Typography variant="h6" color="textSecondary" textAlign="center">
             Contest is live, but you are not registered.
           </Typography>
+        ) : contest.isPublished && !contest.registeredUsers.includes(userId) ? (
+          <Typography variant="h6" color="textSecondary" textAlign="center">
+            Contest has not started, and you have not registered for the
+            contest.
+          </Typography>
         ) : (
           <Typography variant="h6" color="textSecondary" textAlign="center">
             Contest has not started, come back later.
