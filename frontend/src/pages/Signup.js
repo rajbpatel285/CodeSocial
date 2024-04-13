@@ -73,11 +73,14 @@ function Signup() {
     }
 
     try {
-      const response = await axios.post("http://localhost:8000/auth/signup", {
-        email,
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "https://codesocial-axmd.onrender.com/auth/signup",
+        {
+          email,
+          username,
+          password,
+        }
+      );
 
       if (response.data === "exist") {
         setErrorMessage("An account with this email already exists.");

@@ -52,7 +52,7 @@ function UserProfile() {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/user/profile/${userEmailOrUsername}`
+          `https://codesocial-axmd.onrender.com/user/profile/${userEmailOrUsername}`
         );
         setUserDetails(response.data);
         setEditData({
@@ -72,7 +72,7 @@ function UserProfile() {
   const checkFriendship = async (profileId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/checkFriendship`,
+        `https://codesocial-axmd.onrender.com/user/checkFriendship`,
         {
           params: { userId, profileId },
         }
@@ -88,7 +88,7 @@ function UserProfile() {
     const action = isFriend ? "removeFriend" : "addFriend";
     try {
       const response = await axios.post(
-        `http://localhost:8000/user/${action}`,
+        `https://codesocial-axmd.onrender.com/user/${action}`,
         {
           userId,
           friendId: userDetails._id,
@@ -124,7 +124,7 @@ function UserProfile() {
   const handleEditProfile = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/user/profile/update/${userId}`,
+        `https://codesocial-axmd.onrender.com/user/profile/update/${userId}`,
         editData
       );
       if (response.data.message === "username already exists") {

@@ -45,7 +45,7 @@ function QuestionPage() {
   const fetchQuestion = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/question/questions/${questionId}`
+        `https://codesocial-axmd.onrender.com/question/questions/${questionId}`
       );
       setQuestion(response.data);
     } catch (error) {
@@ -65,7 +65,7 @@ function QuestionPage() {
       const inputValue = testInput;
 
       const response = await axios.post(
-        `http://localhost:8000/question/${apiEndpoint}`,
+        `https://codesocial-axmd.onrender.com/question/${apiEndpoint}`,
         {
           code: userCode,
           inputs: inputValue,
@@ -100,7 +100,7 @@ function QuestionPage() {
       const inputValue = testCase.input;
       try {
         const response = await axios.post(
-          `http://localhost:8000/question/${apiEndpoint}`,
+          `https://codesocial-axmd.onrender.com/question/${apiEndpoint}`,
           {
             code: userCode,
             inputs: inputValue,
@@ -115,10 +115,13 @@ function QuestionPage() {
         allPassed &= passed;
         if (allPassed) {
           try {
-            await axios.post(`http://localhost:8000/user/questionSolved`, {
-              userId,
-              questionId,
-            });
+            await axios.post(
+              `https://codesocial-axmd.onrender.com/user/questionSolved`,
+              {
+                userId,
+                questionId,
+              }
+            );
             setIsSolved(true);
           } catch (error) {
             console.error("Error marking question as solved:", error);
@@ -143,7 +146,7 @@ function QuestionPage() {
   const checkIfSolved = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/profile/${userId}`
+        `https://codesocial-axmd.onrender.com/user/profile/${userId}`
       );
       setIsSolved(response.data.questionsSolved.includes(questionId));
     } catch (error) {

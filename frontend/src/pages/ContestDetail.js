@@ -28,7 +28,7 @@ function ContestDetail() {
     const fetchContestDetails = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:8000/contest/${contestId}`
+          `https://codesocial-axmd.onrender.com/contest/${contestId}`
         );
         setContest(data);
         if (
@@ -38,7 +38,9 @@ function ContestDetail() {
           const questionDetails = await Promise.all(
             data.questionSet.map((questionId) =>
               axios
-                .get(`http://localhost:8000/question/questions/${questionId}`)
+                .get(
+                  `https://codesocial-axmd.onrender.com/question/questions/${questionId}`
+                )
                 .then((res) => res.data)
             )
           );
@@ -55,7 +57,7 @@ function ContestDetail() {
   const fetchSolvedQuestions = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/profile/${userId}`
+        `https://codesocial-axmd.onrender.com/user/profile/${userId}`
       );
       setSolvedQuestions(response.data.questionsSolved);
     } catch (error) {

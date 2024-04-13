@@ -82,13 +82,15 @@ function AdminContestDetail() {
   const fetchContestDetails = async () => {
     try {
       const { data } = await axios.get(
-        `http://localhost:8000/contest/${contestId}`
+        `https://codesocial-axmd.onrender.com/contest/${contestId}`
       );
       setContest(data);
       const questionDetails = await Promise.all(
         data.questionSet.map((questionId) =>
           axios
-            .get(`http://localhost:8000/question/questions/${questionId}`)
+            .get(
+              `https://codesocial-axmd.onrender.com/question/questions/${questionId}`
+            )
             .then((res) => res.data)
         )
       );
@@ -101,13 +103,13 @@ function AdminContestDetail() {
   const handleAddQuestionToContest = async () => {
     try {
       const questionResponse = await axios.post(
-        "http://localhost:8000/question/questions",
+        "https://codesocial-axmd.onrender.com/question/questions",
         { ...newQuestion }
       );
       const createdQuestion = questionResponse.data;
 
       const updateContestResponse = await axios.put(
-        `http://localhost:8000/contest/addQuestion/${contestId}`,
+        `https://codesocial-axmd.onrender.com/contest/addQuestion/${contestId}`,
         {
           questionId: createdQuestion.questionId,
         }
@@ -175,7 +177,7 @@ function AdminContestDetail() {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/contest/${contestId}`,
+        `https://codesocial-axmd.onrender.com/contest/${contestId}`,
         updatedContestDetails
       );
       setAlertMessage(
@@ -221,7 +223,7 @@ function AdminContestDetail() {
   const handlePublishContest = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/contest/${contestId}/publish`
+        `https://codesocial-axmd.onrender.com/contest/${contestId}/publish`
       );
       navigate("/admincontests", {
         replace: true,
@@ -241,7 +243,7 @@ function AdminContestDetail() {
   const handleSetContestLive = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/contest/${contestId}/setLive`
+        `https://codesocial-axmd.onrender.com/contest/${contestId}/setLive`
       );
       navigate("/admincontests", {
         replace: true,
@@ -257,7 +259,7 @@ function AdminContestDetail() {
   const handleEndContest = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/contest/${contestId}/end`
+        `https://codesocial-axmd.onrender.com/contest/${contestId}/end`
       );
       navigate("/admincontests", {
         replace: true,
@@ -273,7 +275,7 @@ function AdminContestDetail() {
   const handleDeleteContest = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/contest/${contestId}`
+        `https://codesocial-axmd.onrender.com/contest/${contestId}`
       );
       navigate("/admincontests", {
         replace: true,

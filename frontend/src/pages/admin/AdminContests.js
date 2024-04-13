@@ -72,7 +72,9 @@ function AdminContests() {
 
   const fetchContests = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/contest");
+      const response = await axios.get(
+        "https://codesocial-axmd.onrender.com/contest"
+      );
       const reversedContests = response.data.reverse();
       setContests(reversedContests);
       setAllContests(reversedContests);
@@ -85,13 +87,16 @@ function AdminContests() {
     const startDate = new Date(date + "T" + startTime);
     const endDate = new Date(date + "T" + endTime);
     try {
-      const response = await axios.post("http://localhost:8000/contest", {
-        contestName,
-        description,
-        level,
-        startTime: startDate.toISOString(),
-        endTime: endDate.toISOString(),
-      });
+      const response = await axios.post(
+        "https://codesocial-axmd.onrender.com/contest",
+        {
+          contestName,
+          description,
+          level,
+          startTime: startDate.toISOString(),
+          endTime: endDate.toISOString(),
+        }
+      );
       setAlertMessage(`Contest "${response.data.contestName}" created`);
       const timer = setTimeout(() => {
         setAlertMessage(null);

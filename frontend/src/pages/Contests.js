@@ -53,7 +53,9 @@ function Contests() {
 
   const fetchContests = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/contest");
+      const response = await axios.get(
+        "https://codesocial-axmd.onrender.com/contest"
+      );
       let publishedContests = response.data.filter(
         (contest) => contest.isPublished
       );
@@ -61,7 +63,7 @@ function Contests() {
       setContests(reversedContests);
       setAllContests(reversedContests);
       const userDetails = await axios.get(
-        `http://localhost:8000/user/profile/${userId}`
+        `https://codesocial-axmd.onrender.com/user/profile/${userId}`
       );
       setUserEmail(userDetails.data.email);
       setUsername(userDetails.data.username);
@@ -124,9 +126,12 @@ function Contests() {
 
   const handleRegister = async (contestId) => {
     try {
-      await axios.post(`http://localhost:8000/contest/register/${contestId}`, {
-        userId,
-      });
+      await axios.post(
+        `https://codesocial-axmd.onrender.com/contest/register/${contestId}`,
+        {
+          userId,
+        }
+      );
       fetchContests();
     } catch (error) {
       console.error("Error registering for contest", error);
@@ -136,7 +141,7 @@ function Contests() {
   const handleUnregister = async (contestId) => {
     try {
       await axios.post(
-        `http://localhost:8000/contest/unregister/${contestId}`,
+        `https://codesocial-axmd.onrender.com/contest/unregister/${contestId}`,
         { userId }
       );
       fetchContests();

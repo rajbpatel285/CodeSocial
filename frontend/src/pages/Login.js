@@ -32,10 +32,13 @@ function Login() {
     setErrorMessage("");
 
     try {
-      const response = await axios.post("http://localhost:8000/auth/login", {
-        emailOrUsername,
-        password,
-      });
+      const response = await axios.post(
+        "https://codesocial-axmd.onrender.com/auth/login",
+        {
+          emailOrUsername,
+          password,
+        }
+      );
 
       if (response.data.message === "exist") {
         localStorage.setItem("userId", emailOrUsername);

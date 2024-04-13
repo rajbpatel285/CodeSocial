@@ -45,7 +45,9 @@ function Standings() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/user/users");
+        const response = await axios.get(
+          "https://codesocial-axmd.onrender.com/user/users"
+        );
         setUsers(response.data);
         setAllUsers(response.data);
       } catch (error) {
@@ -56,7 +58,7 @@ function Standings() {
     const fetchFriends = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/user/friends/${userId}`
+          `https://codesocial-axmd.onrender.com/user/friends/${userId}`
         );
         setFriends(response.data.map((friend) => friend.username));
       } catch (error) {

@@ -76,7 +76,7 @@ function AdminProblemSet() {
   const fetchQuestions = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/question/questions"
+        "https://codesocial-axmd.onrender.com/question/questions"
       );
       const publishedQuestions = response.data.filter(
         (question) => question.isPublished
@@ -112,7 +112,7 @@ function AdminProblemSet() {
   const handleSave = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/question/questions",
+        "https://codesocial-axmd.onrender.com/question/questions",
         {
           questionTitle,
           question: questionText,

@@ -28,7 +28,9 @@ function Home() {
   useEffect(() => {
     const fetchContests = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/contest");
+        const response = await axios.get(
+          "https://codesocial-axmd.onrender.com/contest"
+        );
         const publishedContests = response.data
           .filter((contest) => contest.isPublished)
           .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -42,7 +44,7 @@ function Home() {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/question/questions"
+          "https://codesocial-axmd.onrender.com/question/questions"
         );
         const publishedQuestions = response.data
           .filter((question) => question.isPublished)
@@ -56,7 +58,9 @@ function Home() {
 
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/user/users");
+        const response = await axios.get(
+          "https://codesocial-axmd.onrender.com/user/users"
+        );
         const topUsers = response.data.slice(0, 3);
         setUsers(topUsers);
       } catch (error) {
@@ -67,7 +71,7 @@ function Home() {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/user/profile/${userId}`
+          `https://codesocial-axmd.onrender.com/user/profile/${userId}`
         );
         setUsername(response.data.username); // Assuming the response data has a username field
       } catch (error) {

@@ -44,7 +44,7 @@ function AdminQuestionPage() {
   const fetchQuestion = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/question/questions/${questionId}`
+        `https://codesocial-axmd.onrender.com/question/questions/${questionId}`
       );
       setQuestion(response.data);
     } catch (error) {
@@ -63,7 +63,7 @@ function AdminQuestionPage() {
   const handleUpdateQuestion = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/question/questions/${questionId}`,
+        `https://codesocial-axmd.onrender.com/question/questions/${questionId}`,
         {
           questionTitle,
           question: questionText,
@@ -87,7 +87,7 @@ function AdminQuestionPage() {
   const handleDeleteQuestion = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/question/questions/${questionId}`
+        `https://codesocial-axmd.onrender.com/question/questions/${questionId}`
       );
       navigate(-1, {
         replace: true,

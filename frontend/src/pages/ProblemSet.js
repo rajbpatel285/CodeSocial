@@ -63,7 +63,7 @@ function ProblemSet() {
   const fetchQuestions = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/question/questions"
+        "https://codesocial-axmd.onrender.com/question/questions"
       );
       const publishedQuestions = response.data.filter(
         (question) => question.isPublished
@@ -79,7 +79,7 @@ function ProblemSet() {
   const fetchStarredQuestions = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/starred/${userId}`
+        `https://codesocial-axmd.onrender.com/user/starred/${userId}`
       );
       const starredQuestionIds = response.data;
       const starsState = starredQuestionIds.reduce(
@@ -105,7 +105,7 @@ function ProblemSet() {
     const isStarred = filledStars[questionId];
     const endpoint = isStarred ? "/user/unstar" : "/user/star";
     try {
-      await axios.post(`http://localhost:8000${endpoint}`, {
+      await axios.post(`https://codesocial-axmd.onrender.com${endpoint}`, {
         userId: userId,
         questionId: questionId,
       });
@@ -167,7 +167,7 @@ function ProblemSet() {
   const fetchSolvedQuestions = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/profile/${userId}`
+        `https://codesocial-axmd.onrender.com/user/profile/${userId}`
       );
       setSolvedQuestions(response.data.questionsSolved);
     } catch (error) {
