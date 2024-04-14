@@ -142,7 +142,7 @@ function AdminContests() {
 
     if (dateRange.start && dateRange.end) {
       filteredContests = filteredContests.filter((contest) => {
-        const contestDate = new Date(contest.date);
+        const contestDate = new Date(contest.startTime);
         const startDate = new Date(dateRange.start);
         const endDate = new Date(dateRange.end);
         return contestDate >= startDate && contestDate <= endDate;
