@@ -81,8 +81,9 @@ function AdminProblemSet() {
       const publishedQuestions = response.data.filter(
         (question) => question.isPublished
       );
-      setQuestions(publishedQuestions);
-      setAllQuestions(publishedQuestions);
+      const reversedQuestions = publishedQuestions.reverse();
+      setQuestions(reversedQuestions);
+      setAllQuestions(reversedQuestions);
     } catch (error) {
       console.error("Error fetching questions:", error);
     }

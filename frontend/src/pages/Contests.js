@@ -59,9 +59,11 @@ function Contests() {
       let publishedContests = response.data.filter(
         (contest) => contest.isPublished
       );
-      const reversedContests = publishedContests.reverse();
-      setContests(reversedContests);
-      setAllContests(reversedContests);
+      const sortedContests = response.data.sort(
+        (a, b) => new Date(b.startTime) - new Date(a.startTime)
+      );
+      setContests(sortedContests);
+      setAllContests(sortedContests);
       const userDetails = await axios.get(
         `https://codesocial-axmd.onrender.com/user/profile/${userId}`
       );

@@ -75,9 +75,11 @@ function AdminContests() {
       const response = await axios.get(
         "https://codesocial-axmd.onrender.com/contest"
       );
-      const reversedContests = response.data.reverse();
-      setContests(reversedContests);
-      setAllContests(reversedContests);
+      const sortedContests = response.data.sort(
+        (a, b) => new Date(b.startTime) - new Date(a.startTime)
+      );
+      setContests(sortedContests);
+      setAllContests(sortedContests);
     } catch (error) {
       console.error("Failed to fetch contests", error);
     }
