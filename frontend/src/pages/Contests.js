@@ -59,7 +59,7 @@ function Contests() {
       let publishedContests = response.data.filter(
         (contest) => contest.isPublished
       );
-      const sortedContests = response.data.sort(
+      const sortedContests = publishedContests.sort(
         (a, b) => new Date(b.startTime) - new Date(a.startTime)
       );
       setContests(sortedContests);

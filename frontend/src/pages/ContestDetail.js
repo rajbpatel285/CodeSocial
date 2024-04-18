@@ -221,7 +221,7 @@ function ContestDetail() {
           </Typography>
         ) : (
           <Typography variant="h6" color="textSecondary" textAlign="center">
-            Contest has not started, come back later.
+            Contest has not started. You are registered, please come back later.
           </Typography>
         )}
       </div>

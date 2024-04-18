@@ -73,7 +73,7 @@ function Home() {
         const response = await axios.get(
           `https://codesocial-axmd.onrender.com/user/profile/${userId}`
         );
-        setUsername(response.data.username); // Assuming the response data has a username field
+        setUsername(response.data.username);
       } catch (error) {
         console.error("Failed to fetch user details", error);
       }
